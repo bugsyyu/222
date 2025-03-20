@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册 - EduWeb</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="main-header">
+        <nav class="nav-container">
+            <div class="logo">
+                <a href="index.html"><h1>EduWeb</h1></a>
+            </div>
+            <div class="nav-links">
+                <a href="courses.html">课程</a>
+                <a href="community.html">社区</a>
+                <a href="about.html">关于</a>
+            </div>
+            <div class="auth-buttons">
+                <a href="login.html" class="btn btn-login">登录</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="signup-container">
+        <div class="signup-left">
+            <h2>加入EduWeb开启学习之旅</h2>
+            <p>在这里，知识无边界，让我们一起探索学习的无限可能</p>
+        </div>
+
+        <div class="signup-right">
+            <div class="signup-box">
+                <h2>注册</h2>
+                <p class="signup-subtitle">免费加入EduWeb</p>
+
+                <div class="signup-role-selector">
+                    <button class="role-btn active" data-role="learner">学习者</button>
+                    <button class="role-btn" data-role="teacher">教师</button>
+                    <button class="role-btn" data-role="parent">家长</button>
+                </div>
+
+                <div class="signup-form-container">
+                    <form id="registerForm" class="auth-form" action="/api/register.php" method="POST">
+                        <div class="form-group">
+                            <label for="birthdate">出生日期</label>
+                            <div class="birthdate-inputs">
+                                <select name="month" id="month" required>
+                                    <option value="">月份</option>
+                                    <option value="1">1月</option>
+                                    <!-- 其他月份选项 -->
+                                </select>
+                                <select name="day" id="day" required>
+                                    <option value="">日期</option>
+                                    <option value="1">1</option>
+                                    <!-- 其他日期选项 -->
+                                </select>
+                                <select name="year" id="year" required>
+                                    <option value="">年份</option>
+                                    <option value="2010">2010</option>
+                                    <!-- 其他年份选项 -->
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">邮箱</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="username">用户名</label>
+                            <input type="text" id="username" name="username" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">密码</label>
+                            <div class="password-input">
+                                <input type="password" id="password" name="password" required>
+                                <i class="fas fa-eye-slash toggle-password"></i>
+                            </div>
+                            <div class="password-strength">
+                                <div class="strength-bar"></div>
+                                <span class="strength-text"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" id="class-code" name="class-code" placeholder="班级代码（可选）">
+                        </div>
+
+                        <div class="form-group terms">
+                            <label class="agreement">
+                                <input type="checkbox" name="agreement" required>
+                                <span>我已阅读并同意 <a href="terms.html">服务条款</a> 和 <a href="privacy.html">隐私政策</a></span>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">创建账号</button>
+                    </form>
+
+                    <div class="auth-divider">
+                        <span>或</span>
+                    </div>
+
+                    <div class="social-login">
+                        <button class="btn btn-social btn-google">
+                            <i class="fab fa-google"></i>
+                            使用Google账号注册
+                        </button>
+                        <button class="btn btn-social btn-github">
+                            <i class="fab fa-github"></i>
+                            使用GitHub账号注册
+                        </button>
+                    </div>
+
+                    <p class="auth-footer">
+                        已有账号？ <a href="login.html">立即登录</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+</body>
+</html> 

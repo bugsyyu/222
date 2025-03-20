@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - EduWeb</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="main-header">
+        <nav class="nav-container">
+            <div class="logo">
+                <a href="index.html"><h1>EduWeb</h1></a>
+            </div>
+            <div class="nav-links">
+                <a href="courses.html">课程</a>
+                <a href="community.html">社区</a>
+                <a href="about.html">关于</a>
+            </div>
+            <div class="auth-buttons">
+                <a href="register.html" class="btn btn-register">注册</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="signup-container">
+        <div class="signup-left">
+            <h2>欢迎回到EduWeb</h2>
+            <p>在这里继续您的学习之旅</p>
+        </div>
+
+        <div class="signup-right">
+            <div class="signup-box">
+                <h2>登录</h2>
+
+                <div class="social-login" style="margin-bottom: 2rem;">
+                    <button class="btn btn-social btn-google">
+                        <i class="fab fa-google"></i>
+                        使用Google账号登录
+                    </button>
+                    <button class="btn btn-social btn-github">
+                        <i class="fab fa-github"></i>
+                        使用GitHub账号登录
+                    </button>
+                    <button class="btn btn-social btn-apple">
+                        <i class="fab fa-apple"></i>
+                        使用Apple账号登录
+                    </button>
+                </div>
+
+                <div class="auth-divider">
+                    <span>或使用邮箱登录</span>
+                </div>
+
+                <form id="loginForm" class="auth-form" action="/api/login.php" method="POST">
+                    <div class="form-group">
+                        <label for="email">邮箱或用户名</label>
+                        <input type="text" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">密码</label>
+                        <div class="password-input">
+                            <input type="password" id="password" name="password" required>
+                            <i class="fas fa-eye-slash toggle-password"></i>
+                        </div>
+                        <a href="forgot-password.html" class="forgot-password">忘记密码？</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">登录</button>
+                </form>
+
+                <p class="auth-footer">
+                    还没有账号？ <a href="register.html">立即注册</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+</body>
+</html> 

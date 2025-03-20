@@ -1,0 +1,309 @@
+/* 基础布局 */
+html, 
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    flex: 1 0 auto;
+    padding-top: 80px;
+    background-color: var(--background-color);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* 页脚间距 */
+.main-footer {
+    margin-top: 4rem;
+    padding-top: 3rem;
+}
+
+/* 分区样式 */
+.section-divider {
+    margin-top: 3rem;  /* 减少顶部间距 */
+    padding-top: 1rem;
+    position: relative;
+}
+
+.section-divider::before {
+    content: '';
+    position: absolute;
+    top: -1.5rem;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--border-color);
+    opacity: 0.2;
+}
+
+.section-divider .section-title {
+    margin-bottom: 2rem;
+}
+
+/* 课程列表页面样式 */
+.section-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+    padding-top: 0.5rem;
+}
+
+/* 分类区域样式 */
+.categories-section {
+    margin-bottom: 3rem;
+}
+
+/* 搜索栏样式 */
+.search-section {
+    margin: 2rem 0;
+}
+
+.search-section .input-group {
+    display: flex;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.search-section input {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 50px 0 0 50px;
+    font-size: 1rem;
+    outline: none;
+}
+
+.search-section button {
+    padding: 1rem 2rem;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 0 50px 50px 0;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-section button:hover {
+    background-color: #2577b5;
+}
+
+.search-section i {
+    font-size: 1.2rem;
+}
+
+/* 分类卡片样式 */
+.category-card {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform 0.2s;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+}
+
+.category-card .card {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    height: 100%;
+    transition: box-shadow 0.2s;
+}
+
+.category-card:hover .card {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.category-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.category-card .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+
+.category-card .card-text {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 0;
+}
+
+/* 热门课程卡片样式 */
+.course-card {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    height: 100%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.course-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.course-card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.course-card .card-body {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.course-card .course-category {
+    font-size: 0.8rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.course-card .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+
+.course-card .instructor {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.course-card .course-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-top: auto;
+}
+
+.course-card .rating {
+    color: #ffc107;
+}
+
+/* 响应式布局 */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -1rem;
+}
+
+[class^="col-"] {
+    padding: 1rem;
+}
+
+.col-6 {
+    width: 50%;
+}
+
+.col-12 {
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .col-md-4 {
+        width: 33.333333%;
+    }
+    
+    .col-md-6 {
+        width: 50%;
+    }
+}
+
+@media (min-width: 992px) {
+    .col-lg-3 {
+        width: 25%;
+    }
+}
+
+/* 暗色模式支持 */
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark;
+    }
+
+    body {
+        background-color: var(--background-dark);
+        color: white;
+    }
+
+    main {
+        background-color: var(--background-dark);
+    }
+
+    .section-title {
+        color: white;
+    }
+
+    .search-section input {
+        background-color: #2d2d2d;
+        border-color: rgba(255, 255, 255, 0.1);
+        color: white;
+    }
+
+    .search-section input::placeholder {
+        color: #adb5bd;
+    }
+
+    .search-section button {
+        background-color: var(--primary-color);
+    }
+
+    .category-card .card,
+    .course-card {
+        background-color: #2d2d2d;
+        border-color: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .category-card .card-title,
+    .course-card .card-title {
+        color: white;
+    }
+
+    .category-card .card-text,
+    .course-card .instructor,
+    .course-card .course-stats {
+        color: #adb5bd;
+    }
+
+    .category-icon {
+        color: var(--primary-color);
+    }
+
+    .course-card .course-category {
+        color: var(--primary-color);
+    }
+
+    .course-card .rating {
+        color: #ffd43b;
+    }
+
+    .category-card:hover .card,
+    .course-card:hover {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+} 

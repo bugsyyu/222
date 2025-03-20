@@ -1,0 +1,360 @@
+/* Loading Page Styles */
+.loading-page {
+    background-color: #1a1d21;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.loading-container {
+    text-align: center;
+    max-width: 400px;
+    padding: 2rem;
+}
+
+.loading-logo {
+    margin-bottom: 2rem;
+}
+
+.loading-logo img {
+    width: 120px;
+    height: auto;
+}
+
+.loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.loading-icon {
+    font-size: 3rem;
+    color: #2b90d9;
+    animation: bounce 2s infinite;
+}
+
+.loading-content h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.loading-text {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+}
+
+.loading-progress {
+    position: relative;
+    width: 40px;
+    height: 40px;
+}
+
+.progress-ring {
+    width: 100%;
+    height: 100%;
+    border: 3px solid rgba(43, 144, 217, 0.2);
+    border-radius: 50%;
+    position: relative;
+}
+
+.progress-circle {
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    width: 100%;
+    height: 100%;
+    border: 3px solid transparent;
+    border-top-color: #2b90d9;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-20px);
+    }
+    60% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Community Main Page Styles */
+.community-container {
+    display: flex;
+    min-height: calc(100vh - 60px);
+    background-color: #0d1219;
+    margin-top: 70px;
+    padding-top: 10px;
+}
+
+.sidebar {
+    width: 280px;
+    background-color: #1b2838;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 0;
+    color: #8f98a0;
+    position: sticky;
+    top: 70px;
+    height: calc(100vh - 70px);
+    overflow-y: auto;
+}
+
+.sidebar-section {
+    margin-bottom: 0;
+}
+
+.sidebar-title {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: #8f98a0;
+    padding: 1.2rem 1.5rem;
+    background-color: #1b2838;
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.topic-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.topic-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.8rem 1.5rem;
+    border-left: 3px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.topic-item:hover {
+    background-color: #273d54;
+    border-left-color: #66c0f4;
+}
+
+.topic-item.active {
+    background-color: #273d54;
+    border-left-color: #66c0f4;
+}
+
+.topic-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+}
+
+.topic-name {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.main-content {
+    flex: 1;
+    padding: 2rem;
+    color: #acb2b8;
+    background-color: #0d1219;
+}
+
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.content-title {
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.new-discussion-btn {
+    background-color: #66c0f4;
+    color: white;
+    padding: 0.7rem 1.2rem;
+    border-radius: 3px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.new-discussion-btn:hover {
+    background-color: #4b8bb3;
+}
+
+.discussion-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.discussion-card {
+    background-color: #1b2838;
+    border-left: 3px solid transparent;
+    padding: 1.2rem 1.5rem;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.discussion-card:hover {
+    background-color: #273d54;
+    border-left-color: #66c0f4;
+    transform: none;
+}
+
+.discussion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.discussion-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.discussion-info {
+    flex: 1;
+}
+
+.discussion-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+    color: #acb2b8;
+}
+
+.discussion-details {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: #8f98a0;
+    font-size: 0.85rem;
+}
+
+.discussion-stats {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-left: 2rem;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.85rem;
+}
+
+.featured-tag {
+    background-color: rgba(102, 192, 244, 0.15);
+    color: #66c0f4;
+    padding: 0.2rem 0.6rem;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* 添加排序和视图切换按钮样式 */
+.view-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.view-mode-btn {
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #8f98a0;
+    padding: 0.4rem 0.8rem;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.view-mode-btn:hover {
+    background-color: #273d54;
+}
+
+.view-mode-btn.active {
+    background-color: rgba(102, 192, 244, 0.1);
+    border-color: #66c0f4;
+    color: #66c0f4;
+}
+
+.discussion-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.discussion-card {
+    background-color: #1b2838;
+    border-left: 3px solid transparent;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.discussion-card:hover {
+    background-color: #273d54;
+    border-left-color: #66c0f4;
+}
+
+.discussion-header {
+    padding: 1.2rem 1.5rem;
+} 

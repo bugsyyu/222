@@ -1,0 +1,1100 @@
+/* 讨论详情页样式 */
+.discussion-detail {
+    background-color: #0d1219;
+    min-height: calc(100vh - 60px);
+}
+
+/* 面包屑导航 */
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    background-color: #1b2838;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    color: #8f98a0;
+    font-size: 0.9rem;
+}
+
+.breadcrumb a {
+    color: #8f98a0;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.breadcrumb a:hover {
+    color: #66c0f4;
+}
+
+.breadcrumb i {
+    font-size: 0.8rem;
+    color: #8f98a0;
+}
+
+/* 讨论内容区 */
+.discussion-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* 帖子标题区域 */
+.discussion-title-box {
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 0 1.5rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.discussion-title-box h1 {
+    font-size: 1.8rem;
+    color: #acb2b8;
+    margin: 0 0 1rem 0;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.discussion-meta-info {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    color: #8f98a0;
+    font-size: 0.9rem;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.meta-item i {
+    color: #66c0f4;
+    font-size: 0.9rem;
+}
+
+.discussion-tags {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 1rem;
+}
+
+.discussion-tag {
+    background: rgba(102, 192, 244, 0.1);
+    color: #66c0f4;
+    padding: 0.3rem 0.8rem;
+    border-radius: 2px;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(102, 192, 244, 0.2);
+}
+
+/* 帖子样式 */
+.post {
+    margin-bottom: 1rem;
+    margin-left: 60px;
+    position: relative;
+    padding: 0.5rem 0;
+}
+
+.post.original-post {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.post-header {
+    padding: 0.5rem 0;
+}
+
+.post-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.user-info {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.3rem;
+}
+
+.user-avatar {
+    position: absolute;
+    left: -65px;
+    top: -0.5rem;
+    width: 45px;
+    height: 45px;
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+    object-fit: cover;
+    border: 2px solid #1b2838;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.username {
+    color: #acb2b8;
+    font-weight: 500;
+}
+
+.user-badge {
+    display: inline-block;
+    background-color: #66c0f4;
+    color: white;
+    padding: 0.2rem 0.5rem;
+    border-radius: 2px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.post-time {
+    color: #8f98a0;
+    font-size: 0.85rem;
+}
+
+.post-actions .action-btn {
+    background: none;
+    border: none;
+    color: #8f98a0;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: color 0.2s;
+}
+
+.post-actions .action-btn:hover {
+    color: #66c0f4;
+}
+
+/* 帖子内容 */
+.post-content {
+    padding: 0.5rem 0;
+    color: #acb2b8;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+.post-text p {
+    margin-bottom: 1.2rem;
+}
+
+.post-text ul, .post-text ol {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+}
+
+.post-text li {
+    margin-bottom: 0.5rem;
+}
+
+.post-image {
+    max-width: 100%;
+    border-radius: 4px;
+    margin: 1rem 0;
+}
+
+/* 帖子底部 */
+.post-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0;
+    margin-top: 0.8rem;
+    padding-top: 0.8rem;
+    border-top: none;
+}
+
+.post-reactions {
+    display: flex;
+    gap: 0.8rem;
+}
+
+.reaction-btn {
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #8f98a0;
+    padding: 0.5rem 1rem;
+    border-radius: 3px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.reaction-btn:hover {
+    background-color: rgba(102, 192, 244, 0.1);
+    border-color: #66c0f4;
+    color: #66c0f4;
+}
+
+.post-stats {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #8f98a0;
+    font-size: 0.85rem;
+}
+
+/* 回复区域 */
+.replies-section {
+    margin-top: 2rem;
+    position: relative;
+}
+
+.replies-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.5rem;
+    background-color: #1b2838;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 2px;
+}
+
+.replies-header h2 {
+    font-size: 1.1rem;
+    color: #acb2b8;
+    margin: 0;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.replies-header h2 i {
+    color: #66c0f4;
+    font-size: 1rem;
+}
+
+.sort-controls {
+    display: flex;
+    gap: 1rem;
+}
+
+.sort-btn {
+    background: none;
+    border: none;
+    color: #8f98a0;
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 0.4rem 0.8rem;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all 0.2s;
+}
+
+.sort-btn:hover {
+    color: #66c0f4;
+    background: rgba(102, 192, 244, 0.1);
+}
+
+.sort-btn.active {
+    color: #66c0f4;
+    background: rgba(102, 192, 244, 0.1);
+}
+
+.sort-btn i {
+    font-size: 0.8rem;
+}
+
+.replies {
+    margin-top: 1rem;
+    position: relative;
+}
+
+.replies::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.08);
+    transition: background-color 0.2s ease;
+}
+
+.replies:hover::after {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* 调整回复间距 */
+.post.reply:first-child {
+    margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+    .replies-header {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .sort-controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+/* 回复列表 */
+.reply-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* 移除回复帖子的背景 */
+.post.reply {
+    background: none;
+    padding: 0.5rem 0;
+}
+
+.post.reply .post-content {
+    padding: 0;
+}
+
+.post.reply .post-text {
+    margin: 0.5rem 0;
+}
+
+.post.reply .post-footer {
+    padding: 0.5rem 0;
+    border-top: none;
+}
+
+.reply-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.reply-actions .action-btn {
+    background: none;
+    border: none;
+    color: #8f98a0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+.reply-actions .action-btn:hover {
+    color: #66c0f4;
+}
+
+/* 回复编辑器 - 折叠状态 */
+.reply-editor {
+    background-color: #273d54;
+    border-radius: 20px;
+    margin: 1rem 0;
+    transition: all 0.15s ease;
+    overflow: hidden;
+    min-height: 38px;
+    cursor: text;
+}
+
+.reply-editor.collapsed {
+    min-height: 38px;
+    height: 38px;
+    cursor: text;
+}
+
+.reply-editor.collapsed .editor-controls {
+    display: none;
+}
+
+.reply-editor.collapsed textarea {
+    height: 38px;
+    padding: 8px 20px;
+    cursor: text;
+}
+
+.reply-editor textarea {
+    width: 100%;
+    height: 38px;
+    padding: 8px 20px;
+    background: none;
+    border: none;
+    color: #acb2b8;
+    font-size: 0.95rem;
+    resize: none;
+    transition: all 0.15s ease;
+}
+
+/* 回复编辑器 - 展开状态 */
+.reply-editor:not(.collapsed) {
+    box-shadow: 0 0 0 2px rgba(102, 192, 244, 0.3);
+}
+
+.reply-editor:not(.collapsed) textarea {
+    height: 100px;
+    resize: vertical;
+    padding: 12px 20px;
+}
+
+.editor-controls {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* 移除格式化工具栏 */
+.formatting-tools {
+    display: none;
+}
+
+/* 隐藏菜单按钮 */
+.post-actions {
+    display: none;
+}
+
+/* 优化编辑器按钮 */
+.editor-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-right: 8px;
+}
+
+.cancel-btn {
+    background: none;
+    border: none;
+    color: #8f98a0;
+    padding: 8px 16px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.cancel-btn:hover {
+    color: #acb2b8;
+}
+
+.submit-btn {
+    background-color: #66c0f4;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.submit-btn:hover {
+    background-color: #4b8bb3;
+}
+
+/* 优化占位符文本 */
+.reply-editor textarea::placeholder {
+    color: #8f98a0;
+    font-size: 0.95rem;
+}
+
+.reply-editor:not(.collapsed) textarea::placeholder {
+    color: #66c0f4;
+}
+
+@media (max-width: 768px) {
+    .reply-editor.collapsed textarea {
+        padding: 8px 16px;
+    }
+    
+    .reply-editor textarea {
+        padding: 12px 16px;
+    }
+    
+    .submit-btn {
+        padding: 6px 16px;
+        font-size: 0.9rem;
+    }
+}
+
+/* 响应式设计 */
+@media (max-width: 1400px) {
+    .discussion-content {
+        max-width: 100%;
+        padding: 1.5rem;
+    }
+
+    .discussion-title-box h1 {
+        font-size: 1.5rem;
+    }
+
+    .discussion-meta-info {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .community-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .discussion-content {
+        padding: 1rem;
+    }
+
+    .post {
+        padding: 1rem;
+    }
+
+    .post-footer {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .post-reactions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .reply-box {
+        padding: 1rem;
+    }
+
+    .discussion-title-box {
+        padding: 0.5rem 0 1rem 0;
+    }
+
+    .discussion-title-box h1 {
+        font-size: 1.3rem;
+    }
+
+    .discussion-tags {
+        flex-wrap: wrap;
+    }
+
+    .post {
+        margin-left: 40px;
+    }
+    
+    .user-avatar {
+        left: -50px;
+        width: 35px;
+        height: 35px;
+    }
+    
+    .nested-replies {
+        margin-left: 40px;
+    }
+
+    .reply-editor.collapsed textarea {
+        font-size: 0.9rem;
+    }
+}
+
+/* 嵌套回复样式 */
+.nested-replies {
+    margin-left: 3rem;
+    position: relative;
+    transition: all 0.3s ease;
+    max-height: 2000px;
+    overflow: hidden;
+    border-left: 2px solid rgba(102, 192, 244, 0.1);
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+}
+
+.nested-replies.collapsed {
+    max-height: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* 优化深层嵌套的缩进 */
+.nested-replies .nested-replies {
+    margin-left: 1.8rem;
+    padding-left: 1.2rem;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .post {
+        margin-left: 50px;
+    }
+    
+    .user-avatar {
+        left: -55px;
+        width: 40px;
+        height: 40px;
+    }
+    
+    .nested-replies {
+        margin-left: 2rem;
+        padding-left: 1rem;
+    }
+    
+    .nested-replies .nested-replies {
+        margin-left: 1.5rem;
+        padding-left: 0.8rem;
+    }
+}
+
+/* 调整回复内容的间距 */
+.nested-reply {
+    position: relative;
+    margin-top: 0.8rem;
+    padding-top: 0.5rem;
+}
+
+.nested-reply:first-child {
+    margin-top: 0.5rem;
+}
+
+/* 悬停效果 */
+.nested-replies:hover {
+    border-left-color: rgba(102, 192, 244, 0.3);
+}
+
+/* 显示/隐藏回复按钮 */
+.toggle-replies {
+    background: none;
+    border: none;
+    color: #8f98a0;
+    font-size: 0.9rem;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s;
+}
+
+.toggle-replies:hover {
+    color: #66c0f4;
+}
+
+.toggle-replies i {
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+.toggle-replies.collapsed i {
+    transform: rotate(-90deg);
+}
+
+/* 回复按钮样式 */
+.reply-button {
+    color: #8f98a0;
+    font-size: 0.9rem;
+    padding: 0;
+}
+
+.reply-button:hover {
+    color: #66c0f4;
+}
+
+.post-footer {
+    padding: 0.5rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* 调整父级回复样式 */
+.post.reply {
+    margin-bottom: 0.5rem;
+}
+
+.post.reply .post-content {
+    padding-bottom: 0.8rem;
+}
+
+.editor-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.cancel-btn {
+    background: none;
+    border: none;
+    color: #8f98a0;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.cancel-btn:hover {
+    color: #acb2b8;
+}
+
+.reply-editor.collapsed textarea::placeholder {
+    color: #8f98a0;
+}
+
+.reply-editor:not(.collapsed) textarea::placeholder {
+    color: #66c0f4;
+}
+
+.tool-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+}
+
+.tool-btn:hover {
+    background-color: rgba(102, 192, 244, 0.1);
+}
+
+/* 优化提交按钮 */
+.submit-btn {
+    background-color: #66c0f4;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.submit-btn:hover {
+    background-color: #4b8bb3;
+    transform: translateY(-1px);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+
+/* 编辑器动画 */
+.reply-editor textarea {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (max-width: 768px) {
+    .tool-btn {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .submit-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+}
+
+/* 移除原创帖子的回复按钮 */
+.post.original-post .post-footer {
+    display: none;
+}
+
+/* 回复之间的分隔 */
+.post.reply, .nested-reply {
+    position: relative;
+    margin-bottom: 0.5rem;
+    padding-top: 1rem;
+}
+
+/* 分隔线基础样式 */
+.post.reply::before, .nested-reply::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.08);
+    transition: background-color 0.2s ease;
+}
+
+/* 分隔线悬停效果 */
+.post.reply:hover::before, 
+.nested-reply:hover::before,
+.replies:hover::after {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* 第一个回复不显示分隔线 */
+.post.reply:first-child::before, 
+.nested-replies > .nested-reply:first-child::before {
+    display: none;
+}
+
+.reply-reference {
+    color: #66c0f4;
+    font-size: 0.9rem;
+    margin-right: 0.5rem;
+}
+
+.reply-reference:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* 优化回复文本样式 */
+.post-text {
+    color: #acb2b8;
+    line-height: 1.6;
+}
+
+.post-text p {
+    margin: 0;
+    word-break: break-word;
+}
+
+/* 隐藏没有回复时的切换按钮 */
+.toggle-replies {
+    display: none;
+}
+
+/* 调整回复按钮间距 */
+.post-footer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0;
+    margin-top: 0.5rem;
+}
+
+/* 优化回复按钮样式 */
+.reply-button {
+    background: none;
+    border: none;
+    color: #8f98a0;
+    font-size: 0.9rem;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s;
+}
+
+.reply-button:hover {
+    color: #66c0f4;
+}
+
+.reply-button i {
+    font-size: 0.8rem;
+}
+
+/* 左侧回复按钮 */
+.post-footer .reply-button {
+    background: none;
+    border: none;
+    color: #8f98a0;
+    font-size: 0.9rem;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s;
+}
+
+/* 右侧显示/隐藏回复按钮 */
+.post-footer .toggle-replies {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: #8f98a0;
+    font-size: 0.9rem;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s;
+}
+
+.toggle-replies:hover,
+.reply-button:hover {
+    color: #66c0f4;
+}
+
+.toggle-replies i {
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+/* 调整回复内容和分隔线的间距 */
+.post-text {
+    margin-bottom: 0.8rem;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .post-footer {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .post-footer .toggle-replies {
+        margin-left: 0;
+    }
+}
+
+/* 确保嵌套回复容器有足够的底部空间 */
+.nested-replies {
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+}
+
+/* 确认弹窗样式 */
+.dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.dialog {
+    background-color: #1b2838;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    animation: dialogShow 0.2s ease;
+}
+
+@keyframes dialogShow {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dialog-header {
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dialog-header h3 {
+    margin: 0;
+    color: #acb2b8;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.dialog-close {
+    background: none;
+    border: none;
+    color: #8f98a0;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: color 0.2s;
+}
+
+.dialog-close:hover {
+    color: #66c0f4;
+}
+
+.dialog-content {
+    padding: 1.5rem;
+    color: #8f98a0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.dialog-actions {
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dialog-btn {
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.dialog-btn.cancel-dialog {
+    background: none;
+    border: none;
+    color: #8f98a0;
+}
+
+.dialog-btn.cancel-dialog:hover {
+    color: #acb2b8;
+}
+
+.dialog-btn.confirm-dialog {
+    background-color: #c33;
+    color: white;
+    border: none;
+}
+
+.dialog-btn.confirm-dialog:hover {
+    background-color: #b22;
+}
+
+@media (max-width: 768px) {
+    .dialog {
+        margin: 0 1rem;
+    }
+    
+    .dialog-header {
+        padding: 0.8rem 1rem;
+    }
+    
+    .dialog-content {
+        padding: 1rem;
+    }
+    
+    .dialog-actions {
+        padding: 0.8rem 1rem;
+    }
+    
+    .dialog-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+}

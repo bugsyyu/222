@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>社区 - EduWeb</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/community.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="main-header">
+        <nav class="nav-container">
+            <div class="logo">
+                <a href="index.html"><h1>EduWeb</h1></a>
+            </div>
+            <div class="nav-links">
+                <a href="courses.html">课程</a>
+                <a href="community.html" class="active">社区</a>
+                <a href="about.html">关于</a>
+            </div>
+            <div class="auth-buttons">
+                <a href="login.html" class="btn btn-login">登录</a>
+                <a href="register.html" class="btn btn-register">注册</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="community-container">
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">主题分类</h3>
+                <ul class="topic-list">
+                    <li class="topic-item active">
+                        <span class="topic-icon"><i class="fas fa-globe"></i></span>
+                        <span class="topic-name">综合讨论</span>
+                    </li>
+                    <li class="topic-item">
+                        <span class="topic-icon"><i class="fas fa-comment-dots"></i></span>
+                        <span class="topic-name">意见反馈</span>
+                    </li>
+                    <li class="topic-item">
+                        <span class="topic-icon"><i class="fas fa-code"></i></span>
+                        <span class="topic-name">技术交流</span>
+                    </li>
+                    <li class="topic-item">
+                        <span class="topic-icon"><i class="fas fa-paint-brush"></i></span>
+                        <span class="topic-name">设计分享</span>
+                    </li>
+                    <li class="topic-item">
+                        <span class="topic-icon"><i class="fas fa-rocket"></i></span>
+                        <span class="topic-name">经验心得</span>
+                    </li>
+                    <li class="topic-item">
+                        <span class="topic-icon"><i class="fas fa-robot"></i></span>
+                        <span class="topic-name">人工智能</span>
+                    </li>
+                    <li class="topic-item">
+                        <span class="topic-icon"><i class="fas fa-bullhorn"></i></span>
+                        <span class="topic-name">活动公告</span>
+                    </li>
+                    <li class="topic-item">
+                        <span class="topic-icon"><i class="fas fa-handshake"></i></span>
+                        <span class="topic-name">自我介绍</span>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-header">
+                <h1 class="content-title">讨论区</h1>
+                <a href="new-discussion.html" class="new-discussion-btn">
+                    <i class="fas fa-plus"></i>
+                    发起讨论
+                </a>
+            </div>
+
+            <div class="view-controls">
+                <button class="view-mode-btn active">
+                    <i class="fas fa-th-list"></i>
+                    列表视图
+                </button>
+                <button class="view-mode-btn">
+                    <i class="fas fa-grip-horizontal"></i>
+                    网格视图
+                </button>
+            </div>
+
+            <div class="discussion-list">
+                <article class="discussion-card">
+                    <a href="discussion-detail.html" class="discussion-link">
+                        <div class="discussion-header">
+                            <div class="discussion-meta">
+                                <div class="user-avatar">
+                                    <img src="images/avatars/user1.jpg" alt="用户头像">
+                                </div>
+                                <div class="discussion-info">
+                                    <h3 class="discussion-title">[更新日志] 12月11日 - 移动端优化更新</h3>
+                                    <div class="discussion-details">
+                                        <span>作者：张三</span>
+                                        <span>•</span>
+                                        <span>3天前</span>
+                                        <span class="featured-tag">置顶</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="discussion-stats">
+                                <div class="stat-item">
+                                    <i class="fas fa-comment"></i>
+                                    <span>48 回复</span>
+                                </div>
+                                <div class="stat-item">
+                                    <i class="fas fa-eye"></i>
+                                    <span>1.2k 浏览</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+
+                <article class="discussion-card">
+                    <a href="discussion-detail.html" class="discussion-link">
+                        <div class="discussion-header">
+                            <div class="discussion-meta">
+                                <div class="user-avatar">
+                                    <img src="images/avatars/user2.jpg" alt="用户头像">
+                                </div>
+                                <div class="discussion-info">
+                                    <h3 class="discussion-title">如何提高学习效率？分享一些个人经验</h3>
+                                    <div class="discussion-details">
+                                        <span>作者：李四</span>
+                                        <span>•</span>
+                                        <span>5小时前</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="discussion-stats">
+                                <div class="stat-item">
+                                    <i class="fas fa-comment"></i>
+                                    <span>16 回复</span>
+                                </div>
+                                <div class="stat-item">
+                                    <i class="fas fa-eye"></i>
+                                    <span>324 浏览</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- 更多讨论卡片 -->
+            </div>
+        </main>
+    </div>
+
+    <script src="js/community.js"></script>
+</body>
+</html> 

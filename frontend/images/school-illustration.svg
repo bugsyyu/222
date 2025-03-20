@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- 背景 -->
+    <rect width="400" height="300" fill="#F7F8FA"/>
+    
+    <!-- 学校建筑主体 -->
+    <path d="M100 250h200v-150h-200z" fill="#FFFFFF" stroke="#2B90D9" stroke-width="4"/>
+    
+    <!-- 屋顶 -->
+    <path d="M80 100L200 50L320 100" fill="#2B90D9" stroke="#2B90D9" stroke-width="4"/>
+    
+    <!-- 门 -->
+    <rect x="180" y="190" width="40" height="60" fill="#2B90D9"/>
+    
+    <!-- 窗户 -->
+    <rect x="130" y="130" width="30" height="40" fill="#E8F4FF" stroke="#2B90D9" stroke-width="2"/>
+    <rect x="185" y="130" width="30" height="40" fill="#E8F4FF" stroke="#2B90D9" stroke-width="2"/>
+    <rect x="240" y="130" width="30" height="40" fill="#E8F4FF" stroke="#2B90D9" stroke-width="2"/>
+    
+    <!-- 台阶 -->
+    <rect x="170" y="250" width="60" height="10" fill="#2B90D9"/>
+    <rect x="165" y="260" width="70" height="10" fill="#2B90D9"/>
+    
+    <!-- 装饰元素 -->
+    <circle cx="200" cy="80" r="15" fill="#FFFFFF" stroke="#2B90D9" stroke-width="2"/>
+    
+    <!-- 旗杆 -->
+    <line x1="320" y1="50" x2="320" y2="150" stroke="#2B90D9" stroke-width="2"/>
+    <path d="M320 50L350 65L320 80" fill="#2B90D9"/>
+    
+    <!-- 树木 -->
+    <circle cx="80" cy="230" r="20" fill="#79BD9A"/>
+    <circle cx="320" cy="230" r="20" fill="#79BD9A"/>
+    
+    <!-- 云朵 -->
+    <path d="M50 70C50 70 60 50 80 50C100 50 110 70 110 70C110 70 120 60 135 60C150 60 160 70 160 70C160 85 140 90 110 90C80 90 50 85 50 70Z" fill="#E8F4FF"/>
+    <path d="M280 40C280 40 290 20 310 20C330 20 340 40 340 40C340 40 350 30 365 30C380 30 390 40 390 40C390 55 370 60 340 60C310 60 280 55 280 40Z" fill="#E8F4FF"/>
+</svg> 

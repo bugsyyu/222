@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课程列表 - EduWeb</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/courses.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header class="main-header">
+        <nav class="nav-container">
+            <div class="logo">
+                <h1>EduWeb</h1>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="courses.html" class="active">课程</a>
+                <a href="community.html">社区</a>
+                <a href="about.html">关于</a>
+                <a href="donate.html">捐助</a>
+                <a href="docs.html">文档</a>
+            </div>
+            <div class="auth-buttons">
+                <a href="login.html" class="btn btn-login">登录</a>
+                <a href="register.html" class="btn btn-register">注册</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 主要内容区 -->
+    <main class="container mt-5 pt-5">
+        <!-- 搜索栏 -->
+        <div class="search-section mb-4">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="搜索课程...">
+                <button class="btn btn-primary" type="button">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 学科分类导航 -->
+        <div class="categories-section mb-5">
+            <h2 class="section-title mb-3">学科分类</h2>
+            <div class="row g-3">
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="#" class="category-card">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <i class="bi bi-laptop category-icon"></i>
+                                <h5 class="card-title">计算机科学</h5>
+                                <p class="card-text">编程、人工智能、数据科学等</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="#" class="category-card">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <i class="bi bi-graph-up category-icon"></i>
+                                <h5 class="card-title">商业管理</h5>
+                                <p class="card-text">金融、市场营销、创业等</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="#" class="category-card">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <i class="bi bi-palette category-icon"></i>
+                                <h5 class="card-title">艺术设计</h5>
+                                <p class="card-text">平面设计、UI/UX、动画等</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="#" class="category-card">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <i class="bi bi-translate category-icon"></i>
+                                <h5 class="card-title">语言学习</h5>
+                                <p class="card-text">英语、日语、德语等</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="#" class="category-card">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <i class="bi bi-calculator category-icon"></i>
+                                <h5 class="card-title">数学</h5>
+                                <p class="card-text">代数、统计、微积分等</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="#" class="category-card">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <i class="bi bi-heart-pulse category-icon"></i>
+                                <h5 class="card-title">健康医学</h5>
+                                <p class="card-text">营养学、心理学、医学等</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="#" class="category-card">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <i class="bi bi-music-note-beamed category-icon"></i>
+                                <h5 class="card-title">音乐艺术</h5>
+                                <p class="card-text">乐理、演奏、作曲等</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="#" class="category-card">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <i class="bi bi-book category-icon"></i>
+                                <h5 class="card-title">人文社科</h5>
+                                <p class="card-text">历史、哲学、文学等</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 热门课程 -->
+        <div class="popular-courses-section section-divider">
+            <h2 class="section-title">热门课程</h2>
+            <div class="row g-4" id="popularCourses">
+                <!-- 课程卡片将通过JS动态加载 -->
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="main-footer mt-5">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>关于我们</h4>
+                <p>EduWeb是一个致力于知识共享的开源教育平台</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="courses.html">所有课程</a></li>
+                    <li><a href="community.html">社区讨论</a></li>
+                    <li><a href="docs.html">开发文档</a></li>
+                    <li><a href="help.html">帮助中心</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>资源</h4>
+                <ul>
+                    <li><a href="https://github.com/eduweb">GitHub</a></li>
+                    <li><a href="blog.html">博客</a></li>
+                    <li><a href="donate.html">支持我们</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>联系我们</h4>
+                <ul>
+                    <li><a href="mailto:contact@eduweb.com">Email</a></li>
+                    <li><a href="https://twitter.com/eduweb">Twitter</a></li>
+                    <li><a href="https://discord.gg/eduweb">Discord</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 EduWeb. 采用 AGPLv3 许可证开源</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/courses.js"></script>
+</body>
+</html> 
