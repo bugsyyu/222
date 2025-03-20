@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心 - EduWeb</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/profile.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo">
+            <a href="index.html">EduWeb</a>
+        </div>
+        <nav class="main-nav">
+            <a href="index.html">首页</a>
+            <a href="courses.html">课程</a>
+            <a href="community.html">社区</a>
+            <a href="about.html">关于</a>
+            <a href="donate.html">捐助</a>
+            <a href="docs.html">文档</a>
+        </nav>
+        <div class="user-area">
+            <img src="https://via.placeholder.com/40" class="user-avatar" alt="用户头像" id="userAvatar">
+        </div>
+    </header>
+
+    <div class="page-layout">
+        <!-- 左侧边栏 -->
+        <div class="sidebar">
+            <div class="user-info">
+                <div class="avatar-container">
+                    <img src="https://via.placeholder.com/150" class="user-avatar-large" alt="用户头像" id="profileAvatar">
+                    <button class="avatar-edit-btn" id="changeAvatarBtn"><i class="bi bi-camera"></i></button>
+                </div>
+                <h2 id="userName">用户名</h2>
+                <p id="userEmail">user@example.com</p>
+            </div>
+            
+            <div class="sidebar-menu">
+                <h3>个人中心</h3>
+                <ul>
+                    <li><a href="profile.html" class="active">学习记录</a></li>
+                    <li><a href="#" id="favoritesLink">我的收藏</a></li>
+                    <li><a href="#" id="settingsLink">设置</a></li>
+                    <li><a href="#" id="logoutBtn">退出登录</a></li>
+                </ul>
+            </div>
+            
+            <div class="learning-stats">
+                <h3>学习统计</h3>
+                <div class="stat-item">
+                    <span>学习时长</span>
+                    <span class="stat-value" id="stats-hours">120小时</span>
+                </div>
+                <div class="stat-item">
+                    <span>完成课程</span>
+                    <span class="stat-value" id="stats-courses">5门</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主内容区 -->
+        <div class="main-content">
+            <div class="content-header">
+                <h1>学习记录</h1>
+                <div class="header-actions">
+                    <button class="edit-profile-btn">编辑资料</button>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="section-header">
+                    <h2>最近学习</h2>
+                    <a href="#" class="view-all">查看全部</a>
+                </div>
+                <div class="course-list">
+                    <div class="course-item">
+                        <div class="course-info">
+                            <h3>Python基础课程</h3>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 75%"></div>
+                            </div>
+                            <div class="course-meta">
+                                <span class="progress-text">完成度: 75%</span>
+                                <span class="course-date">3天前</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-item">
+                        <div class="course-info">
+                            <h3>Web开发入门</h3>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 60%"></div>
+                            </div>
+                            <div class="course-meta">
+                                <span class="progress-text">完成度: 60%</span>
+                                <span class="course-date">1周前</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="section-header">
+                    <h2>收藏课程</h2>
+                    <a href="#" id="viewAllFavorites" class="view-all">查看全部</a>
+                </div>
+                <div class="favorites-grid">
+                    <div class="favorite-card">
+                        <div class="favorite-img">
+                            <img src="https://via.placeholder.com/300x200" alt="课程封面">
+                        </div>
+                        <div class="favorite-info">
+                            <h3>数据结构与算法</h3>
+                            <p>讲师：张老师</p>
+                            <div class="favorite-actions">
+                                <a href="#" class="btn-start">开始学习</a>
+                                <button class="btn-unfavorite"><i class="bi bi-star-fill"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="favorite-card">
+                        <div class="favorite-img">
+                            <img src="https://via.placeholder.com/300x200" alt="课程封面">
+                        </div>
+                        <div class="favorite-info">
+                            <h3>机器学习基础</h3>
+                            <p>讲师：李老师</p>
+                            <div class="favorite-actions">
+                                <a href="#" class="btn-start">开始学习</a>
+                                <button class="btn-unfavorite"><i class="bi bi-star-fill"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑资料模态框 -->
+    <div class="modal-overlay" id="editProfileModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>编辑个人资料</h3>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editProfileForm">
+                    <div class="form-group">
+                        <label>用户名</label>
+                        <input type="text" id="editUsername">
+                    </div>
+                    <div class="form-group">
+                        <label>邮箱</label>
+                        <input type="email" id="editEmail">
+                    </div>
+                    <div class="form-group">
+                        <label>个人简介</label>
+                        <textarea id="editBio" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" id="cancelEditBtn">取消</button>
+                <button class="btn-save" id="saveProfileBtn">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页面内容容器 -->
+    <div id="pageContent" class="page-container">
+        <!-- 当前内容显示在这里 -->
+    </div>
+
+    <script src="js/profile.js"></script>
+</body>
+</html> 
