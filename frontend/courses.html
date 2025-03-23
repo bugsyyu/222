@@ -7,21 +7,415 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/courses.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        /* 确保主内容区有适当的顶部间距 - 增加到导航栏距离的两倍 */
+        main.container {
+            padding-top: 160px;
+        }
+        
+        /* 确保页脚距离是原来的两倍 */
+        .main-footer {
+            margin-top: 8rem;
+        }
+
+        /* 确保导航栏始终在最顶层 */
+        .main-header {
+            z-index: 1000 !important;
+        }
+        
+        /* 分类标题和搜索图标容器 */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        /* 搜索图标样式 - 更精致的设计 */
+        .search-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary-color);
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(26, 106, 173, 0.25);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .search-icon:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.2) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .search-icon:hover {
+            background-color: #1a6aad;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(26, 106, 173, 0.35);
+        }
+        
+        .search-icon:hover:before {
+            opacity: 1;
+        }
+        
+        .search-icon i {
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+        }
+        
+        .search-icon:hover i {
+            transform: scale(1.1);
+        }
+        
+        /* 搜索覆盖层 */
+        .search-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 0;
+        }
+        
+        .search-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* 搜索表单和按钮相关样式 */
+        .search-form {
+            display: flex;
+            align-items: center;
+            gap: 4px; /* 减小间距从8px到4px */
+            width: 750px;
+            max-width: 90%;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-radius: 20px;
+            position: relative;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.15));
+        }
+
+        /* 搜索框打开时的放大效果 - 明显增强放大效果 */
+        .search-form.focused {
+            transform: scale(1.08) !important;
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.25));
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+        }
+
+        /* 搜索框输入样式 */
+        .overlay-search-input {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.95);
+            border: none;
+            border-radius: 16px 0 0 16px;
+            padding: 15px 20px;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            height: 58px;
+            outline: none; /* 移除黑色焦点边框 */
+        }
+
+        .overlay-search-input:focus {
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+        }
+
+        /* 搜索按钮样式优化 - 恢复蓝色渐变 */
+        #overlaySearchButton {
+            height: 58px;
+            min-width: 120px; /* 增加宽度使文字不挤 */
+            background: linear-gradient(135deg, #1e88e5 0%, #1565c0 100%);
+            color: white;
+            border: none;
+            border-radius: 0 16px 16px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(26, 106, 173, 0.25);
+            font-weight: 500;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* 让搜索图标和文字间距更合理 */
+        #overlaySearchButton i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* 波纹效果增强 */
+        .ripple-effect {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%);
+            transform: scale(0);
+            animation: glass-ripple 0.8s cubic-bezier(0.17, 0.67, 0.45, 0.97);
+            pointer-events: none;
+            mix-blend-mode: overlay; /* 更适合蓝色按钮的混合模式 */
+            z-index: 1;
+        }
+
+        /* 3D玻璃波纹动画 */
+        @keyframes glass-ripple {
+            0% {
+                transform: scale(0);
+                opacity: 0.8;
+                filter: blur(0px);
+            }
+            50% {
+                opacity: 0.6;
+                filter: blur(2px);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0;
+                filter: blur(4px);
+            }
+        }
+
+        /* 搜索按钮hover效果增强 */
+        #overlaySearchButton:hover {
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+            box-shadow: 0 8px 20px rgba(26, 106, 173, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* 搜索按钮按下效果 */
+        #overlaySearchButton:active {
+            transform: translateY(1px) scale(0.98);
+            background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%);
+            box-shadow: 0 4px 10px rgba(26, 106, 173, 0.2);
+        }
+
+        /* 深色模式样式调整 */
+        @media (prefers-color-scheme: dark) {
+            .overlay-search-input {
+                background-color: rgba(30, 30, 30, 0.95);
+                color: rgba(255, 255, 255, 0.95);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                border: 1px solid rgba(255, 255, 255, 0.07);
+            }
+            
+            .overlay-search-input::placeholder {
+                color: rgba(200, 200, 200, 0.6);
+            }
+            
+            .overlay-search-input:focus {
+                box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+                border-color: rgba(255, 255, 255, 0.1);
+            }
+
+            #overlaySearchButton {
+                background: linear-gradient(135deg, #0d47a1 0%, #1565c0 100%);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            }
+            
+            #overlaySearchButton:hover {
+                background: linear-gradient(135deg, #1565c0 0%, #1976d2 100%);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            }
+            
+            #overlaySearchButton:active {
+                background: linear-gradient(135deg, #0d47a1 0%, #1565c0 100%);
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            }
+            
+            .ripple-effect {
+                background: radial-gradient(circle, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
+                mix-blend-mode: overlay;
+            }
+        }
+        
+        /* 搜索加载动画 */
+        .search-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2500;
+            /* 完全移除任何背景和模糊效果 */
+            background-color: transparent !important;
+            background: none !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            pointer-events: none; /* 允许点击穿透到底层元素 */
+        }
+        
+        .search-animation.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto; /* 当活跃时恢复交互 */
+        }
+        
+        /* 增强搜索加载动画的可见性 */
+        .search-loading {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            perspective: 600px;
+            transform: translateZ(20px);
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
+        }
+        
+        .search-loading div {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            animation: search-loading 1.5s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            box-shadow: 0 0 15px rgba(26, 106, 173, 0.8), 0 0 10px rgba(26, 106, 173, 0.5);
+        }
+        
+        @keyframes search-loading {
+            0% {
+                transform: scale(1) translateZ(0);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.3) translateZ(30px);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(1) translateZ(0);
+                opacity: 1;
+            }
+        }
+        
+        .search-loading div:nth-child(1) {
+            top: 10px;
+            left: 10px;
+            animation-delay: 0s;
+            background-color: #2196f3;
+        }
+        
+        .search-loading div:nth-child(2) {
+            top: 10px;
+            left: 32px;
+            animation-delay: -0.2s;
+            background-color: #03a9f4;
+        }
+        
+        .search-loading div:nth-child(3) {
+            top: 10px;
+            left: 54px;
+            animation-delay: -0.4s;
+            background-color: #00bcd4;
+        }
+        
+        .search-loading div:nth-child(4) {
+            top: 32px;
+            left: 10px;
+            animation-delay: -0.2s;
+            background-color: #3f51b5;
+        }
+        
+        .search-loading div:nth-child(5) {
+            top: 32px;
+            left: 32px;
+            animation-delay: -0.4s;
+            background-color: #2196f3;
+        }
+        
+        .search-loading div:nth-child(6) {
+            top: 32px;
+            left: 54px;
+            animation-delay: -0.6s;
+            background-color: #03a9f4;
+        }
+        
+        .search-loading div:nth-child(7) {
+            top: 54px;
+            left: 10px;
+            animation-delay: -0.4s;
+            background-color: #673ab7;
+        }
+        
+        .search-loading div:nth-child(8) {
+            top: 54px;
+            left: 32px;
+            animation-delay: -0.6s;
+            background-color: #3f51b5;
+        }
+        
+        .search-loading div:nth-child(9) {
+            top: 54px;
+            left: 54px;
+            animation-delay: -0.8s;
+            background-color: #2196f3;
+        }
+
+        /* 当搜索覆盖层处于活动状态时，确保搜索表单可见 */
+        .search-overlay.active .search-form {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* 删除冲突的floating动画，以确保focused效果生效 */
+        .search-form {
+            display: flex;
+            width: 800px;
+            max-width: 90%;
+            position: relative;
+            transform: translateY(40px) scale(0.95);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.15));
+        }
+
+        /* 搜索动画打开时禁用漂浮动画 */
+        .search-form.focused {
+            animation: none !important;
+        }
+    </style>
 </head>
 <body>
     <!-- 导航栏 -->
     <header class="main-header">
         <nav class="nav-container">
             <div class="logo">
-                <h1>EduWeb</h1>
+                <a href="index.html"><h1>EduWeb</h1></a>
             </div>
             <div class="nav-links">
                 <a href="index.html">首页</a>
                 <a href="courses.html" class="active">课程</a>
                 <a href="community.html">社区</a>
-                <a href="about.html">关于</a>
-                <a href="donate.html">捐助</a>
-                <a href="docs.html">文档</a>
+                <a href="dashboard.html" data-require-login="true">仪表盘</a>
             </div>
             <div class="auth-buttons">
                 <a href="login.html" class="btn btn-login">登录</a>
@@ -30,110 +424,44 @@
         </nav>
     </header>
 
-    <!-- 主要内容区 -->
-    <main class="container mt-5 pt-5">
-        <!-- 搜索栏 -->
-        <div class="search-section mb-4">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="搜索课程...">
-                <button class="btn btn-primary" type="button">
-                    <i class="bi bi-search"></i>
-                </button>
-            </div>
+    <!-- 搜索覆盖层 -->
+    <div class="search-overlay" id="searchOverlay">
+        <form class="search-form" onsubmit="event.preventDefault(); document.getElementById('overlaySearchButton').click();">
+            <input type="text" class="overlay-search-input" placeholder="输入课程名称、关键词或讲师名..." id="overlaySearchInput">
+            <button type="submit" id="overlaySearchButton">
+                <i class="bi bi-search"></i>搜索
+            </button>
+        </form>
+    </div>
+    
+    <!-- 搜索加载动画 -->
+    <div class="search-animation" id="searchAnimation">
+        <div class="search-loading">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
         </div>
+    </div>
 
+    <!-- 主要内容区 -->
+    <main class="container">
         <!-- 学科分类导航 -->
         <div class="categories-section mb-5">
-            <h2 class="section-title mb-3">学科分类</h2>
-            <div class="row g-3">
-                <div class="col-6 col-md-4 col-lg-3">
-                    <a href="#" class="category-card">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <i class="bi bi-laptop category-icon"></i>
-                                <h5 class="card-title">计算机科学</h5>
-                                <p class="card-text">编程、人工智能、数据科学等</p>
-                            </div>
-                        </div>
-                    </a>
+            <div class="section-header">
+                <h2 class="section-title">学科分类</h2>
+                <div class="search-icon" id="searchIcon">
+                    <i class="bi bi-search"></i>
                 </div>
-                <div class="col-6 col-md-4 col-lg-3">
-                    <a href="#" class="category-card">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <i class="bi bi-graph-up category-icon"></i>
-                                <h5 class="card-title">商业管理</h5>
-                                <p class="card-text">金融、市场营销、创业等</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-6 col-md-4 col-lg-3">
-                    <a href="#" class="category-card">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <i class="bi bi-palette category-icon"></i>
-                                <h5 class="card-title">艺术设计</h5>
-                                <p class="card-text">平面设计、UI/UX、动画等</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-6 col-md-4 col-lg-3">
-                    <a href="#" class="category-card">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <i class="bi bi-translate category-icon"></i>
-                                <h5 class="card-title">语言学习</h5>
-                                <p class="card-text">英语、日语、德语等</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-6 col-md-4 col-lg-3">
-                    <a href="#" class="category-card">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <i class="bi bi-calculator category-icon"></i>
-                                <h5 class="card-title">数学</h5>
-                                <p class="card-text">代数、统计、微积分等</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-6 col-md-4 col-lg-3">
-                    <a href="#" class="category-card">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <i class="bi bi-heart-pulse category-icon"></i>
-                                <h5 class="card-title">健康医学</h5>
-                                <p class="card-text">营养学、心理学、医学等</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-6 col-md-4 col-lg-3">
-                    <a href="#" class="category-card">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <i class="bi bi-music-note-beamed category-icon"></i>
-                                <h5 class="card-title">音乐艺术</h5>
-                                <p class="card-text">乐理、演奏、作曲等</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-6 col-md-4 col-lg-3">
-                    <a href="#" class="category-card">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <i class="bi bi-book category-icon"></i>
-                                <h5 class="card-title">人文社科</h5>
-                                <p class="card-text">历史、哲学、文学等</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
+            </div>
+            
+            <div class="row g-3" id="categoriesContainer">
+                <!-- 分类卡片将由JavaScript动态填充 -->
             </div>
         </div>
 
@@ -158,24 +486,8 @@
                 <ul>
                     <li><a href="courses.html">所有课程</a></li>
                     <li><a href="community.html">社区讨论</a></li>
-                    <li><a href="docs.html">开发文档</a></li>
-                    <li><a href="help.html">帮助中心</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>资源</h4>
-                <ul>
-                    <li><a href="https://github.com/eduweb">GitHub</a></li>
-                    <li><a href="blog.html">博客</a></li>
-                    <li><a href="donate.html">支持我们</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>联系我们</h4>
-                <ul>
-                    <li><a href="mailto:contact@eduweb.com">Email</a></li>
-                    <li><a href="https://twitter.com/eduweb">Twitter</a></li>
-                    <li><a href="https://discord.gg/eduweb">Discord</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
                 </ul>
             </div>
         </div>
@@ -186,6 +498,10 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/auth.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/categories.js"></script>
     <script src="js/courses.js"></script>
 </body>
 </html> 

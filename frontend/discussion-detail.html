@@ -8,6 +8,70 @@
     <link rel="stylesheet" href="css/community.css">
     <link rel="stylesheet" href="css/discussion.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-image: url('images/new-back.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-color: transparent !important;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* Add a light overlay to make the background lighter */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.6);
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        /* Discussion container background override */
+        .discussion-container {
+            background: transparent !important;
+            position: relative;
+            z-index: 2;
+            flex: 1 0 auto;
+        }
+        
+        /* Remove existing linear gradient background */
+        .discussion-container::before {
+            background-image: none !important;
+        }
+        
+        /* Ensure all content appears above overlay */
+        .breadcrumb {
+            background-color: rgba(255, 255, 255, 0.7) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            position: relative;
+            z-index: 2;
+            border-radius: 12px;
+            margin: 0 1rem 1rem 1rem;
+        }
+        
+        /* Ensure main content appears above overlay */
+        .discussion-main {
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* 确保页脚位置正确 */
+        .main-footer {
+            position: relative;
+            z-index: 3;
+            margin-top: auto;
+        }
+    </style>
 </head>
 <body>
     <header class="main-header">
@@ -16,64 +80,26 @@
                 <a href="index.html"><h1>EduWeb</h1></a>
             </div>
             <div class="nav-links">
+                <a href="index.html">首页</a>
                 <a href="courses.html">课程</a>
                 <a href="community.html" class="active">社区</a>
-                <a href="about.html">关于</a>
+                <a href="dashboard.html" data-require-login="true">仪表盘</a>
             </div>
             <div class="auth-buttons">
+                <!-- 此区域将由auth.js根据登录状态动态更新 -->
                 <a href="login.html" class="btn btn-login">登录</a>
                 <a href="register.html" class="btn btn-register">注册</a>
             </div>
         </nav>
     </header>
 
-    <div class="community-container">
-        <aside class="sidebar">
-            <div class="sidebar-section">
-                <h3 class="sidebar-title">主题分类</h3>
-                <ul class="topic-list">
-                    <li class="topic-item active">
-                        <span class="topic-icon"><i class="fas fa-globe"></i></span>
-                        <span class="topic-name">综合讨论</span>
-                    </li>
-                    <li class="topic-item">
-                        <span class="topic-icon"><i class="fas fa-comment-dots"></i></span>
-                        <span class="topic-name">意见反馈</span>
-                    </li>
-                    <li class="topic-item">
-                        <span class="topic-icon"><i class="fas fa-code"></i></span>
-                        <span class="topic-name">技术交流</span>
-                    </li>
-                    <li class="topic-item">
-                        <span class="topic-icon"><i class="fas fa-paint-brush"></i></span>
-                        <span class="topic-name">设计分享</span>
-                    </li>
-                    <li class="topic-item">
-                        <span class="topic-icon"><i class="fas fa-rocket"></i></span>
-                        <span class="topic-name">经验心得</span>
-                    </li>
-                    <li class="topic-item">
-                        <span class="topic-icon"><i class="fas fa-robot"></i></span>
-                        <span class="topic-name">人工智能</span>
-                    </li>
-                    <li class="topic-item">
-                        <span class="topic-icon"><i class="fas fa-bullhorn"></i></span>
-                        <span class="topic-name">活动公告</span>
-                    </li>
-                    <li class="topic-item">
-                        <span class="topic-icon"><i class="fas fa-handshake"></i></span>
-                        <span class="topic-name">自我介绍</span>
-                    </li>
-                </ul>
-            </div>
-        </aside>
-
-        <main class="main-content discussion-detail">
+    <div class="discussion-container">
+        <main class="discussion-main full-width">
             <!-- 面包屑导航 -->
             <div class="breadcrumb">
                 <a href="community.html">社区</a>
                 <i class="fas fa-chevron-right"></i>
-                <a href="community.html?category=announcements">综合讨论</a>
+                <a href="community.html?category=announcements">所有讨论</a>
                 <i class="fas fa-chevron-right"></i>
                 <span>[更新日志] 12月11日 - 移动端优化更新</span>
             </div>
@@ -86,15 +112,11 @@
                     <div class="discussion-meta-info">
                         <div class="meta-item">
                             <i class="fas fa-folder"></i>
-                            <span>综合讨论</span>
+                            <span>所有讨论</span>
                         </div>
                         <div class="meta-item">
                             <i class="fas fa-clock"></i>
                             <span>发布于 2024年1月4日 14:04</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-eye"></i>
-                            <span>1.2k 浏览</span>
                         </div>
                         <div class="meta-item">
                             <i class="fas fa-comment"></i>
@@ -108,398 +130,251 @@
                     </div>
                 </div>
 
-                <!-- 原始帖子 -->
-                <article class="post original-post">
-                    <div class="post-header">
-                        <div class="post-meta">
-                            <div class="user-info">
-                                <div class="user-avatar">
-                                    <img src="images/avatars/user1.jpg" alt="用户头像">
-                                </div>
-                                <div class="user-details">
-                                    <h3 class="username">张三</h3>
-                                    <span class="user-badge staff">管理员</span>
-                                    <span class="post-time">2024年1月4日 14:04</span>
-                                </div>
-                            </div>
-                            <div class="post-actions">
-                                <button class="action-btn">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </button>
+                <!-- 帖子区域 -->
+                <div class="posts-container">
+                    <!-- 原始帖子 -->
+                    <article class="post-card original-post" id="post1">
+                        <div class="post-card-left">
+                            <div class="post-avatar">
+                                <img src="images/default-avatar.svg" alt="用户头像" onerror="this.src='images/default-avatar.svg'">
+                                <div class="user-role-badge staff">管理员</div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="post-content">
-                        <div class="post-text">
-                            <p>大家好！</p>
-                            <p>我们很高兴地宣布，今天我们推出了一系列移动端的优化更新。这些更新主要包括：</p>
-                            <ul>
-                                <li>优化了移动端的页面加载速度</li>
-                                <li>改进了移动端的用户界面交互体验</li>
-                                <li>修复了一些已知的显示问题</li>
-                            </ul>
-                            <p>此外，我们还添加了以下新功能：</p>
-                            <ol>
-                                <li>移动端现在支持深色模式</li>
-                                <li>新增了手势操作支持</li>
-                                <li>优化了移动端的图片加载策略</li>
-                            </ol>
-                            <img src="images/update-preview.jpg" alt="更新预览" class="post-image">
-                        </div>
-                        <div class="post-footer">
-                            <button class="reply-button">回复</button>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- 回复区域 -->
-                <div class="replies-section">
-                    <!-- 回复编辑器 -->
-                    <div class="reply-editor collapsed">
-                        <textarea placeholder="写下你的评论..." class="editor-input"></textarea>
-                        <div class="editor-controls">
-                            <div class="editor-actions">
-                                <button class="cancel-btn">取消</button>
-                                <button class="submit-btn">发布评论</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="replies">
-                        <!-- 第1层回复A -->
-                        <article class="post reply">
+                        <div class="post-card-right">
                             <div class="post-header">
-                                <div class="post-meta">
-                                    <div class="user-info">
-                                        <div class="user-avatar">
-                                            <img src="images/avatars/user2.jpg" alt="用户头像">
-                                        </div>
-                                        <div class="user-details">
-                                            <h3 class="username">李四</h3>
-                                            <span class="user-badge member">会员</span>
-                                            <span class="post-time">2024年1月4日 14:30</span>
-                                        </div>
-                                    </div>
+                                <div class="post-author">
+                                    <span class="username">张三</span>
+                                    <span class="post-date">2024年1月4日 14:04</span>
                                 </div>
                             </div>
-                            
                             <div class="post-content">
-                                <div class="post-text">
-                                    <p>移动端的优化确实很及时，特别是深色模式的支持让我很期待！</p>
-                                </div>
-                                <div class="post-footer">
-                                    <button class="reply-button">
-                                        <i class="fas fa-reply"></i>
-                                        回复
-                                    </button>
-                                    <button class="toggle-replies">
-                                        <i class="fas fa-chevron-down"></i>
-                                        显示回复 (2)
-                                    </button>
-                                </div>
+                                <p>大家好！</p>
+                                <p>我们很高兴地宣布，今天我们推出了一系列移动端的优化更新。这些更新主要包括：</p>
+                                <ul>
+                                    <li>优化了移动端的页面加载速度</li>
+                                    <li>改进了移动端的用户界面交互体验</li>
+                                    <li>修复了一些已知的显示问题</li>
+                                </ul>
+                                <p>此外，我们还添加了以下新功能：</p>
+                                <ol>
+                                    <li>移动端现在支持深色模式</li>
+                                    <li>新增了手势操作支持</li>
+                                    <li>优化了移动端的图片加载策略</li>
+                                </ol>
+                                <img src="images/update-preview.jpg" alt="更新预览" class="post-image">
                             </div>
-                        </article>
+                        </div>
+                    </article>
 
-                        <!-- 第1层回复A的嵌套回复 -->
-                        <div class="nested-replies">
-                            <!-- 第2层回复A-1 -->
-                            <article class="post nested-reply">
-                                <div class="post-header">
-                                    <div class="post-meta">
-                                        <div class="user-info">
-                                            <div class="user-avatar">
-                                                <img src="images/avatars/user3.jpg" alt="用户头像">
-                                            </div>
-                                            <div class="user-details">
-                                                <h3 class="username">王五</h3>
-                                                <span class="user-badge member">会员</span>
-                                                <span class="post-time">2024年1月4日 14:40</span>
-                                            </div>
-                                        </div>
+                    <!-- 回复区域 -->
+                    <div class="replies-section">
+                        <h3 class="replies-heading"><i class="fas fa-comments"></i> 回复 (48)</h3>
+                        
+                        <!-- 登录提示 - 未登录时显示 -->
+                        <div class="login-notice" id="replyLoginNotice">
+                            <i class="fas fa-lock"></i>
+                            请<a href="login.html">登录</a>后参与讨论，或<a href="register.html">注册</a>新账号
+                        </div>
+
+                        <!-- 回复编辑器 - 这里保留 -->
+                        
+                        <!-- 回复排序控件 - 替换为简单的排序指示 -->
+                        <div class="replies-sort">
+                            <span class="sort-label"><i class="fas fa-history"></i> 按时间顺序排列（最早优先）</span>
+                        </div>
+                        
+                        <!-- 所有按时间排序的回复列表 -->
+                        <div class="chronological-replies" id="chronologicalReplies">
+                            <!-- 回复将通过JS按时间顺序添加 -->
+                            <!-- 直接回复示例 - 李四 14:30 -->
+                            <article class="post-card reply-card" id="reply1">
+                                <div class="post-card-left">
+                                    <div class="post-avatar">
+                                        <img src="images/default-avatar.svg" alt="用户头像" onerror="this.src='images/default-avatar.svg'">
+                                        <div class="user-role-badge member">会员</div>
                                     </div>
                                 </div>
-                                <div class="post-content">
-                                    <div class="post-text">
-                                        <p><span class="reply-reference">回复 @李四：</span>我也很喜欢深色模式，对眼睛更友好！</p>
-                                    </div>
-                                    <div class="post-footer">
-                                        <button class="reply-button">
-                                            <i class="fas fa-reply"></i>
-                                            回复
-                                        </button>
-                                        <button class="toggle-replies">
-                                            <i class="fas fa-chevron-down"></i>
-                                            显示回复 (2)
-                                        </button>
-                                    </div>
-                                </div>
-                            </article>
-
-                            <!-- 第2层回复A-1的嵌套回复 -->
-                            <div class="nested-replies">
-                                <!-- 第3层回复A-1-1 -->
-                                <article class="post nested-reply">
+                                <div class="post-card-right">
                                     <div class="post-header">
-                                        <div class="post-meta">
-                                            <div class="user-info">
-                                                <div class="user-avatar">
-                                                    <img src="images/avatars/user4.jpg" alt="用户头像">
-                                                </div>
-                                                <div class="user-details">
-                                                    <h3 class="username">赵六</h3>
-                                                    <span class="user-badge member">会员</span>
-                                                    <span class="post-time">2024年1月4日 14:45</span>
-                                                </div>
-                                            </div>
+                                        <div class="post-author">
+                                            <span class="username">李四</span>
+                                            <span class="post-date">2024年1月4日 14:30</span>
                                         </div>
                                     </div>
                                     <div class="post-content">
-                                        <div class="post-text">
-                                            <p><span class="reply-reference">回复 @王五：</span>确实，而且整体的配色也很舒服。</p>
-                                        </div>
-                                        <div class="post-footer">
-                                            <button class="reply-button">
-                                                <i class="fas fa-reply"></i>
-                                                回复
-                                            </button>
-                                            <button class="toggle-replies">
-                                                <i class="fas fa-chevron-down"></i>
-                                                显示回复 (2)
-                                            </button>
-                                        </div>
+                                        <p>移动端的优化确实很及时，特别是深色模式的支持让我很期待！</p>
                                     </div>
-                                </article>
-
-                                <!-- 第3层回复A-1-1的嵌套回复 -->
-                                <div class="nested-replies">
-                                    <!-- 第4层回复 -->
-                                    <article class="post nested-reply">
-                                        <div class="post-header">
-                                            <div class="post-meta">
-                                                <div class="user-info">
-                                                    <div class="user-avatar">
-                                                        <img src="images/avatars/user9.jpg" alt="用户头像">
-                                                    </div>
-                                                    <div class="user-details">
-                                                        <h3 class="username">郑十一</h3>
-                                                        <span class="user-badge member">会员</span>
-                                                        <span class="post-time">2024年1月4日 15:10</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="post-content">
-                                            <div class="post-text">
-                                                <p><span class="reply-reference">回复 @赵六：</span>配色确实很棒，尤其是深色模式下的对比度。</p>
-                                            </div>
-                                            <div class="post-footer">
-                                                <button class="reply-button">
-                                                    <i class="fas fa-reply"></i>
-                                                    回复
-                                                </button>
-                                                <button class="toggle-replies">
-                                                    <i class="fas fa-chevron-down"></i>
-                                                    显示回复 (2)
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </article>
-
-                                    <!-- 第5层及以上回复 -->
+                                    <div class="post-actions">
+                                        <button class="post-reply-btn" data-require-login="true" data-parent-id="reply1" data-parent-user="李四">
+                                            <i class="fas fa-reply"></i>
+                                            回复
+                                        </button>
+                                    </div>
+                                    
+                                    <!-- 直接嵌套回复区域 - 最多1级 -->
                                     <div class="nested-replies">
-                                        <!-- 第5层回复 -->
-                                        <article class="post nested-reply">
-                                            <div class="post-header">
-                                                <div class="post-meta">
-                                                    <div class="user-info">
-                                                        <div class="user-avatar">
-                                                            <img src="images/avatars/user10.jpg" alt="用户头像">
-                                                        </div>
-                                                        <div class="user-details">
-                                                            <h3 class="username">王十二</h3>
-                                                            <span class="user-badge member">会员</span>
-                                                            <span class="post-time">2024年1月4日 15:15</span>
-                                                        </div>
-                                                    </div>
+                                        <!-- 嵌套回复示例 -->
+                                        <article class="post-card nested-reply-card" id="nested1-nested" data-original-id="nested1">
+                                            <div class="post-card-left">
+                                                <div class="post-avatar">
+                                                    <img src="images/default-avatar.svg" alt="用户头像" onerror="this.src='images/default-avatar.svg'">
+                                                    <div class="user-role-badge member">会员</div>
                                                 </div>
                                             </div>
-                                            <div class="post-content">
-                                                <div class="post-text">
-                                                    <p><span class="reply-reference">回复 @郑十一：</span>对比度的处理确实很专业。</p>
+                                            <div class="post-card-right">
+                                                <div class="post-header">
+                                                    <div class="post-author">
+                                                        <span class="username">王五</span>
+                                                        <span class="post-date">2024年1月4日 14:40</span>
+                                                    </div>
                                                 </div>
-                                                <div class="post-footer">
-                                                    <button class="reply-button">
+                                                <div class="post-content">
+                                                    <p>我已经更新了最新版，深色模式非常棒，对眼睛很友好！</p>
+                                                </div>
+                                                <div class="post-actions">
+                                                    <button class="post-reply-btn" data-require-login="true" data-parent-id="nested1" data-parent-user="王五">
                                                         <i class="fas fa-reply"></i>
                                                         回复
-                                                    </button>
-                                                    <button class="toggle-replies">
-                                                        <i class="fas fa-chevron-down"></i>
-                                                        显示回复 (1)
                                                     </button>
                                                 </div>
                                             </div>
                                         </article>
-
-                                        <!-- 第6层回复 -->
-                                        <div class="nested-replies">
-                                            <article class="post nested-reply">
+                                        
+                                        <!-- 添加张三对李四的回复作为嵌套回复 -->
+                                        <article class="post-card nested-reply-card" id="nested2-nested" data-original-id="nested2">
+                                            <div class="post-card-left">
+                                                <div class="post-avatar">
+                                                    <img src="images/default-avatar.svg" alt="用户头像" onerror="this.src='images/default-avatar.svg'">
+                                                    <div class="user-role-badge staff">管理员</div>
+                                                </div>
+                                            </div>
+                                            <div class="post-card-right">
                                                 <div class="post-header">
-                                                    <div class="post-meta">
-                                                        <div class="user-info">
-                                                            <div class="user-avatar">
-                                                                <img src="images/avatars/user11.jpg" alt="用户头像">
-                                                            </div>
-                                                            <div class="user-details">
-                                                                <h3 class="username">李十三</h3>
-                                                                <span class="user-badge member">会员</span>
-                                                                <span class="post-time">2024年1月4日 15:20</span>
-                                                            </div>
-                                                        </div>
+                                                    <div class="post-author">
+                                                        <span class="username">张三</span>
+                                                        <span class="post-date">2024年1月4日 14:50</span>
                                                     </div>
                                                 </div>
                                                 <div class="post-content">
-                                                    <div class="post-text">
-                                                        <p><span class="reply-reference">回复 @王十二：</span>作为一名设计师，我觉得这个配色方案很有研究。</p>
-                                                    </div>
-                                                    <div class="post-footer">
-                                                        <button class="reply-button">
-                                                            <i class="fas fa-reply"></i>
-                                                            回复
-                                                        </button>
-                                                    </div>
+                                                    <p>谢谢支持！我们后续还会继续优化移动端的体验。</p>
                                                 </div>
-                                            </article>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- 第2层回复A-2 -->
-                                <article class="post nested-reply">
-                                    <div class="post-header">
-                                        <div class="post-meta">
-                                            <div class="user-info">
-                                                <div class="user-avatar">
-                                                    <img src="images/avatars/user6.jpg" alt="用户头像">
-                                                </div>
-                                                <div class="user-details">
-                                                    <h3 class="username">孙八</h3>
-                                                    <span class="user-badge member">会员</span>
-                                                    <span class="post-time">2024年1月4日 14:55</span>
+                                                <div class="post-actions">
+                                                    <button class="post-reply-btn" data-require-login="true" data-parent-id="nested2" data-parent-user="张三">
+                                                        <i class="fas fa-reply"></i>
+                                                        回复
+                                                    </button>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="post-content">
-                                        <div class="post-text">
-                                            <p><span class="reply-reference">回复 @李四：</span>手势操作也很流畅！</p>
-                                        </div>
-                                        <div class="post-footer">
-                                            <button class="reply-button">
-                                                <i class="fas fa-reply"></i>
-                                                回复
-                                            </button>
-                                        </div>
-                                    </div>
-                                </article>
-                            </div>
-
-                            <!-- 第1层回复B -->
-                            <article class="post reply">
-                                <div class="post-header">
-                                    <div class="post-meta">
-                                        <div class="user-info">
-                                            <div class="user-avatar">
-                                                <img src="images/avatars/user7.jpg" alt="用户头像">
-                                            </div>
-                                            <div class="user-details">
-                                                <h3 class="username">周九</h3>
-                                                <span class="user-badge member">会员</span>
-                                                <span class="post-time">2024年1月4日 15:00</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="post-content">
-                                    <div class="post-text">
-                                        <p><span class="reply-reference">回复 @李四：</span>图片加载速度确实提升了不少！</p>
-                                    </div>
-                                    <div class="post-footer">
-                                        <button class="reply-button">
-                                            <i class="fas fa-reply"></i>
-                                            回复
-                                        </button>
-                                        <button class="toggle-replies">
-                                            <i class="fas fa-chevron-down"></i>
-                                            显示回复 (1)
-                                        </button>
+                                        </article>
                                     </div>
                                 </div>
                             </article>
-
-                            <!-- 第1层回复B的嵌套回复 -->
-                            <div class="nested-replies">
-                                <!-- 第2层回复B-1 -->
-                                <article class="post nested-reply">
+                            
+                            <!-- 王五的嵌套回复的独立副本 - 14:40 -->
+                            <article class="post-card reply-card" id="nested1" data-is-nested-copy="true" data-original-reply="reply1">
+                                <div class="post-card-left">
+                                    <div class="post-avatar">
+                                        <img src="images/default-avatar.svg" alt="用户头像" onerror="this.src='images/default-avatar.svg'">
+                                        <div class="user-role-badge member">会员</div>
+                                    </div>
+                                </div>
+                                <div class="post-card-right">
+                                    <div class="reply-reference">
+                                        <i class="fas fa-quote-left"></i>
+                                        回复给 <a href="#reply1" class="reply-parent-link">李四</a>
+                                        <span class="reply-timestamp">2024年1月4日 14:40</span>
+                                    </div>
                                     <div class="post-header">
-                                        <div class="post-meta">
-                                            <div class="user-info">
-                                                <div class="user-avatar">
-                                                    <img src="images/avatars/user8.jpg" alt="用户头像">
-                                                </div>
-                                                <div class="user-details">
-                                                    <h3 class="username">吴十</h3>
-                                                    <span class="user-badge member">会员</span>
-                                                    <span class="post-time">2024年1月4日 15:05</span>
-                                                </div>
-                                            </div>
+                                        <div class="post-author">
+                                            <span class="username">王五</span>
+                                            <span class="post-date">2024年1月4日 14:40</span>
                                         </div>
                                     </div>
                                     <div class="post-content">
-                                        <div class="post-text">
-                                            <p><span class="reply-reference">回复 @周九：</span>是的，现在加载非常快。</p>
-                                        </div>
-                                        <div class="post-footer">
-                                            <button class="reply-button">
-                                                <i class="fas fa-reply"></i>
-                                                回复
-                                            </button>
-                                        </div>
+                                        <p>我已经更新了最新版，深色模式非常棒，对眼睛很友好！</p>
                                     </div>
-                                </article>
-                            </div>
-                        </div>
-
-                        <!-- 新增的第1层回复C -->
-                        <article class="post reply">
-                            <div class="post-header">
-                                <div class="post-meta">
-                                    <div class="user-info">
-                                        <div class="user-avatar">
-                                            <img src="images/avatars/user12.jpg" alt="用户头像">
-                                        </div>
-                                        <div class="user-details">
-                                            <h3 class="username">钱十四</h3>
-                                            <span class="user-badge member">会员</span>
-                                            <span class="post-time">2024年1月4日 15:30</span>
-                                        </div>
+                                    <div class="post-actions">
+                                        <button class="post-reply-btn" data-require-login="true" data-parent-id="nested1" data-parent-user="王五">
+                                            <i class="fas fa-reply"></i>
+                                            回复
+                                        </button>
+                                    </div>
+                                    <div class="nested-replies">
+                                        <!-- 嵌套回复会在后续添加 -->
                                     </div>
                                 </div>
-                            </div>
+                            </article>
                             
-                            <div class="post-content">
-                                <div class="post-text">
-                                    <p>移动端的手势操作非常丝滑，用起来很舒服！期待后续更多优化。</p>
+                            <!-- 张三的嵌套回复的独立副本 - 14:50 -->
+                            <article class="post-card reply-card" id="nested2" data-is-nested-copy="true" data-original-reply="reply1">
+                                <div class="post-card-left">
+                                    <div class="post-avatar">
+                                        <img src="images/default-avatar.svg" alt="用户头像" onerror="this.src='images/default-avatar.svg'">
+                                        <div class="user-role-badge staff">管理员</div>
+                                    </div>
                                 </div>
-                                <div class="post-footer">
-                                    <button class="reply-button">
-                                        <i class="fas fa-reply"></i>
-                                        回复
-                                    </button>
+                                <div class="post-card-right">
+                                    <div class="reply-reference">
+                                        <i class="fas fa-quote-left"></i>
+                                        回复给 <a href="#reply1" class="reply-parent-link">李四</a>
+                                        <span class="reply-timestamp">2024年1月4日 14:50</span>
+                                    </div>
+                                    <div class="post-header">
+                                        <div class="post-author">
+                                            <span class="username">张三</span>
+                                            <span class="post-date">2024年1月4日 14:50</span>
+                                        </div>
+                                    </div>
+                                    <div class="post-content">
+                                        <p>谢谢支持！我们后续还会继续优化移动端的体验。</p>
+                                    </div>
+                                    <div class="post-actions">
+                                        <button class="post-reply-btn" data-require-login="true" data-parent-id="nested2" data-parent-user="张三">
+                                            <i class="fas fa-reply"></i>
+                                            回复
+                                        </button>
+                                    </div>
+                                    <div class="nested-replies">
+                                        <!-- 嵌套回复会在后续添加 -->
+                                    </div>
                                 </div>
-                            </div>
-                        </article>
+                            </article>
+                            
+                            <!-- 直接回复示例 - 赵六 15:15 -->
+                            <article class="post-card reply-card" id="reply2">
+                                <div class="post-card-left">
+                                    <div class="post-avatar">
+                                        <img src="images/default-avatar.svg" alt="用户头像" onerror="this.src='images/default-avatar.svg'">
+                                        <div class="user-role-badge learner">学习者</div>
+                                    </div>
+                                </div>
+                                <div class="post-card-right">
+                                    <div class="post-header">
+                                        <div class="post-author">
+                                            <span class="username">赵六</span>
+                                            <span class="post-date">2024年1月4日 15:15</span>
+                                        </div>
+                                    </div>
+                                    <div class="post-content">
+                                        <p>手势操作支持非常好用，大大提高了我浏览课程的效率！</p>
+                                        <p>希望未来能支持更多种类的手势操作，让使用更方便。</p>
+                                    </div>
+                                    <div class="post-actions">
+                                        <button class="post-reply-btn" data-require-login="true" data-parent-id="reply2" data-parent-user="赵六">
+                                            <i class="fas fa-reply"></i>
+                                            回复
+                                        </button>
+                                    </div>
+                                    
+                                    <!-- 直接嵌套回复区域 - 最多1级 -->
+                                    <div class="nested-replies">
+                                        <!-- 嵌套回复在需要时动态添加 -->
+                                    </div>
+                                </div>
+                            </article>
+                            
+                            <!-- 更多回复将动态添加 -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -508,126 +383,45 @@
 
     <!-- 确认弹窗 -->
     <div class="dialog-overlay" style="display: none;">
-        <div class="dialog">
+        <div class="dialog-box">
             <div class="dialog-header">
-                <h3>放弃评论?</h3>
-                <button class="dialog-close">
-                    <i class="fas fa-times"></i>
-                </button>
+                <h3>确认取消</h3>
+                <button class="dialog-close"><i class="fas fa-times"></i></button>
             </div>
             <div class="dialog-content">
-                <p>您有一个正在进行的评论，您确定要放弃它吗？</p>
+                <p>你确定要取消回复吗？已输入的内容将会丢失。</p>
             </div>
-            <div class="dialog-actions">
-                <button class="dialog-btn cancel-dialog">取消</button>
-                <button class="dialog-btn confirm-dialog">丢弃</button>
+            <div class="dialog-footer">
+                <button class="cancel-dialog">取消</button>
+                <button class="confirm-dialog">确定</button>
             </div>
         </div>
     </div>
 
-    <script src="js/discussion.js"></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const replyEditor = document.querySelector('.reply-editor');
-        const editorInput = document.querySelector('.editor-input');
-        const cancelBtn = document.querySelector('.cancel-btn');
-        const dialogOverlay = document.querySelector('.dialog-overlay');
-        const dialogClose = document.querySelector('.dialog-close');
-        const cancelDialog = document.querySelector('.cancel-dialog');
-        const confirmDialog = document.querySelector('.confirm-dialog');
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>关于我们</h4>
+                <p>EduWeb是一个致力于知识共享的开源教育平台</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="courses.html">所有课程</a></li>
+                    <li><a href="community.html">社区讨论</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 EduWeb. 采用 AGPLv3 许可证开源</p>
+        </div>
+    </footer>
 
-        // 点击编辑器展开
-        replyEditor.addEventListener('click', function(e) {
-            if (this.classList.contains('collapsed') && e.target === this || e.target === editorInput) {
-                this.classList.remove('collapsed');
-                editorInput.focus();
-            }
-        });
-
-        // 显示确认弹窗
-        function showDialog() {
-            dialogOverlay.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        // 隐藏确认弹窗
-        function hideDialog() {
-            dialogOverlay.style.display = 'none';
-            document.body.style.overflow = '';
-        }
-
-        // 折叠编辑器
-        function collapseEditor() {
-            replyEditor.classList.add('collapsed');
-            editorInput.value = '';
-            editorInput.blur();
-            hideDialog();
-        }
-
-        // 点击取消按钮
-        cancelBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            if (editorInput.value.trim()) {
-                showDialog();
-            } else {
-                collapseEditor();
-            }
-        });
-
-        // 点击关闭弹窗按钮
-        dialogClose.addEventListener('click', hideDialog);
-        cancelDialog.addEventListener('click', hideDialog);
-        confirmDialog.addEventListener('click', collapseEditor);
-
-        // 点击弹窗外部关闭弹窗
-        dialogOverlay.addEventListener('click', function(e) {
-            if (e.target === dialogOverlay) {
-                hideDialog();
-            }
-        });
-
-        // 点击编辑器控件时阻止冒泡
-        document.querySelector('.editor-controls').addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
-
-        // 初始化所有回复的显示/隐藏功能
-        document.querySelectorAll('.post').forEach(post => {
-            const toggleButton = post.querySelector('.toggle-replies');
-            if (!toggleButton) return;
-
-            const nestedReplies = post.nextElementSibling;
-            if (!nestedReplies || !nestedReplies.classList.contains('nested-replies')) return;
-
-            const replyCount = nestedReplies.querySelectorAll('.nested-reply').length;
-            if (replyCount === 0) {
-                toggleButton.style.display = 'none';
-            } else {
-                toggleButton.style.display = 'inline-flex';
-                // 初始状态：回复是隐藏的，按钮显示向下箭头
-                nestedReplies.classList.add('collapsed');
-                toggleButton.innerHTML = `
-                    <i class="fas fa-chevron-down"></i>
-                    显示回复 (${replyCount})
-                `;
-
-                // 添加点击事件监听器
-                toggleButton.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
-                    const isCollapsed = nestedReplies.classList.contains('collapsed');
-                    nestedReplies.classList.toggle('collapsed');
-                    
-                    // 更新按钮文本和图标：显示状态用向右箭头，隐藏状态用向下箭头
-                    this.innerHTML = `
-                        <i class="fas fa-chevron-${!isCollapsed ? 'down' : 'right'}"></i>
-                        ${!isCollapsed ? '显示' : '隐藏'}回复 (${replyCount})
-                    `;
-                });
-            }
-        });
-    });
-    </script>
+    <script src="js/auth.js"></script>
+    <script src="js/discussion-detail.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/notifications.js"></script>
 </body>
 </html> 

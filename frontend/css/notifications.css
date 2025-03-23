@@ -1,0 +1,673 @@
+/* 通知页面样式 */
+:root {
+    --notification-system-color: #2b90d9;
+    --notification-course-color: #79bd9a;
+    --notification-reply-color: #8c5dd3;
+    --unread-bg-color: rgba(43, 144, 217, 0.05);
+}
+
+/* 确保导航栏样式与主页一致 */
+.main-header {
+    background-color: var(--background-dark);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo h1 {
+    color: white;
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.logo h1 a {
+    color: white;
+    text-decoration: none;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    margin: 0 1rem;
+    padding: 0.5rem;
+    transition: color 0.3s ease;
+    opacity: 0.8;
+}
+
+.nav-links a:hover {
+    color: white;
+    opacity: 1;
+}
+
+.nav-links a.active {
+    color: white;
+    opacity: 1;
+    font-weight: 600;
+}
+
+/* 导航栏按钮样式 */
+.auth-buttons {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+/* 导航栏中的通知图标样式 */
+.auth-buttons .notification-icon {
+    position: relative;
+    color: white;
+    font-size: 1.3rem;
+    margin-right: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.auth-buttons .notification-icon:hover,
+.auth-buttons .notification-icon.active {
+    transform: scale(1.1);
+    color: var(--primary-color);
+}
+
+.auth-buttons .notification-badge {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    background-color: #e74c3c;
+    color: white;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+/* 用户头像样式 */
+.auth-buttons .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.2s ease;
+}
+
+.auth-buttons .user-avatar:hover {
+    border-color: var(--primary-color);
+    transform: scale(1.05);
+}
+
+/* 通知容器样式 */
+.notifications-container {
+    max-width: 960px;
+    margin: 100px auto 50px;
+    padding: 0 20px;
+}
+
+/* 通知页面标题和操作栏 */
+.notifications-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.notifications-header h1 {
+    font-size: 2rem;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.notifications-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-mark-all-read,
+.btn-notification-settings {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    background: transparent;
+    cursor: pointer;
+}
+
+.btn-mark-all-read {
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+}
+
+.btn-mark-all-read:hover {
+    background-color: rgba(43, 144, 217, 0.1);
+}
+
+.btn-notification-settings {
+    color: var(--secondary-color);
+    border: 1px solid var(--border-color);
+    text-decoration: none;
+}
+
+.btn-notification-settings:hover {
+    background-color: var(--light-gray);
+}
+
+.btn-mark-all-read i,
+.btn-notification-settings i {
+    margin-right: 5px;
+}
+
+/* 通知过滤器 */
+.notifications-filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 8px 16px;
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+    background-color: var(--light-gray);
+}
+
+.filter-btn.active {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+/* 通知列表样式 */
+.notification-group {
+    margin-bottom: 30px;
+}
+
+.group-title {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+.notification-item {
+    display: flex;
+    padding: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    margin-bottom: 15px;
+    transition: all 0.2s ease;
+    background-color: white;
+}
+
+.notification-item:hover {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+}
+
+.notification-item.unread {
+    background-color: var(--unread-bg-color);
+    border-left: 4px solid var(--primary-color);
+}
+
+/* 通知列表中的图标样式 */
+.notification-item .notification-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.notification-item .notification-icon.system {
+    background-color: var(--notification-system-color);
+}
+
+.notification-item .notification-icon.course {
+    background-color: var(--notification-course-color);
+}
+
+.notification-item .notification-icon.reply {
+    background-color: var(--notification-reply-color);
+}
+
+.notification-item .notification-icon i {
+    font-size: 1.1rem;
+}
+
+/* 通知内容 */
+.notification-content {
+    flex: 1;
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.notification-header h4 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.notification-time {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.notification-content p {
+    margin: 0 0 15px;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* 通知操作按钮 */
+.notification-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-view,
+.btn-mark-read {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn-view {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+}
+
+.btn-view:hover {
+    background-color: #3aa0e9;
+}
+
+.btn-mark-read {
+    background-color: transparent;
+    color: #666;
+    border: 1px solid var(--border-color);
+}
+
+.btn-mark-read:hover {
+    background-color: var(--light-gray);
+}
+
+/* 空通知状态 */
+.notifications-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 0;
+    text-align: center;
+    color: #888;
+}
+
+.empty-illustration {
+    font-size: 4rem;
+    color: #ddd;
+    margin-bottom: 20px;
+}
+
+.notifications-empty h3 {
+    margin: 0 0 10px;
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.notifications-empty p {
+    margin: 0;
+    max-width: 400px;
+}
+
+/* 导航栏通知图标样式 */
+.notification-icon {
+    position: relative;
+    color: white;
+    font-size: 1.3rem;
+    margin-right: 15px;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.notification-icon:hover {
+    opacity: 1;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #ff5555;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 响应式设计 */
+@media screen and (max-width: 768px) {
+    .notifications-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .notification-item {
+        flex-direction: column;
+    }
+    
+    .notification-icon {
+        margin-bottom: 10px;
+    }
+    
+    .notification-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .btn-view, 
+    .btn-mark-read {
+        text-align: center;
+    }
+}
+
+/* 通知设置模态窗口样式 */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.modal-overlay.active,
+.modal-overlay[style*="display: flex"] {
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.modal-container {
+    background-color: white;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--text-color);
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.close-btn:hover {
+    color: #555;
+}
+
+.modal-body {
+    padding: 20px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.settings-group {
+    margin-bottom: 25px;
+}
+
+.settings-group h4 {
+    margin: 0 0 15px;
+    font-size: 1.1rem;
+    color: #555;
+    font-weight: 500;
+}
+
+.settings-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.settings-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.item-label {
+    flex: 1;
+}
+
+.item-label span {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: var(--text-color);
+}
+
+.item-description {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #777;
+}
+
+/* 开关样式 */
+.toggle-switch {
+    position: relative;
+    width: 52px;
+    height: 26px;
+}
+
+.toggle-input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-label {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.toggle-label:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+.toggle-input:checked + .toggle-label {
+    background-color: var(--primary-color);
+}
+
+.toggle-input:checked + .toggle-label:before {
+    transform: translateX(26px);
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 15px 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.btn-cancel,
+.btn-save {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-cancel {
+    background-color: transparent;
+    color: #666;
+    border: 1px solid var(--border-color);
+}
+
+.btn-cancel:hover {
+    background-color: var(--light-gray);
+}
+
+.btn-save {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+}
+
+.btn-save:hover {
+    background-color: #3aa0e9;
+}
+
+/* 设置说明样式 */
+.settings-explanation {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.settings-explanation i {
+    color: var(--primary-color);
+    font-size: 1rem;
+}
+
+.settings-explanation p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+/* 优化设置项目样式 */
+.settings-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.settings-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.item-label {
+    flex: 1;
+}
+
+.item-label span {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: var(--text-color);
+}
+
+.item-description {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #777;
+} 

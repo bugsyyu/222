@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>通知中心 - EduWeb</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/notifications.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        /* 确保模态窗口正确显示 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-overlay.active,
+        .modal-overlay[style*="display: flex"] {
+            display: flex !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
+        /* 确保按钮可点击 */
+        .btn-notification-settings {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <nav class="nav-container">
+            <div class="logo">
+                <a href="index.html"><h1>EduWeb</h1></a>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="courses.html">课程</a>
+                <a href="community-loading.html">社区</a>
+                <a href="dashboard.html">仪表盘</a>
+            </div>
+            <div class="auth-buttons">
+                <a href="notifications.html" class="notification-icon active">
+                    <i class="bi bi-bell-fill"></i>
+                    <span class="notification-badge">5</span>
+                </a>
+                <a href="profile.html">
+                    <img src="images/default-avatar.svg" class="user-avatar" alt="用户头像" id="userAvatar" onerror="this.src='images/default-avatar.svg'">
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="notifications-container">
+        <div class="notifications-header">
+            <h1>通知中心</h1>
+            <div class="notifications-actions">
+                <button class="btn-mark-all-read" id="markAllReadBtn">
+                    <i class="bi bi-check2-all"></i> 全部标为已读
+                </button>
+                <button class="btn-notification-settings" id="openNotificationSettingsBtn">
+                    <i class="bi bi-gear"></i> 通知设置
+                </button>
+            </div>
+        </div>
+
+        <div class="notifications-filters">
+            <button class="filter-btn active" data-filter="all">全部</button>
+            <button class="filter-btn" data-filter="course">课程更新</button>
+            <button class="filter-btn" data-filter="reply">回复提醒</button>
+        </div>
+
+        <div class="notifications-list">
+            <!-- 未读通知 -->
+            <div class="notification-group">
+                <h3 class="group-title">未读通知 (5)</h3>
+                
+                <div class="notification-item unread" data-type="course">
+                    <div class="notification-icon course">
+                        <i class="bi bi-book"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-header">
+                            <h4>课程更新 - Python基础课程</h4>
+                            <span class="notification-time">2小时前</span>
+                        </div>
+                        <p>您关注的课程已更新新章节：《Python进阶：函数与模块》。</p>
+                        <div class="notification-actions">
+                            <a href="course-detail.html" class="btn-view">查看课程</a>
+                            <button class="btn-mark-read" data-id="2">标为已读</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notification-item unread" data-type="reply">
+                    <div class="notification-icon reply">
+                        <i class="bi bi-chat-dots"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-header">
+                            <h4>回复提醒 - 社区讨论</h4>
+                            <span class="notification-time">5小时前</span>
+                        </div>
+                        <p>李明回复了您在《如何高效学习编程》讨论中的评论："谢谢分享，这些方法很实用！"</p>
+                        <div class="notification-actions">
+                            <a href="discussion-detail.html" class="btn-view">查看讨论</a>
+                            <button class="btn-mark-read" data-id="3">标为已读</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notification-item unread" data-type="course">
+                    <div class="notification-icon course">
+                        <i class="bi bi-book"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-header">
+                            <h4>课程更新 - Web开发入门</h4>
+                            <span class="notification-time">1天前</span>
+                        </div>
+                        <p>您收藏的课程《Web开发入门》已更新了新的学习资料。</p>
+                        <div class="notification-actions">
+                            <a href="course-detail.html" class="btn-view">查看课程</a>
+                            <button class="btn-mark-read" data-id="4">标为已读</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 已读通知 -->
+            <div class="notification-group">
+                <h3 class="group-title">已读通知 (1)</h3>
+                
+                <div class="notification-item" data-type="reply">
+                    <div class="notification-icon reply">
+                        <i class="bi bi-chat-dots"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-header">
+                            <h4>回复提醒 - 社区讨论</h4>
+                            <span class="notification-time">3天前</span>
+                        </div>
+                        <p>王老师回复了您在《学习路径规划》讨论中的问题："建议先掌握基础知识，再深入学习框架..."</p>
+                        <div class="notification-actions">
+                            <a href="discussion-detail.html" class="btn-view">查看讨论</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="notifications-empty" style="display: none;">
+            <div class="empty-illustration">
+                <i class="bi bi-bell-slash"></i>
+            </div>
+            <h3>暂无通知</h3>
+            <p>当您收到新消息或系统通知时，将会显示在这里</p>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>关于我们</h4>
+                <p>EduWeb是一个致力于知识共享的开源教育平台</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="courses.html">所有课程</a></li>
+                    <li><a href="community.html">社区讨论</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 EduWeb. 采用 AGPLv3 许可证开源</p>
+        </div>
+    </footer>
+
+    <!-- 通知设置模态框 -->
+    <div class="modal-overlay" id="notificationSettingsModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>通知设置</h3>
+                <button class="close-btn" id="closeNotificationSettingsBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="notification-settings-list">
+                    <div class="settings-group">
+                        <h4>通知类型</h4>
+                        <!-- 设置选项将由JavaScript动态生成 -->
+                    </div>
+                </div>
+                <div class="settings-explanation">
+                    <i class="bi bi-info-circle"></i>
+                    <p>这些设置将应用于您的所有设备。</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" id="cancelNotificationSettingsBtn">取消</button>
+                <button class="btn-save" id="saveNotificationSettingsBtn">保存设置</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/common.js"></script>
+    
+    <!-- 确保通知设置按钮点击事件生效的备份脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取通知设置按钮和模态窗口
+            const settingsBtn = document.getElementById('openNotificationSettingsBtn');
+            const modal = document.getElementById('notificationSettingsModal');
+            
+            // 直接绑定按钮点击事件，作为备份机制
+            if (settingsBtn && !settingsBtn.onclick) {
+                console.log("备份脚本：绑定通知设置按钮事件");
+                settingsBtn.onclick = function() {
+                    console.log("备份脚本：通知设置按钮被点击");
+                    if (modal) {
+                        if (window.testModal) {
+                            // 如果主脚本已加载，使用其中的函数
+                            window.testModal();
+                        } else {
+                            // 使用备份显示方法
+                            modal.style.display = 'flex';
+                            modal.style.opacity = '1';
+                            modal.style.visibility = 'visible';
+                        }
+                    }
+                };
+            }
+        });
+    </script>
+</body>
+</html> 

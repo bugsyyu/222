@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发起讨论 - EduWeb社区</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/community.css">
+    <link rel="stylesheet" href="css/discussion.css">
+    <link rel="stylesheet" href="css/new-discussion.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-image: url('images/new-back.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-color: transparent !important;
+            position: relative;
+        }
+        
+        /* Add a light overlay to make the background lighter */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.6);
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        /* Ensure content appears above overlay */
+        .new-discussion-container {
+            position: relative;
+            z-index: 2;
+            margin-top: 90px;
+        }
+        
+        /* Apply glass effect to form container */
+        .new-discussion-form-container {
+            background: rgba(255, 255, 255, 0.7) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            border-radius: 16px !important;
+            border: 1px solid rgba(255, 255, 255, 0.8) !important;
+            box-shadow: 
+                0 8px 20px rgba(0, 0, 0, 0.1),
+                0 2px 5px rgba(0, 0, 0, 0.05),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.3) !important;
+        }
+        
+        /* Apply glass effect to breadcrumb */
+        .breadcrumb {
+            background-color: rgba(255, 255, 255, 0.7) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            padding: 15px 20px !important;
+            border-radius: 12px !important;
+            border: 1px solid rgba(255, 255, 255, 0.8) !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px !important;
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <nav class="nav-container">
+            <div class="logo">
+                <a href="index.html"><h1>EduWeb</h1></a>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="courses.html">课程</a>
+                <a href="community-loading.html" class="active">社区</a>
+                <a href="dashboard.html" data-require-login="true">仪表盘</a>
+            </div>
+            <div class="auth-buttons">
+                <!-- 此区域将由auth.js根据登录状态动态更新 -->
+                <a href="login.html" class="btn btn-login">登录</a>
+                <a href="register.html" class="btn btn-register">注册</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="new-discussion-container">
+        <div class="breadcrumb">
+            <a href="community-loading.html">社区</a>
+            <i class="fas fa-chevron-right"></i>
+            <span>发起讨论</span>
+        </div>
+        
+        <div class="new-discussion-form-container">
+            <h1 class="page-title">发起新讨论</h1>
+            
+            <form id="newDiscussionForm" class="new-discussion-form">
+                <div class="form-group">
+                    <label for="discussionTitle">标题</label>
+                    <input type="text" id="discussionTitle" class="form-control" placeholder="请输入讨论标题..." required>
+                    <div class="form-hint">清晰、具体的标题能更好地吸引回复（5-100字）</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="discussionCategory">分类</label>
+                    <select id="discussionCategory" class="form-control" required>
+                        <option value="">请选择讨论分类...</option>
+                        <option value="course_experience">课程心得</option>
+                        <option value="feedback">意见反馈</option>
+                        <option value="question">问题求助</option>
+                        <option value="resource_sharing">资源分享</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="discussionContent">内容</label>
+                    <div class="editor-toolbar">
+                        <div class="formatting-buttons">
+                            <button type="button" class="format-btn" title="粗体">
+                                <i class="fas fa-bold"></i>
+                            </button>
+                            <button type="button" class="format-btn" title="斜体">
+                                <i class="fas fa-italic"></i>
+                            </button>
+                            <button type="button" class="format-btn" title="插入链接">
+                                <i class="fas fa-link"></i>
+                            </button>
+                            <button type="button" class="format-btn" title="插入代码">
+                                <i class="fas fa-code"></i>
+                            </button>
+                            <button type="button" class="format-btn" title="插入图片">
+                                <i class="fas fa-image"></i>
+                            </button>
+                            <button type="button" class="format-btn" title="插入列表">
+                                <i class="fas fa-list-ul"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <textarea id="discussionContent" class="form-control editor-textarea" rows="12" placeholder="请详细描述您的讨论内容..." required></textarea>
+                    <div class="form-hint">详细的描述有助于其他用户更好地理解和参与讨论</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="discussionTags">标签</label>
+                    <input type="text" id="discussionTags" class="form-control" placeholder="输入标签，用逗号分隔...">
+                    <div class="form-hint">最多添加5个标签，每个标签不超过15个字符</div>
+                </div>
+                
+                <div class="form-actions">
+                    <a href="community-loading.html" class="btn btn-cancel">取消</a>
+                    <button type="submit" class="btn btn-submit">发布讨论</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>关于我们</h4>
+                <p>EduWeb是一个致力于知识共享的开源教育平台</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="courses.html">所有课程</a></li>
+                    <li><a href="community-loading.html">社区讨论</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 EduWeb. 采用 AGPLv3 许可证开源</p>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/new-discussion.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/notifications.js"></script>
+</body>
+</html> 

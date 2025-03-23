@@ -7,6 +7,354 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/community.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-image: url('images/new-back.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-color: transparent !important;
+            position: relative;
+        }
+        
+        /* Add a light overlay to make the background lighter */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.6);
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        /* Update z-index for main content to appear above the overlay */
+        .community-container {
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Enhanced Glass Morphism for Content Cards */
+        .topic-card {
+            background: rgba(255, 255, 255, 0.7) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.8) !important;
+            box-shadow: 
+                0 8px 20px rgba(0, 0, 0, 0.1),
+                0 2px 5px rgba(0, 0, 0, 0.05),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.3) !important;
+            transition: all 0.3s ease !important;
+            position: relative;
+            overflow: hidden;
+            padding: 1.8rem 1.6rem !important;
+            border-radius: 16px !important;
+        }
+        
+        .topic-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.12), transparent);
+            border-radius: 16px 16px 0 0;
+            pointer-events: none;
+        }
+        
+        .topic-card:hover {
+            transform: translateY(-3px) !important;
+            box-shadow: 
+                0 14px 28px rgba(0, 0, 0, 0.12),
+                0 4px 10px rgba(0, 0, 0, 0.08),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.5) !important;
+        }
+        
+        .topic-card.topic-pinned {
+            border-left: none !important;
+            border-radius: 16px !important;
+            background: rgba(255, 255, 255, 0.75) !important;
+            position: relative;
+        }
+        
+        .topic-card.topic-pinned::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, #4f46e5, #7c3aed);
+            border-radius: 16px 0 0 16px;
+        }
+        
+        /* Enhance topic title */
+        .topic-title {
+            font-weight: 600 !important;
+            letter-spacing: -0.01em !important;
+            margin-bottom: 4px !important;
+            color: #252525 !important;
+        }
+        
+        .topic-pin {
+            color: #7c3aed !important;
+            font-size: 0.9em !important;
+        }
+        
+        /* Enhance topic excerpt */
+        .topic-excerpt {
+            color: #444 !important;
+            line-height: 1.6 !important;
+            margin: 8px 0 12px !important;
+        }
+        
+        /* Enhance avatar */
+        .topic-avatar {
+            width: 52px !important;
+            height: 52px !important;
+            min-width: 52px !important;
+            margin-top: 3px !important;
+        }
+        
+        .topic-avatar img {
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1) !important;
+            border: 2px solid rgba(255, 255, 255, 0.8) !important;
+        }
+        
+        /* Enhance topic meta */
+        .topic-meta {
+            background: rgba(240, 240, 250, 0.5) !important;
+            padding: 8px 12px !important;
+            border-radius: 8px !important;
+            margin-top: 6px !important;
+            backdrop-filter: blur(5px) !important;
+            -webkit-backdrop-filter: blur(5px) !important;
+            display: inline-flex !important;
+            flex-wrap: wrap !important;
+        }
+        
+        .topic-meta span {
+            margin-right: 16px !important;
+            color: #555 !important;
+            font-weight: 500 !important;
+            font-size: 0.8rem !important;
+        }
+        
+        .topic-meta i {
+            color: #7c3aed !important;
+            margin-right: 6px !important;
+        }
+        
+        /* Ultra-enhanced pagination with maximum glass effect */
+        .pagination {
+            background: rgba(255, 255, 255, 0.25) !important; /* Even more transparent */
+            backdrop-filter: blur(20px) !important; /* Stronger blur */
+            -webkit-backdrop-filter: blur(20px) !important;
+            border-radius: 18px !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important; /* More transparent border */
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.1),
+                0 4px 10px rgba(0, 0, 0, 0.05),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
+            padding: 1.5rem 2rem !important;
+            margin-top: 2.5rem !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Enhanced light reflection effects */
+        .pagination::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: 
+                linear-gradient(135deg, 
+                    rgba(255, 255, 255, 0.4) 0%, 
+                    rgba(255, 255, 255, 0.1) 30%, 
+                    transparent 100%);
+            pointer-events: none;
+        }
+        
+        /* Add edge highlight for glass effect */
+        .pagination::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(
+                to right,
+                transparent 0%,
+                rgba(255, 255, 255, 0.5) 50%,
+                transparent 100%
+            );
+            pointer-events: none;
+        }
+        
+        .current-page {
+            font-weight: 500 !important;
+            color: rgba(0, 0, 0, 0.75) !important;
+            font-size: 0.95rem !important;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.7) !important;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .page-controls {
+            display: flex !important;
+            gap: 10px !important;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .page-number, .page-prev, .page-next {
+            width: 42px !important;
+            height: 42px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            border-radius: 12px !important;
+            color: rgba(0, 0, 0, 0.75) !important;
+            background: rgba(255, 255, 255, 0.3) !important; /* More transparent */
+            border: 1px solid rgba(255, 255, 255, 0.25) !important; /* More transparent border */
+            box-shadow: 
+                0 4px 12px rgba(0, 0, 0, 0.08),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.25),
+                inset 0 1px 2px rgba(255, 255, 255, 0.5) !important; /* Inner top highlight */
+            transition: all 0.3s ease !important;
+            font-weight: 500 !important;
+            backdrop-filter: blur(12px) !important; /* Stronger blur */
+            -webkit-backdrop-filter: blur(12px) !important;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Enhanced lighting effect for buttons */
+        .page-number::before, .page-prev::before, .page-next::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.2) 0%,
+                rgba(255, 255, 255, 0.05) 50%,
+                transparent 100%
+            );
+            transform: rotate(30deg);
+            pointer-events: none;
+        }
+        
+        .page-number:hover, .page-prev:hover, .page-next:hover {
+            background: rgba(255, 255, 255, 0.4) !important;
+            transform: translateY(-3px) !important;
+            box-shadow: 
+                0 8px 20px rgba(0, 0, 0, 0.12),
+                0 3px 8px rgba(0, 0, 0, 0.08),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.4),
+                inset 0 1px 2px rgba(255, 255, 255, 0.8) !important;
+        }
+        
+        .page-number.active {
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.85), rgba(124, 58, 237, 0.85)) !important; /* Semi-transparent gradient */
+            color: white !important;
+            border-color: rgba(255, 255, 255, 0.3) !important;
+            box-shadow: 
+                0 8px 25px rgba(79, 70, 229, 0.4),
+                0 3px 10px rgba(79, 70, 229, 0.25),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
+            transform: translateY(-1px) !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+        }
+        
+        /* Content header enhancement */
+        .content-header {
+            background: rgba(255, 255, 255, 0.7) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            border-radius: 16px !important;
+            padding: 1.5rem !important;
+            margin-bottom: 2rem !important;
+            border: 1px solid rgba(255, 255, 255, 0.8) !important;
+            box-shadow: 
+                0 5px 15px rgba(0, 0, 0, 0.05),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.3) !important;
+        }
+        
+        .content-title {
+            font-weight: 600 !important;
+            color: #252525 !important;
+            margin: 0 !important;
+        }
+        
+        .new-discussion-btn {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed) !important;
+            border-radius: 12px !important;
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3) !important;
+            padding: 0.8rem 1.3rem !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .new-discussion-btn:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4) !important;
+            background: linear-gradient(135deg, #4338ca, #6d28d9) !important;
+        }
+        
+        /* Sidebar and footer - keep as is */
+        .sidebar {
+            background-color: rgba(255, 255, 255, 0.97);
+        }
+        
+        /* Ensure footer is above the overlay */
+        .main-footer {
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Ensure header is above the overlay */
+        .main-header {
+            position: fixed;
+            z-index: 100;
+        }
+        
+        /* Topic filters enhancement */
+        .topic-filters {
+            margin-bottom: 1.8rem !important;
+        }
+        
+        .topic-filter-heading {
+            font-size: 1.25rem !important;
+            font-weight: 600 !important;
+            color: #252525 !important;
+            position: relative !important;
+            display: inline-block !important;
+            padding-bottom: 5px !important;
+        }
+        
+        .topic-filter-heading::after {
+            content: '' !important;
+            position: absolute !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            width: 40% !important;
+            height: 3px !important;
+            background: linear-gradient(to right, #4f46e5, #7c3aed) !important;
+            border-radius: 3px !important;
+        }
+    </style>
 </head>
 <body>
     <header class="main-header">
@@ -15,11 +363,13 @@
                 <a href="index.html"><h1>EduWeb</h1></a>
             </div>
             <div class="nav-links">
+                <a href="index.html">首页</a>
                 <a href="courses.html">课程</a>
                 <a href="community.html" class="active">社区</a>
-                <a href="about.html">关于</a>
+                <a href="dashboard.html" data-require-login="true">仪表盘</a>
             </div>
             <div class="auth-buttons">
+                <!-- 此区域将由auth.js根据登录状态动态更新 -->
                 <a href="login.html" class="btn btn-login">登录</a>
                 <a href="register.html" class="btn btn-register">注册</a>
             </div>
@@ -33,35 +383,19 @@
                 <ul class="topic-list">
                     <li class="topic-item active">
                         <span class="topic-icon"><i class="fas fa-globe"></i></span>
-                        <span class="topic-name">综合讨论</span>
+                        <span class="topic-name">所有讨论</span>
+                    </li>
+                    <li class="topic-item">
+                        <span class="topic-icon"><i class="fas fa-graduation-cap"></i></span>
+                        <span class="topic-name">课程心得</span>
                     </li>
                     <li class="topic-item">
                         <span class="topic-icon"><i class="fas fa-comment-dots"></i></span>
                         <span class="topic-name">意见反馈</span>
                     </li>
                     <li class="topic-item">
-                        <span class="topic-icon"><i class="fas fa-code"></i></span>
-                        <span class="topic-name">技术交流</span>
-                    </li>
-                    <li class="topic-item">
-                        <span class="topic-icon"><i class="fas fa-paint-brush"></i></span>
-                        <span class="topic-name">设计分享</span>
-                    </li>
-                    <li class="topic-item">
-                        <span class="topic-icon"><i class="fas fa-rocket"></i></span>
-                        <span class="topic-name">经验心得</span>
-                    </li>
-                    <li class="topic-item">
-                        <span class="topic-icon"><i class="fas fa-robot"></i></span>
-                        <span class="topic-name">人工智能</span>
-                    </li>
-                    <li class="topic-item">
                         <span class="topic-icon"><i class="fas fa-bullhorn"></i></span>
-                        <span class="topic-name">活动公告</span>
-                    </li>
-                    <li class="topic-item">
-                        <span class="topic-icon"><i class="fas fa-handshake"></i></span>
-                        <span class="topic-name">自我介绍</span>
+                        <span class="topic-name">系统公告</span>
                     </li>
                 </ul>
             </div>
@@ -70,90 +404,159 @@
         <main class="main-content">
             <div class="content-header">
                 <h1 class="content-title">讨论区</h1>
-                <a href="new-discussion.html" class="new-discussion-btn">
+                <a href="new-discussion.html" class="new-discussion-btn" data-require-login="true">
                     <i class="fas fa-plus"></i>
                     发起讨论
                 </a>
             </div>
 
-            <div class="view-controls">
-                <button class="view-mode-btn active">
-                    <i class="fas fa-th-list"></i>
-                    列表视图
-                </button>
-                <button class="view-mode-btn">
-                    <i class="fas fa-grip-horizontal"></i>
-                    网格视图
-                </button>
-            </div>
-
             <div class="discussion-list">
-                <article class="discussion-card">
-                    <a href="discussion-detail.html" class="discussion-link">
-                        <div class="discussion-header">
-                            <div class="discussion-meta">
-                                <div class="user-avatar">
-                                    <img src="images/avatars/user1.jpg" alt="用户头像">
+                <div class="topic-filters">
+                    <div class="topic-filter-heading">最新主题</div>
+                </div>
+
+                <div class="topics">
+                    <!-- 置顶讨论 -->
+                    <a href="discussion-detail.html" class="topic-card-link">
+                        <div class="topic-card topic-pinned">
+                            <div class="topic-card-left">
+                                <div class="topic-avatar">
+                                    <img src="images/default-avatar.svg" alt="用户头像" onerror="this.src='images/default-avatar.svg'">
                                 </div>
-                                <div class="discussion-info">
-                                    <h3 class="discussion-title">[更新日志] 12月11日 - 移动端优化更新</h3>
-                                    <div class="discussion-details">
-                                        <span>作者：张三</span>
-                                        <span>•</span>
-                                        <span>3天前</span>
-                                        <span class="featured-tag">置顶</span>
+                                <div class="topic-content">
+                                    <span class="topic-title">
+                                        <span class="topic-pin"><i class="fas fa-thumbtack"></i></span>
+                                        [更新日志] 12月11日 - 移动端优化更新
+                                    </span>
+                                    <div class="topic-excerpt">
+                                        我们很高兴地宣布，今天我们推出了一系列移动端的优化更新。这些更新主要包括：优化了移动端的页面加载速度...
                                     </div>
-                                </div>
-                            </div>
-                            <div class="discussion-stats">
-                                <div class="stat-item">
-                                    <i class="fas fa-comment"></i>
-                                    <span>48 回复</span>
-                                </div>
-                                <div class="stat-item">
-                                    <i class="fas fa-eye"></i>
-                                    <span>1.2k 浏览</span>
+                                    <div class="topic-meta">
+                                        <span class="topic-category"><i class="fas fa-folder"></i> 所有讨论</span>
+                                        <span class="topic-author"><i class="fas fa-user"></i> 张三</span>
+                                        <span class="topic-date"><i class="far fa-calendar"></i> 3天前</span>
+                                        <span class="topic-replies"><i class="far fa-comment"></i> 48 回复</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </a>
-                </article>
 
-                <article class="discussion-card">
-                    <a href="discussion-detail.html" class="discussion-link">
-                        <div class="discussion-header">
-                            <div class="discussion-meta">
-                                <div class="user-avatar">
-                                    <img src="images/avatars/user2.jpg" alt="用户头像">
+                    <!-- 普通讨论 -->
+                    <a href="discussion-detail.html" class="topic-card-link">
+                        <div class="topic-card">
+                            <div class="topic-card-left">
+                                <div class="topic-avatar">
+                                    <img src="images/default-avatar.svg" alt="用户头像" onerror="this.src='images/default-avatar.svg'">
                                 </div>
-                                <div class="discussion-info">
-                                    <h3 class="discussion-title">如何提高学习效率？分享一些个人经验</h3>
-                                    <div class="discussion-details">
-                                        <span>作者：李四</span>
-                                        <span>•</span>
-                                        <span>5小时前</span>
+                                <div class="topic-content">
+                                    <span class="topic-title">
+                                        如何提高学习效率？分享一些个人经验
+                                    </span>
+                                    <div class="topic-excerpt">
+                                        学习是一个持续的过程，需要不断优化学习方法。在这里分享一些我个人提高学习效率的方法和技巧...
                                     </div>
-                                </div>
-                            </div>
-                            <div class="discussion-stats">
-                                <div class="stat-item">
-                                    <i class="fas fa-comment"></i>
-                                    <span>16 回复</span>
-                                </div>
-                                <div class="stat-item">
-                                    <i class="fas fa-eye"></i>
-                                    <span>324 浏览</span>
+                                    <div class="topic-meta">
+                                        <span class="topic-category"><i class="fas fa-folder"></i> 课程心得</span>
+                                        <span class="topic-author"><i class="fas fa-user"></i> 李四</span>
+                                        <span class="topic-date"><i class="far fa-calendar"></i> 5小时前</span>
+                                        <span class="topic-replies"><i class="far fa-comment"></i> 16 回复</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </a>
-                </article>
 
-                <!-- 更多讨论卡片 -->
+                    <!-- 更多讨论列表 -->
+                    <a href="discussion-detail.html" class="topic-card-link">
+                        <div class="topic-card">
+                            <div class="topic-card-left">
+                                <div class="topic-avatar">
+                                    <img src="images/default-avatar.svg" alt="用户头像" onerror="this.src='images/default-avatar.svg'">
+                                </div>
+                                <div class="topic-content">
+                                    <span class="topic-title">
+                                        有没有人推荐一些好的编程学习资源？
+                                    </span>
+                                    <div class="topic-excerpt">
+                                        最近想系统学习前端开发，求大家推荐一些好的学习资源，包括但不限于书籍、视频、网站等...
+                                    </div>
+                                    <div class="topic-meta">
+                                        <span class="topic-category"><i class="fas fa-folder"></i> 课程心得</span>
+                                        <span class="topic-author"><i class="fas fa-user"></i> 王五</span>
+                                        <span class="topic-date"><i class="far fa-calendar"></i> 1天前</span>
+                                        <span class="topic-replies"><i class="far fa-comment"></i> 10 回复</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="discussion-detail.html" class="topic-card-link">
+                        <div class="topic-card">
+                            <div class="topic-card-left">
+                                <div class="topic-avatar">
+                                    <img src="images/default-avatar.svg" alt="用户头像" onerror="this.src='images/default-avatar.svg'">
+                                </div>
+                                <div class="topic-content">
+                                    <span class="topic-title">
+                                        平台功能建议：希望增加学习路径功能
+                                    </span>
+                                    <div class="topic-excerpt">
+                                        对于新手来说，不知道从何学起是很常见的问题。如果平台能提供一些预设的学习路径，会更加方便用户系统学习...
+                                    </div>
+                                    <div class="topic-meta">
+                                        <span class="topic-category"><i class="fas fa-folder"></i> 意见反馈</span>
+                                        <span class="topic-author"><i class="fas fa-user"></i> 赵六</span>
+                                        <span class="topic-date"><i class="far fa-calendar"></i> 2天前</span>
+                                        <span class="topic-replies"><i class="far fa-comment"></i> 8 回复</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="pagination">
+                    <span class="current-page">第 1 页，共 5 页</span>
+                    <div class="page-controls">
+                        <a href="#" class="page-prev disabled"><i class="fas fa-chevron-left"></i></a>
+                        <a href="#" class="page-number active">1</a>
+                        <a href="#" class="page-number">2</a>
+                        <a href="#" class="page-number">3</a>
+                        <a href="#" class="page-number">4</a>
+                        <a href="#" class="page-number">5</a>
+                        <a href="#" class="page-next"><i class="fas fa-chevron-right"></i></a>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
 
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>关于我们</h4>
+                <p>EduWeb是一个致力于知识共享的开源教育平台</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="courses.html">所有课程</a></li>
+                    <li><a href="community.html">社区讨论</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 EduWeb. 采用 AGPLv3 许可证开源</p>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
     <script src="js/community.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/notifications.js"></script>
 </body>
 </html> 

@@ -7,140 +7,247 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/profile.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <!-- 紧急修复样式 -->
+    <style>
+        /* 确保模态框显示正确 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-overlay.active,
+        .modal-overlay[style*="display: flex"] {
+            display: flex !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
+        /* 确保按钮点击区域正确 */
+        button {
+            cursor: pointer;
+        }
+        
+        /* 确保链接按钮正确 */
+        a.btn-continue, a.btn-start, a.btn-view-all {
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        /* 调整页脚与内容的距离 */
+        .profile-container {
+            margin-bottom: 120px; /* 将间距增大到原来的2倍 (60px*2=120px) */
+        }
+        
+        .main-footer {
+            margin-top: 0; /* 移除页脚的顶部边距，防止出现多余的空白 */
+            position: relative; /* 确保定位正常 */
+            bottom: 0; /* 确保页脚固定在底部 */
+            width: 100%; /* 确保页脚宽度充满容器 */
+        }
+        
+        html, body {
+            min-height: 100vh; /* 确保页面至少有视口高度 */
+            margin: 0;
+            padding: 0;
+            position: relative; /* 使页面可以放置固定元素 */
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* 在body最底部添加额外的清除浮动，确保没有浮动元素导致的空白 */
+        body::after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+    </style>
 </head>
 <body>
     <header class="main-header">
-        <div class="logo">
-            <a href="index.html">EduWeb</a>
-        </div>
-        <nav class="main-nav">
-            <a href="index.html">首页</a>
-            <a href="courses.html">课程</a>
-            <a href="community.html">社区</a>
-            <a href="about.html">关于</a>
-            <a href="donate.html">捐助</a>
-            <a href="docs.html">文档</a>
+        <nav class="nav-container">
+            <div class="logo">
+                <a href="index.html"><h1>EduWeb</h1></a>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="courses.html">课程</a>
+                <a href="community-loading.html">社区</a>
+                <a href="dashboard.html">仪表盘</a>
+            </div>
+            <div class="auth-buttons">
+                <!-- 此区域将由auth.js根据登录状态动态更新 -->
+            </div>
         </nav>
-        <div class="user-area">
-            <img src="https://via.placeholder.com/40" class="user-avatar" alt="用户头像" id="userAvatar">
-        </div>
     </header>
 
-    <div class="page-layout">
-        <!-- 左侧边栏 -->
-        <div class="sidebar">
-            <div class="user-info">
-                <div class="avatar-container">
-                    <img src="https://via.placeholder.com/150" class="user-avatar-large" alt="用户头像" id="profileAvatar">
-                    <button class="avatar-edit-btn" id="changeAvatarBtn"><i class="bi bi-camera"></i></button>
-                </div>
-                <h2 id="userName">用户名</h2>
-                <p id="userEmail">user@example.com</p>
-            </div>
-            
-            <div class="sidebar-menu">
-                <h3>个人中心</h3>
-                <ul>
-                    <li><a href="profile.html" class="active">学习记录</a></li>
-                    <li><a href="#" id="favoritesLink">我的收藏</a></li>
-                    <li><a href="#" id="settingsLink">设置</a></li>
-                    <li><a href="#" id="logoutBtn">退出登录</a></li>
-                </ul>
-            </div>
-            
-            <div class="learning-stats">
-                <h3>学习统计</h3>
-                <div class="stat-item">
-                    <span>学习时长</span>
-                    <span class="stat-value" id="stats-hours">120小时</span>
-                </div>
-                <div class="stat-item">
-                    <span>完成课程</span>
-                    <span class="stat-value" id="stats-courses">5门</span>
-                </div>
+    <div class="profile-container">
+        <div class="profile-header">
+            <h1>个人中心</h1>
+            <div class="user-greeting">
+                <p>你好，<span id="greetingName">张同学</span>！欢迎回到您的个人空间。</p>
+                <a href="dashboard.html" class="btn btn-to-dashboard"><i class="bi bi-speedometer2"></i> 查看学习仪表盘</a>
             </div>
         </div>
 
-        <!-- 主内容区 -->
-        <div class="main-content">
-            <div class="content-header">
-                <h1>学习记录</h1>
-                <div class="header-actions">
-                    <button class="edit-profile-btn">编辑资料</button>
+        <div class="profile-content">
+            <!-- 用户信息卡片 -->
+            <div class="profile-card user-profile">
+                <div class="card-header">
+                    <h3>个人资料</h3>
+                    <span class="card-icon"><i class="bi bi-person-circle"></i></span>
+                </div>
+                <div class="card-body">
+                    <div class="user-info-container">
+                        <div class="avatar-container">
+                            <img src="images/default-avatar.svg" class="user-avatar-large" alt="用户头像" id="profileAvatar" onerror="this.src='images/default-avatar.svg'">
+                            <button class="avatar-edit-btn" id="changeAvatarBtn" title="更换头像，支持从本地上传"><i class="bi bi-camera"></i></button>
+                        </div>
+                        <div class="user-details">
+                            <h2 id="userName">张同学</h2>
+                            <p id="userEmail">zhang@example.com</p>
+                            <p class="user-bio">热爱学习，专注于编程技术和Web开发，希望通过EduWeb平台提升自己的技能。</p>
+                            <div class="user-stats">
+                                <div class="stat-item">
+                                    <i class="bi bi-clock-history"></i>
+                                    <span>学习时长：<span id="stats-hours">120</span>小时</span>
+                                </div>
+                                <div class="stat-item">
+                                    <i class="bi bi-journal-check"></i>
+                                    <span>完成课程：<span id="stats-courses">5</span>门</span>
+                                </div>
+                                <div class="stat-item">
+                                    <i class="bi bi-calendar-check"></i>
+                                    <span>连续打卡：<span id="stats-streak">7</span>天</span>
+                                </div>
+                            </div>
+                            <!-- 教师角色专属功能入口 -->
+                            <div class="teacher-actions" id="teacherActions" style="display: none;">
+                                <a href="teacher-courses.html" class="btn-teacher-portal">
+                                    <i class="bi bi-mortarboard-fill"></i> 教师课程管理
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="profile-actions">
+                        <button class="btn-edit-profile" id="editProfileBtn">编辑个人资料</button>
+                        <button class="btn-logout" id="logoutBtn">退出登录</button>
+                    </div>
                 </div>
             </div>
 
-            <div class="content-section">
-                <div class="section-header">
-                    <h2>最近学习</h2>
-                    <a href="#" class="view-all">查看全部</a>
+            <!-- 最近学习卡片 -->
+            <div class="profile-card recent-courses">
+                <div class="card-header">
+                    <h3>最近学习</h3>
+                    <span class="card-icon"><i class="bi bi-collection-play"></i></span>
                 </div>
-                <div class="course-list">
-                    <div class="course-item">
-                        <div class="course-info">
-                            <h3>Python基础课程</h3>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 75%"></div>
+                <div class="card-body">
+                    <div class="course-list">
+                        <div class="course-item">
+                            <div class="course-img">
+                                <img src="images/default-course-cover.svg" alt="课程封面" onerror="this.src='images/default-course-cover.svg'">
                             </div>
-                            <div class="course-meta">
-                                <span class="progress-text">完成度: 75%</span>
-                                <span class="course-date">3天前</span>
+                            <div class="course-info">
+                                <h3>Python基础课程</h3>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 75%"></div>
+                                </div>
+                                <div class="course-meta">
+                                    <span class="progress-text">完成度: 75%</span>
+                                    <span class="course-date">3天前</span>
+                                </div>
+                            </div>
+                            <div class="course-actions">
+                                <a href="#" class="btn-continue">继续学习</a>
+                            </div>
+                        </div>
+                        <div class="course-item">
+                            <div class="course-img">
+                                <img src="images/default-course-cover.svg" alt="课程封面" onerror="this.src='images/default-course-cover.svg'">
+                            </div>
+                            <div class="course-info">
+                                <h3>Web开发入门</h3>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 60%"></div>
+                                </div>
+                                <div class="course-meta">
+                                    <span class="progress-text">完成度: 60%</span>
+                                    <span class="course-date">1周前</span>
+                                </div>
+                            </div>
+                            <div class="course-actions">
+                                <a href="#" class="btn-continue">继续学习</a>
                             </div>
                         </div>
                     </div>
-                    <div class="course-item">
-                        <div class="course-info">
-                            <h3>Web开发入门</h3>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 60%"></div>
-                            </div>
-                            <div class="course-meta">
-                                <span class="progress-text">完成度: 60%</span>
-                                <span class="course-date">1周前</span>
-                            </div>
-                        </div>
-                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="courses.html" class="btn-view-all">查看全部课程</a>
                 </div>
             </div>
 
-            <div class="content-section">
-                <div class="section-header">
-                    <h2>收藏课程</h2>
-                    <a href="#" id="viewAllFavorites" class="view-all">查看全部</a>
+            <!-- 收藏课程卡片 -->
+            <div class="profile-card favorite-courses">
+                <div class="card-header">
+                    <h3>收藏课程</h3>
+                    <span class="card-icon"><i class="bi bi-star"></i></span>
                 </div>
-                <div class="favorites-grid">
-                    <div class="favorite-card">
-                        <div class="favorite-img">
-                            <img src="https://via.placeholder.com/300x200" alt="课程封面">
+                <div class="card-body">
+                    <div class="favorites-grid">
+                        <div class="favorite-card">
+                            <div class="favorite-img">
+                                <img src="images/default-course-cover.svg" alt="课程封面" onerror="this.src='images/default-course-cover.svg'">
+                            </div>
+                            <div class="favorite-info">
+                                <h3>数据结构与算法</h3>
+                                <p>讲师：张老师</p>
+                                <div class="favorite-actions">
+                                    <a href="#" class="btn-start">开始学习</a>
+                                    <button class="btn-unfavorite"><i class="bi bi-star-fill"></i></button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="favorite-info">
-                            <h3>数据结构与算法</h3>
-                            <p>讲师：张老师</p>
-                            <div class="favorite-actions">
-                                <a href="#" class="btn-start">开始学习</a>
-                                <button class="btn-unfavorite"><i class="bi bi-star-fill"></i></button>
+                        <div class="favorite-card">
+                            <div class="favorite-img">
+                                <img src="images/default-course-cover.svg" alt="课程封面" onerror="this.src='images/default-course-cover.svg'">
+                            </div>
+                            <div class="favorite-info">
+                                <h3>机器学习基础</h3>
+                                <p>讲师：李老师</p>
+                                <div class="favorite-actions">
+                                    <a href="#" class="btn-start">开始学习</a>
+                                    <button class="btn-unfavorite"><i class="bi bi-star-fill"></i></button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="favorite-card">
-                        <div class="favorite-img">
-                            <img src="https://via.placeholder.com/300x200" alt="课程封面">
-                        </div>
-                        <div class="favorite-info">
-                            <h3>机器学习基础</h3>
-                            <p>讲师：李老师</p>
-                            <div class="favorite-actions">
-                                <a href="#" class="btn-start">开始学习</a>
-                                <button class="btn-unfavorite"><i class="bi bi-star-fill"></i></button>
-                            </div>
-                        </div>
-                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="btn-view-all" id="viewAllFavorites">查看全部收藏</a>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 编辑资料模态框 -->
+    <!-- 页面内容容器 - 用于显示全部收藏等 -->
+    <div class="page-container" id="pageContent"></div>
+
+    <!-- 编辑个人资料模态框 -->
     <div class="modal-overlay" id="editProfileModal">
         <div class="modal-container">
             <div class="modal-header">
@@ -151,15 +258,15 @@
                 <form id="editProfileForm">
                     <div class="form-group">
                         <label>用户名</label>
-                        <input type="text" id="editUsername">
+                        <input type="text" id="editUsername" value="张同学">
                     </div>
                     <div class="form-group">
                         <label>邮箱</label>
-                        <input type="email" id="editEmail">
+                        <input type="email" id="editEmail" value="zhang@example.com">
                     </div>
                     <div class="form-group">
                         <label>个人简介</label>
-                        <textarea id="editBio" rows="3"></textarea>
+                        <textarea id="editBio" rows="3">热爱学习，专注于编程技术和Web开发，希望通过EduWeb平台提升自己的技能。</textarea>
                     </div>
                 </form>
             </div>
@@ -170,11 +277,229 @@
         </div>
     </div>
 
-    <!-- 页面内容容器 -->
-    <div id="pageContent" class="page-container">
-        <!-- 当前内容显示在这里 -->
-    </div>
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>关于我们</h4>
+                <p>EduWeb是一个致力于知识共享的开源教育平台</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="courses.html">所有课程</a></li>
+                    <li><a href="community.html">社区讨论</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 EduWeb. 采用 AGPLv3 许可证开源</p>
+        </div>
+    </footer>
 
+    <script src="js/auth.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/notifications.js"></script>
     <script src="js/profile.js"></script>
+    
+    <!-- 紧急修复脚本，直接添加内联事件处理器 -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 直接绑定编辑个人资料按钮
+        const editProfileBtn = document.getElementById('editProfileBtn');
+        if (editProfileBtn) {
+            editProfileBtn.onclick = function() {
+                const modal = document.getElementById('editProfileModal');
+                if (modal) {
+                    document.getElementById('editUsername').value = document.getElementById('userName').textContent;
+                    document.getElementById('editEmail').value = document.getElementById('userEmail').textContent;
+                    document.getElementById('editBio').value = document.querySelector('.user-bio').textContent;
+                    modal.style.display = 'flex';
+                    modal.style.opacity = '1';
+                    modal.style.visibility = 'visible';
+                }
+            };
+        }
+        
+        // 绑定退出登录按钮
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.onclick = function() {
+                if (confirm('确定要退出登录吗？')) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('eduwebUser');
+                    window.location.href = 'index.html';
+                }
+            };
+        }
+        
+        // 关闭编辑个人资料模态框
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        if (closeModalBtn) {
+            closeModalBtn.onclick = function() {
+                const modal = document.getElementById('editProfileModal');
+                if (modal) {
+                    modal.style.display = 'none';
+                    modal.style.opacity = '0';
+                    modal.style.visibility = 'hidden';
+                }
+            };
+        }
+        
+        // 取消编辑按钮
+        const cancelEditBtn = document.getElementById('cancelEditBtn');
+        if (cancelEditBtn) {
+            cancelEditBtn.onclick = function() {
+                const modal = document.getElementById('editProfileModal');
+                if (modal) {
+                    modal.style.display = 'none';
+                    modal.style.opacity = '0';
+                    modal.style.visibility = 'hidden';
+                }
+            };
+        }
+        
+        // 保存个人资料按钮
+        const saveProfileBtn = document.getElementById('saveProfileBtn');
+        if (saveProfileBtn) {
+            saveProfileBtn.onclick = function() {
+                const username = document.getElementById('editUsername').value;
+                const email = document.getElementById('editEmail').value;
+                const bio = document.getElementById('editBio').value;
+                
+                if (!username || !email) {
+                    alert('用户名和邮箱不能为空');
+                    return;
+                }
+                
+                document.getElementById('userName').textContent = username;
+                document.getElementById('userEmail').textContent = email;
+                document.querySelector('.user-bio').textContent = bio;
+                
+                if (document.getElementById('greetingName')) {
+                    document.getElementById('greetingName').textContent = username;
+                }
+                
+                const modal = document.getElementById('editProfileModal');
+                if (modal) {
+                    modal.style.display = 'none';
+                    modal.style.opacity = '0';
+                    modal.style.visibility = 'hidden';
+                }
+                
+                // 显示成功消息
+                alert('个人资料已更新');
+            };
+        }
+        
+        // 更换头像按钮
+        const changeAvatarBtn = document.getElementById('changeAvatarBtn');
+        if (changeAvatarBtn) {
+            changeAvatarBtn.onclick = function() {
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.accept = 'image/*';
+                fileInput.style.display = 'none';
+                document.body.appendChild(fileInput);
+                
+                fileInput.click();
+                
+                fileInput.onchange = function() {
+                    if (this.files && this.files[0]) {
+                        const file = this.files[0];
+                        
+                        if (file.size > 2 * 1024 * 1024) {
+                            alert('文件大小不能超过2MB');
+                            document.body.removeChild(fileInput);
+                            return;
+                        }
+                        
+                        const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                        if (!validTypes.includes(file.type)) {
+                            alert('请选择JPEG, PNG或GIF格式的图片');
+                            document.body.removeChild(fileInput);
+                            return;
+                        }
+                        
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const imageDataUrl = e.target.result;
+                            
+                            const profileAvatar = document.getElementById('profileAvatar');
+                            const userAvatar = document.getElementById('userAvatar');
+                            
+                            if (profileAvatar) profileAvatar.src = imageDataUrl;
+                            if (userAvatar) userAvatar.src = imageDataUrl;
+                            
+                            // 显示成功消息
+                            alert('头像已更新');
+                        };
+                        
+                        reader.readAsDataURL(file);
+                    }
+                    
+                    document.body.removeChild(fileInput);
+                };
+            };
+        }
+        
+        // 修复继续学习按钮
+        const continueBtns = document.querySelectorAll('.btn-continue');
+        if (continueBtns.length > 0) {
+            continueBtns.forEach(btn => {
+                btn.onclick = function(e) {
+                    e.preventDefault();
+                    const courseItem = this.closest('.course-item');
+                    const courseName = courseItem.querySelector('h3').textContent;
+                    let courseId;
+                    
+                    if (courseName === 'Python基础课程') {
+                        courseId = '1';
+                    } else if (courseName === 'Web开发入门') {
+                        courseId = '2';
+                    } else {
+                        courseId = '1'; // 默认ID
+                    }
+                    
+                    window.location.href = `course-learn.html?id=${courseId}`;
+                };
+            });
+        }
+        
+        // 修复开始学习按钮
+        const startLearningBtns = document.querySelectorAll('.btn-start');
+        if (startLearningBtns.length > 0) {
+            startLearningBtns.forEach(btn => {
+                btn.onclick = function(e) {
+                    e.preventDefault();
+                    const favoriteCard = this.closest('.favorite-card');
+                    const courseName = favoriteCard.querySelector('h3').textContent;
+                    let courseId;
+                    
+                    if (courseName === '数据结构与算法') {
+                        courseId = '3';
+                    } else if (courseName === '机器学习基础') {
+                        courseId = '4';
+                    } else {
+                        courseId = '1'; // 默认ID
+                    }
+                    
+                    window.location.href = `course-learn.html?id=${courseId}`;
+                };
+            });
+        }
+        
+        // 查看全部收藏按钮
+        const viewAllFavoritesBtn = document.getElementById('viewAllFavorites');
+        if (viewAllFavoritesBtn) {
+            viewAllFavoritesBtn.onclick = function(e) {
+                e.preventDefault();
+                window.location.href = 'courses.html?favorites=true';
+            };
+        }
+    });
+    </script>
 </body>
 </html> 

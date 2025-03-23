@@ -1,0 +1,355 @@
+/* 课程学习页面样式 */
+:root {
+    --primary-color: #4a6baf;
+    --secondary-color: #6c757d;
+    --accent-color: #3a559f;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --border-color: #dee2e6;
+    --text-color: #212529;
+    --light-text: #6c757d;
+    --sidebar-width: 320px;
+    --header-height: 70px;
+    --avatar-size: 40px;
+}
+
+/* 学习容器 */
+.learning-container {
+    display: flex;
+    min-height: calc(100vh - var(--header-height));
+    margin-top: var(--header-height);
+    padding-top: 20px;
+    background-color: var(--light-color);
+}
+
+/* 课程导航侧边栏 */
+.course-sidebar {
+    width: var(--sidebar-width);
+    background-color: #fff;
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    position: fixed;
+    left: 0;
+    top: var(--header-height);
+    height: calc(100vh - var(--header-height));
+    z-index: 100;
+}
+
+.course-info {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.course-info h2 {
+    margin: 0 0 10px 0;
+    font-size: 1.3rem;
+    color: var(--dark-color);
+}
+
+.instructor-info {
+    display: flex;
+    align-items: center;
+    color: var(--light-text);
+    font-size: 0.9rem;
+}
+
+.instructor-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.progress-overview {
+    padding: 15px 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 8px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 100%;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: var(--success-color);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+.progress-stats {
+    font-size: 0.8rem;
+    color: var(--light-text);
+    text-align: right;
+}
+
+/* 章节列表 */
+.chapters-list {
+    padding: 0;
+}
+
+.chapter {
+    margin-bottom: 10px;
+}
+
+.chapter-header {
+    padding: 12px 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    color: var(--dark-color);
+    cursor: pointer;
+}
+
+.chapter-title {
+    font-size: 0.95rem;
+}
+
+.chapter-progress {
+    font-size: 0.8rem;
+    color: var(--light-text);
+}
+
+.lessons {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.lesson {
+    display: flex;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.lesson:hover {
+    background-color: #f1f4f9;
+}
+
+.lesson.active {
+    background-color: #e8f0fe;
+    border-left: 3px solid var(--primary-color);
+}
+
+.lesson.completed {
+    color: var(--success-color);
+}
+
+.lesson-status {
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.lesson-status i {
+    font-size: 1.1rem;
+}
+
+.lesson-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.lesson-title {
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+}
+
+.lesson-duration {
+    font-size: 0.75rem;
+    color: var(--light-text);
+}
+
+/* 内容区域 */
+.content-area {
+    flex: 1;
+    padding: 20px;
+    margin-left: var(--sidebar-width);
+    overflow-y: auto;
+    min-height: calc(100vh - var(--header-height));
+}
+
+/* 返回课程按钮 */
+.lesson-header {
+    margin-bottom: 20px;
+}
+
+.back-to-course {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary-color);
+    font-weight: 500;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    border: 1px solid var(--primary-color);
+    background-color: rgba(74, 107, 175, 0.05);
+    cursor: pointer;
+}
+
+.back-to-course:hover {
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+}
+
+.back-to-course i {
+    font-size: 1rem;
+}
+
+.lesson-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.nav-button {
+    background-color: #f8f9fa;
+    border: 1px solid var(--border-color);
+    color: var(--dark-color);
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.nav-button:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.current-lesson-info {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+/* 视频区域 */
+.lesson-content {
+    flex: 1;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.video-container {
+    width: 100%;
+    position: relative;
+    padding-top: 56.25%; /* 16:9 比例 */
+    background-color: #000;
+}
+
+.video-container video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.learning-actions {
+    padding: 20px;
+    display: flex;
+    justify-content: flex-end;
+    border-top: 1px solid var(--border-color);
+}
+
+.btn-complete-lesson {
+    background-color: var(--success-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-complete-lesson:hover {
+    background-color: #218838;
+}
+
+/* Toast 提示 */
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.toast-message {
+    background-color: rgba(46, 204, 113, 0.9);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.toast-message.show {
+    opacity: 1;
+}
+
+/* 响应式设计 */
+@media (max-width: 992px) {
+    :root {
+        --sidebar-width: 280px;
+    }
+}
+
+@media (max-width: 768px) {
+    .learning-container {
+        flex-direction: column;
+        margin-top: var(--header-height);
+        padding-top: 15px;
+    }
+    
+    .course-sidebar {
+        transform: translateX(-100%);
+        width: 280px;
+        height: calc(100vh - var(--header-height));
+    }
+    
+    .content-area {
+        margin-left: 0;
+        padding-top: 15px;
+    }
+} 

@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教师课程管理 - EduWeb</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/profile.css">
+    <link rel="stylesheet" href="css/teacher.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <!-- 紧急修复样式 -->
+    <style>
+        /* 确保模态框显示正确 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-overlay.active,
+        .modal-overlay[style*="display: flex"] {
+            display: flex !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
+        /* 确保按钮点击区域正确 */
+        button {
+            cursor: pointer;
+        }
+        
+        /* 确保编辑和发布/下架按钮正确 */
+        .btn-edit-course, .btn-toggle-status, .btn-publish-course {
+            cursor: pointer;
+            display: inline-block;
+        }
+        
+        /* 页面内容容器样式 */
+        .page-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f5f5f5;
+            z-index: 900;
+            padding: 80px 20px 20px;
+            overflow-y: auto;
+        }
+        
+        /* 课程列表页面样式 */
+        .courses-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        
+        .courses-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .courses-header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: #333;
+        }
+        
+        .btn-back {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-back:hover {
+            background-color: #5a6268;
+        }
+        
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .empty-courses {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+            font-size: 1.2rem;
+        }
+
+        /* 调整页脚与内容的距离 */
+        .profile-container {
+            margin-bottom: 120px; /* 将间距增大到原来的2倍 (60px*2=120px) */
+        }
+        
+        .main-footer {
+            margin-top: 0; /* 移除页脚的顶部边距，防止出现多余的空白 */
+            position: relative; /* 确保定位正常 */
+            bottom: 0; /* 确保页脚固定在底部 */
+            width: 100%; /* 确保页脚宽度充满容器 */
+        }
+        
+        html, body {
+            min-height: 100vh; /* 确保页面至少有视口高度 */
+            margin: 0;
+            padding: 0;
+            position: relative; /* 使页面可以放置固定元素 */
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* 在body最底部添加额外的清除浮动，确保没有浮动元素导致的空白 */
+        body::after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <nav class="nav-container">
+            <div class="logo">
+                <a href="index.html"><h1>EduWeb</h1></a>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="courses.html">课程</a>
+                <a href="community.html">社区</a>
+                <a href="dashboard.html">仪表盘</a>
+            </div>
+            <div class="auth-buttons">
+                <!-- 此区域将由auth.js根据登录状态动态更新 -->
+            </div>
+        </nav>
+    </header>
+
+    <div class="profile-container">
+        <div class="profile-header">
+            <h1>教师课程管理</h1>
+            <div class="user-greeting">
+                <p>你好，<span id="greetingName">王老师</span>！欢迎使用课程管理功能。</p>
+                <a href="profile.html" class="btn btn-to-dashboard"><i class="bi bi-person-circle"></i> 返回个人中心</a>
+            </div>
+        </div>
+
+        <div class="profile-content">
+            <!-- 教师信息卡片 -->
+            <div class="profile-card teacher-profile">
+                <div class="card-header">
+                    <h3>教师资料</h3>
+                    <span class="card-icon"><i class="bi bi-mortarboard-fill"></i></span>
+                </div>
+                <div class="card-body">
+                    <div class="user-info-container">
+                        <div class="avatar-container">
+                            <img src="images/default-avatar.svg" class="user-avatar-large" alt="教师头像" id="teacherAvatar" onerror="this.src='images/default-avatar.svg'">
+                        </div>
+                        <div class="user-details">
+                            <h2 id="teacherName">王老师</h2>
+                            <p id="teacherEmail">wang@example.com</p>
+                            <p class="user-bio">资深前端开发工程师，拥有10年教学经验，专注Web开发和用户体验设计，热爱分享技术知识。</p>
+                            <div class="teacher-stats">
+                                <div class="stat-item">
+                                    <i class="bi bi-book"></i>
+                                    <span>已发布课程：<span id="stats-published">4</span>门</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn-create-course" id="createCourseBtn"><i class="bi bi-plus-circle"></i> 创建新课程</button>
+                </div>
+            </div>
+
+            <!-- 已发布课程卡片 -->
+            <div class="profile-card published-courses">
+                <div class="card-header">
+                    <h3>已发布课程</h3>
+                    <span class="card-icon"><i class="bi bi-collection-play"></i></span>
+                </div>
+                <div class="card-body">
+                    <div class="course-list">
+                        <div class="course-item">
+                            <div class="course-img">
+                                <img src="images/default-course-cover.svg" alt="课程封面" onerror="this.src='images/default-course-cover.svg'">
+                            </div>
+                            <div class="course-info">
+                                <h3>Web前端开发入门</h3>
+                                <div class="course-meta">
+                                    <span class="course-favorites"><i class="bi bi-star"></i> 235 收藏</span>
+                                    <span class="course-status published">已发布</span>
+                                </div>
+                            </div>
+                            <div class="course-actions">
+                                <button class="btn-edit-course">编辑</button>
+                                <button class="btn-toggle-status">下架</button>
+                            </div>
+                        </div>
+                        <div class="course-item">
+                            <div class="course-img">
+                                <img src="images/default-course-cover.svg" alt="课程封面" onerror="this.src='images/default-course-cover.svg'">
+                            </div>
+                            <div class="course-info">
+                                <h3>JavaScript高级编程</h3>
+                                <div class="course-meta">
+                                    <span class="course-favorites"><i class="bi bi-star"></i> 178 收藏</span>
+                                    <span class="course-status published">已发布</span>
+                                </div>
+                            </div>
+                            <div class="course-actions">
+                                <button class="btn-edit-course">编辑</button>
+                                <button class="btn-toggle-status">下架</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="teacher-published-courses.html" class="btn-view-all" id="viewAllPublishedCourses">查看全部已发布课程</a>
+                </div>
+            </div>
+
+            <!-- 草稿课程卡片 -->
+            <div class="profile-card draft-courses">
+                <div class="card-header">
+                    <h3>草稿课程</h3>
+                    <span class="card-icon"><i class="bi bi-file-earmark-text"></i></span>
+                </div>
+                <div class="card-body">
+                    <div class="course-list">
+                        <div class="course-item">
+                            <div class="course-img">
+                                <img src="images/default-course-cover.svg" alt="课程封面" onerror="this.src='images/default-course-cover.svg'">
+                            </div>
+                            <div class="course-info">
+                                <h3>Vue.js实战教程</h3>
+                                <div class="course-meta">
+                                    <span class="course-status draft">草稿</span>
+                                </div>
+                            </div>
+                            <div class="course-actions">
+                                <button class="btn-edit-course">继续编辑</button>
+                                <button class="btn-publish-course">发布</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="teacher-draft-courses.html" class="btn-view-all" id="viewAllDraftCourses">查看全部草稿</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 创建课程模态框 -->
+    <div class="modal-overlay" id="createCourseModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>创建新课程</h3>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="createCourseForm">
+                    <div class="form-group">
+                        <label>课程标题 <span class="required">*</span></label>
+                        <input type="text" id="courseTitle" placeholder="请输入课程标题">
+                    </div>
+                    <div class="form-group">
+                        <label>课程分类 <span class="required">*</span></label>
+                        <select id="courseCategory">
+                            <option value="">-- 请选择分类 --</option>
+                            <!-- 分类选项将由JavaScript动态填充 -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>课程简介 <span class="required">*</span></label>
+                        <textarea id="courseDescription" rows="3" placeholder="简要描述你的课程内容"></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label>课程总时长 (小时) <span class="required">*</span></label>
+                            <input type="number" id="courseDuration" min="0.5" step="0.5" placeholder="如：10">
+                        </div>
+                        <div class="form-group half">
+                            <label>章节数 <span class="required">*</span></label>
+                            <input type="number" id="courseChapters" min="1" step="1" placeholder="如：8">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label>难度等级 <span class="required">*</span></label>
+                            <select id="courseDifficulty">
+                                <option value="">-- 请选择难度 --</option>
+                                <option value="beginner">入门</option>
+                                <option value="intermediate">中级</option>
+                                <option value="advanced">高级</option>
+                                <option value="expert">专家</option>
+                            </select>
+                        </div>
+                        <div class="form-group half">
+                            <label>授课语言 <span class="required">*</span></label>
+                            <select id="courseLanguage">
+                                <option value="">-- 请选择语言 --</option>
+                                <option value="chinese">中文</option>
+                                <option value="english">英文</option>
+                                <option value="japanese">日语</option>
+                                <option value="korean">韩语</option>
+                                <option value="french">法语</option>
+                                <option value="other">其他</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>发布日期</label>
+                        <input type="date" id="courseReleaseDate">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>课程封面 <span class="required">*</span></label>
+                        <div class="cover-upload">
+                            <input type="file" id="courseCover" accept="image/*">
+                            <div class="upload-preview">
+                                <img src="images/default-course-cover.svg" id="coverPreview">
+                            </div>
+                            <button type="button" class="btn-upload">选择图片</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>课程视频 <span class="required">*</span></label>
+                        <div class="video-upload-container">
+                            <div class="video-upload-list" id="videoUploadList">
+                                <div class="empty-video-message">请上传课程视频</div>
+                            </div>
+                            <div class="video-upload-actions">
+                                <input type="file" id="courseVideo" accept="video/*" multiple>
+                                <button type="button" class="btn-upload-video" id="addVideoBtn">
+                                    <i class="bi bi-plus-lg"></i> 添加视频
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" id="cancelCreateBtn">取消</button>
+                <button class="btn-save" id="saveDraftBtn">保存草稿</button>
+                <button class="btn-publish" id="publishCourseBtn">立即发布</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑课程模态框 -->
+    <div class="modal-overlay" id="editCourseModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>编辑课程</h3>
+                <button class="close-btn" id="closeEditModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editCourseForm">
+                    <div class="form-group">
+                        <label>课程标题 <span class="required">*</span></label>
+                        <input type="text" id="editCourseTitle">
+                    </div>
+                    <div class="form-group">
+                        <label>课程分类 <span class="required">*</span></label>
+                        <select id="editCourseCategory">
+                            <option value="">-- 请选择分类 --</option>
+                            <!-- 分类选项将由JavaScript动态填充 -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>课程简介 <span class="required">*</span></label>
+                        <textarea id="editCourseDescription" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label>课程总时长 (小时) <span class="required">*</span></label>
+                            <input type="number" id="editCourseDuration" min="0.5" step="0.5">
+                        </div>
+                        <div class="form-group half">
+                            <label>章节数 <span class="required">*</span></label>
+                            <input type="number" id="editCourseChapters" min="1" step="1">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label>难度等级 <span class="required">*</span></label>
+                            <select id="editCourseDifficulty">
+                                <option value="">-- 请选择难度 --</option>
+                                <option value="beginner">入门</option>
+                                <option value="intermediate">中级</option>
+                                <option value="advanced">高级</option>
+                                <option value="expert">专家</option>
+                            </select>
+                        </div>
+                        <div class="form-group half">
+                            <label>授课语言 <span class="required">*</span></label>
+                            <select id="editCourseLanguage">
+                                <option value="">-- 请选择语言 --</option>
+                                <option value="chinese">中文</option>
+                                <option value="english">英文</option>
+                                <option value="japanese">日语</option>
+                                <option value="korean">韩语</option>
+                                <option value="french">法语</option>
+                                <option value="other">其他</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>发布日期</label>
+                        <input type="date" id="editCourseReleaseDate">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>课程封面 <span class="required">*</span></label>
+                        <div class="cover-upload">
+                            <input type="file" id="editCourseCover" accept="image/*">
+                            <div class="upload-preview">
+                                <img src="images/default-course-cover.svg" id="editCoverPreview">
+                            </div>
+                            <button type="button" class="btn-upload">更换图片</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>课程视频 <span class="required">*</span></label>
+                        <div class="video-upload-container">
+                            <div class="video-upload-list" id="editVideoUploadList">
+                                <!-- 编辑模式下已上传的视频会显示在这里 -->
+                                <div class="video-item">
+                                    <div class="video-info">
+                                        <i class="bi bi-file-earmark-play"></i>
+                                        <span class="video-name">第1章：课程介绍.mp4</span>
+                                        <span class="video-size">25.4 MB</span>
+                                    </div>
+                                    <div class="video-actions">
+                                        <button type="button" class="btn-video-delete"><i class="bi bi-trash"></i></button>
+                                    </div>
+                                </div>
+                                <div class="video-item">
+                                    <div class="video-info">
+                                        <i class="bi bi-file-earmark-play"></i>
+                                        <span class="video-name">第2章：基础知识.mp4</span>
+                                        <span class="video-size">42.8 MB</span>
+                                    </div>
+                                    <div class="video-actions">
+                                        <button type="button" class="btn-video-delete"><i class="bi bi-trash"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="video-upload-actions">
+                                <input type="file" id="editCourseVideo" accept="video/*" multiple>
+                                <button type="button" class="btn-upload-video" id="editAddVideoBtn">
+                                    <i class="bi bi-plus-lg"></i> 添加视频
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" id="cancelEditCourseBtn">取消</button>
+                <button class="btn-delete" id="deleteCourseBtn">删除课程</button>
+                <button class="btn-save" id="saveEditBtn">保存更改</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页面内容容器 - 用于显示全部课程等 -->
+    <div class="page-container" id="pageContent"></div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/categories.js"></script>
+    <script src="js/teacher.js"></script>
+    
+    <!-- 紧急修复脚本 -->
+    <script>
+        // 在页面加载后执行额外检查和恢复事件绑定
+        document.addEventListener('DOMContentLoaded', function() {
+            // 创建课程按钮
+            const createCourseBtn = document.getElementById('createCourseBtn');
+            if (createCourseBtn) {
+                createCourseBtn.onclick = function() {
+                    const modal = document.getElementById('createCourseModal');
+                    if (modal) {
+                        // 重置表单
+                        document.getElementById('createCourseForm').reset();
+                        document.getElementById('coverPreview').src = 'images/default-course-cover.svg';
+                        document.getElementById('videoUploadList').innerHTML = '<div class="empty-video-message">请上传课程视频</div>';
+                        
+                        // 显示模态框
+                        modal.style.display = 'flex';
+                        modal.style.opacity = '1';
+                        modal.style.visibility = 'visible';
+                    }
+                };
+            }
+            
+            // 关闭创建课程模态框
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            if (closeModalBtn) {
+                closeModalBtn.onclick = function() {
+                    const modal = document.getElementById('createCourseModal');
+                    if (modal) {
+                        modal.style.display = 'none';
+                        modal.style.opacity = '0';
+                        modal.style.visibility = 'hidden';
+                    }
+                };
+            }
+            
+            // 取消创建课程
+            const cancelCreateBtn = document.getElementById('cancelCreateBtn');
+            if (cancelCreateBtn) {
+                cancelCreateBtn.onclick = function() {
+                    const modal = document.getElementById('createCourseModal');
+                    if (modal) {
+                        modal.style.display = 'none';
+                        modal.style.opacity = '0';
+                        modal.style.visibility = 'hidden';
+                    }
+                };
+            }
+            
+            // 保存课程草稿
+            const saveDraftBtn = document.getElementById('saveDraftBtn');
+            if (saveDraftBtn) {
+                saveDraftBtn.onclick = function() {
+                    // 简单验证
+                    const title = document.getElementById('courseTitle').value;
+                    if (!title) {
+                        alert('课程标题不能为空');
+                        return;
+                    }
+                    
+                    const modal = document.getElementById('createCourseModal');
+                    if (modal) {
+                        modal.style.display = 'none';
+                        modal.style.opacity = '0';
+                        modal.style.visibility = 'hidden';
+                    }
+                    
+                    // 显示成功消息
+                    alert('课程草稿保存成功');
+                };
+            }
+            
+            // 立即发布课程
+            const publishCourseBtn = document.getElementById('publishCourseBtn');
+            if (publishCourseBtn) {
+                publishCourseBtn.onclick = function() {
+                    // 简单验证
+                    const title = document.getElementById('courseTitle').value;
+                    const category = document.getElementById('courseCategory').value;
+                    const description = document.getElementById('courseDescription').value;
+                    
+                    if (!title || !category || !description) {
+                        alert('请填写必填项：课程标题、分类和简介');
+                        return;
+                    }
+                    
+                    const modal = document.getElementById('createCourseModal');
+                    if (modal) {
+                        modal.style.display = 'none';
+                        modal.style.opacity = '0';
+                        modal.style.visibility = 'hidden';
+                    }
+                    
+                    // 显示成功消息
+                    alert('课程已成功发布');
+                };
+            }
+            
+            // 绑定编辑课程按钮
+            const editCourseBtns = document.querySelectorAll('.btn-edit-course');
+            if (editCourseBtns.length > 0) {
+                editCourseBtns.forEach(btn => {
+                    btn.onclick = function() {
+                        const courseItem = this.closest('.course-item');
+                        const courseTitle = courseItem.querySelector('h3').textContent;
+                        
+                        const modal = document.getElementById('editCourseModal');
+                        if (modal) {
+                            // 填充表单数据（这里使用简单的模拟数据）
+                            document.getElementById('editCourseTitle').value = courseTitle;
+                            document.getElementById('editCourseCategory').value = '计算机科学';
+                            document.getElementById('editCourseDescription').value = '这是一门' + courseTitle + '课程的详细描述...';
+                            document.getElementById('editCourseDuration').value = '30';
+                            document.getElementById('editCourseChapters').value = '10';
+                            document.getElementById('editCourseDifficulty').value = 'intermediate';
+                            document.getElementById('editCourseLanguage').value = 'chinese';
+                            
+                            // 显示封面预览
+                            document.getElementById('editCoverPreview').src = 'images/default-course-cover.svg';
+                            
+                            // 显示模态框
+                            modal.style.display = 'flex';
+                            modal.style.opacity = '1';
+                            modal.style.visibility = 'visible';
+                        }
+                    };
+                });
+            }
+            
+            // 关闭编辑课程模态框
+            const closeEditModalBtn = document.getElementById('closeEditModalBtn');
+            if (closeEditModalBtn) {
+                closeEditModalBtn.onclick = function() {
+                    const modal = document.getElementById('editCourseModal');
+                    if (modal) {
+                        modal.style.display = 'none';
+                        modal.style.opacity = '0';
+                        modal.style.visibility = 'hidden';
+                    }
+                };
+            }
+            
+            // 取消编辑课程
+            const cancelEditCourseBtn = document.getElementById('cancelEditCourseBtn');
+            if (cancelEditCourseBtn) {
+                cancelEditCourseBtn.onclick = function() {
+                    const modal = document.getElementById('editCourseModal');
+                    if (modal) {
+                        modal.style.display = 'none';
+                        modal.style.opacity = '0';
+                        modal.style.visibility = 'hidden';
+                    }
+                };
+            }
+            
+            // 保存编辑
+            const saveEditBtn = document.getElementById('saveEditBtn');
+            if (saveEditBtn) {
+                saveEditBtn.onclick = function() {
+                    // 简单验证
+                    const title = document.getElementById('editCourseTitle').value;
+                    if (!title) {
+                        alert('课程标题不能为空');
+                        return;
+                    }
+                    
+                    const modal = document.getElementById('editCourseModal');
+                    if (modal) {
+                        modal.style.display = 'none';
+                        modal.style.opacity = '0';
+                        modal.style.visibility = 'hidden';
+                    }
+                    
+                    // 显示成功消息
+                    alert('课程修改已保存');
+                };
+            }
+            
+            // 删除课程
+            const deleteCourseBtn = document.getElementById('deleteCourseBtn');
+            if (deleteCourseBtn) {
+                deleteCourseBtn.onclick = function() {
+                    if (confirm('确定要删除此课程吗？此操作不可恢复！')) {
+                        const modal = document.getElementById('editCourseModal');
+                        if (modal) {
+                            modal.style.display = 'none';
+                            modal.style.opacity = '0';
+                            modal.style.visibility = 'hidden';
+                        }
+                        
+                        // 显示成功消息
+                        alert('课程已删除');
+                    }
+                };
+            }
+            
+            // 绑定状态切换按钮
+            const toggleStatusBtns = document.querySelectorAll('.btn-toggle-status');
+            if (toggleStatusBtns.length > 0) {
+                toggleStatusBtns.forEach(btn => {
+                    btn.onclick = function() {
+                        const courseItem = this.closest('.course-item');
+                        const statusElement = courseItem.querySelector('.course-status');
+                        
+                        if (statusElement.classList.contains('published')) {
+                            // 当前是已发布状态，切换为草稿
+                            statusElement.classList.remove('published');
+                            statusElement.classList.add('draft');
+                            statusElement.textContent = '草稿';
+                            this.textContent = '发布';
+                            alert('课程已下架');
+                        } else {
+                            // 当前是草稿状态，切换为已发布
+                            statusElement.classList.remove('draft');
+                            statusElement.classList.add('published');
+                            statusElement.textContent = '已发布';
+                            this.textContent = '下架';
+                            alert('课程已发布');
+                        }
+                    };
+                });
+            }
+            
+            // 绑定发布草稿按钮
+            const publishBtns = document.querySelectorAll('.btn-publish-course');
+            if (publishBtns.length > 0) {
+                publishBtns.forEach(btn => {
+                    btn.onclick = function() {
+                        const courseItem = this.closest('.course-item');
+                        const courseTitle = courseItem.querySelector('h3').textContent;
+                        
+                        if (confirm(`确定要发布《${courseTitle}》课程吗？`)) {
+                            courseItem.remove();
+                            alert('课程已成功发布');
+                        }
+                    };
+                });
+            }
+                
+            // 查看全部已发布课程按钮
+            const viewAllPublishedCoursesBtn = document.getElementById('viewAllPublishedCourses');
+            if (viewAllPublishedCoursesBtn) {
+                viewAllPublishedCoursesBtn.onclick = function(e) {
+                    // 允许正常的链接导航到新页面，无需阻止默认行为
+                    // 通过 href 属性跳转到新页面 teacher-published-courses.html
+                };
+            }
+            
+            // 查看全部草稿按钮
+            const viewAllDraftCoursesBtn = document.getElementById('viewAllDraftCourses');
+            if (viewAllDraftCoursesBtn) {
+                viewAllDraftCoursesBtn.onclick = function(e) {
+                    // 允许正常的链接导航到新页面，无需阻止默认行为
+                    // 通过 href 属性跳转到新页面 teacher-draft-courses.html
+                };
+            }
+            
+            // 添加文件上传相关事件绑定
+            setupFileUploads();
+        });
+        
+        // 在页面完全加载后执行额外检查分类菜单
+        window.addEventListener('load', function() {
+            console.log('页面完全加载，执行额外初始化检查...');
+            
+            // 检查分类下拉菜单
+            const courseCategory = document.getElementById('courseCategory');
+            const editCourseCategory = document.getElementById('editCourseCategory');
+            
+            // 检查分类数据是否可用
+            if (typeof COURSE_CATEGORIES !== 'undefined' && COURSE_CATEGORIES.length > 0) {
+                console.log('分类数据可用，共', COURSE_CATEGORIES.length, '项');
+                
+                // 检查下拉菜单是否已填充，如果没有则填充
+                if (courseCategory && courseCategory.options.length <= 1) {
+                    console.log('课程分类下拉菜单未填充，正在重新填充...');
+                    
+                    // 保留默认选项
+                    const defaultOption = courseCategory.querySelector('option');
+                    courseCategory.innerHTML = '';
+                    courseCategory.appendChild(defaultOption);
+                    
+                    // 添加分类选项
+                    COURSE_CATEGORIES.forEach(category => {
+                        const option = document.createElement('option');
+                        option.value = category.name;
+                        option.textContent = category.name;
+                        courseCategory.appendChild(option);
+                    });
+                    
+                    console.log('课程分类下拉菜单已重新填充');
+                }
+                
+                // 同样检查编辑表单的分类下拉菜单
+                if (editCourseCategory && editCourseCategory.options.length <= 1) {
+                    console.log('编辑表单课程分类下拉菜单未填充，正在重新填充...');
+                    
+                    // 保留默认选项
+                    const defaultOption = editCourseCategory.querySelector('option');
+                    editCourseCategory.innerHTML = '';
+                    editCourseCategory.appendChild(defaultOption);
+                    
+                    // 添加分类选项
+                    COURSE_CATEGORIES.forEach(category => {
+                        const option = document.createElement('option');
+                        option.value = category.name;
+                        option.textContent = category.name;
+                        editCourseCategory.appendChild(option);
+                    });
+                    
+                    console.log('编辑表单课程分类下拉菜单已重新填充');
+                }
+            } else {
+                console.error('错误: 分类数据不可用!');
+            }
+        });
+        
+        // 设置文件上传相关功能
+        function setupFileUploads() {
+            // 设置课程封面上传
+            setupCoverUpload('courseCover', 'coverPreview');
+            setupCoverUpload('editCourseCover', 'editCoverPreview');
+            
+            // 设置视频上传
+            setupVideoUpload('courseVideo', 'videoUploadList', 'addVideoBtn');
+            setupVideoUpload('editCourseVideo', 'editVideoUploadList', 'editAddVideoBtn');
+            
+            // 绑定已有的视频删除按钮
+            bindVideoDeleteButtons();
+        }
+        
+        // 设置课程封面上传
+        function setupCoverUpload(inputId, previewId) {
+            const fileInput = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+            const uploadButton = fileInput.parentElement.querySelector('.btn-upload');
+            
+            if (uploadButton) {
+                uploadButton.onclick = function() {
+                    fileInput.click();
+                };
+            }
+            
+            if (fileInput) {
+                fileInput.onchange = function() {
+                    if (fileInput.files && fileInput.files[0]) {
+                        const reader = new FileReader();
+                        
+                        reader.onload = function(e) {
+                            preview.src = e.target.result;
+                        };
+                        
+                        reader.readAsDataURL(fileInput.files[0]);
+                    }
+                };
+            }
+        }
+        
+        // 设置视频上传
+        function setupVideoUpload(inputId, listContainerId, buttonId) {
+            const fileInput = document.getElementById(inputId);
+            const listContainer = document.getElementById(listContainerId);
+            const uploadButton = document.getElementById(buttonId);
+            
+            if (uploadButton) {
+                uploadButton.onclick = function() {
+                    fileInput.click();
+                };
+            }
+            
+            if (fileInput) {
+                fileInput.onchange = function() {
+                    if (fileInput.files && fileInput.files.length > 0) {
+                        // 清除空消息
+                        const emptyMessage = listContainer.querySelector('.empty-video-message');
+                        if (emptyMessage) {
+                            emptyMessage.remove();
+                        }
+                        
+                        // 添加每个选择的视频到列表
+                        for (let i = 0; i < fileInput.files.length; i++) {
+                            const file = fileInput.files[i];
+                            const videoItem = createVideoItem(file);
+                            listContainer.appendChild(videoItem);
+                            
+                            // 模拟上传进度
+                            simulateUploadProgress(videoItem);
+                        }
+                        
+                        // 绑定新添加的删除按钮
+                        bindVideoDeleteButtons();
+                        
+                        // 重置文件输入，允许再次选择同一文件
+                        fileInput.value = '';
+                    }
+                };
+            }
+        }
+        
+        // 创建视频项
+        function createVideoItem(file) {
+            const fileSize = formatFileSize(file.size);
+            const videoItem = document.createElement('div');
+            videoItem.className = 'video-item uploading';
+            videoItem.innerHTML = `
+                <div class="video-info">
+                    <i class="bi bi-file-earmark-play"></i>
+                    <span class="video-name">${file.name}</span>
+                    <span class="video-size">${fileSize}</span>
+                    <span class="video-status uploading">上传中</span>
+                </div>
+                <div class="video-actions">
+                    <button type="button" class="btn-video-delete"><i class="bi bi-trash"></i></button>
+                </div>
+                <div class="video-upload-progress">
+                    <div class="progress-bar-fill" style="width: 0%"></div>
+                </div>
+            `;
+            return videoItem;
+        }
+        
+        // 格式化文件大小
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        // 模拟上传进度
+        function simulateUploadProgress(videoItem) {
+            const progressBar = videoItem.querySelector('.progress-bar-fill');
+            const statusSpan = videoItem.querySelector('.video-status');
+            let progress = 0;
+            
+            const interval = setInterval(() => {
+                progress += Math.random() * 10;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    videoItem.classList.remove('uploading');
+                    statusSpan.textContent = '已完成';
+                    statusSpan.classList.remove('uploading');
+                    statusSpan.classList.add('success');
+                }
+                progressBar.style.width = `${progress}%`;
+            }, 500);
+        }
+        
+        // 绑定视频删除按钮
+        function bindVideoDeleteButtons() {
+            const deleteButtons = document.querySelectorAll('.btn-video-delete');
+            deleteButtons.forEach(button => {
+                button.onclick = function() {
+                    const videoItem = this.closest('.video-item');
+                    videoItem.style.opacity = '0';
+                    videoItem.style.height = '0';
+                    videoItem.style.marginBottom = '0';
+                    videoItem.style.padding = '0';
+                    videoItem.style.transition = 'all 0.3s';
+                    
+                    setTimeout(() => {
+                        videoItem.remove();
+                        
+                        // 检查列表是否为空，如果是则显示空消息
+                        const listContainer = videoItem.parentNode;
+                        if (listContainer && listContainer.children.length === 0) {
+                            listContainer.innerHTML = '<div class="empty-video-message">请上传课程视频</div>';
+                        }
+                    }, 300);
+                };
+            });
+        }
+    </script>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>关于我们</h4>
+                <p>EduWeb是一个致力于知识共享的开源教育平台</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="courses.html">所有课程</a></li>
+                    <li><a href="community.html">社区讨论</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 EduWeb. 采用 AGPLv3 许可证开源</p>
+        </div>
+    </footer>
+</body>
+</html> 

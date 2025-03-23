@@ -1,0 +1,686 @@
+// discussion-detail.js - 处理讨论详情页面功能
+
+document.addEventListener('DOMContentLoaded', function() {
+    // 初始化页面功能
+    initReplyButtons();
+    initToggleReplies();
+    setupEditorToolbar();
+    setupDialogBox();
+    updateUserRoleBadges();
+    setupReplyEditor();
+    
+    // 添加测试数据 - 生成多级嵌套回复进行测试
+    addTestNestedReplies();
+});
+
+// 初始化回复按钮功能
+function initReplyButtons() {
+    document.querySelectorAll('.post-reply-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            // 回复按钮点击处理
+            const replyEditor = document.querySelector('.reply-editor');
+            const postElement = this.closest('.post-card');
+            const postId = postElement.id;
+            const postUsername = postElement.querySelector('.username').textContent;
+            
+            // 设置回复对象
+            const textarea = replyEditor.querySelector('.editor-input');
+            
+            // 添加数据属性，记录是回复哪个帖子，用于提交时知道应该添加到哪个回复下面
+            replyEditor.dataset.replyTo = postId;
+            
+            // 只有当文本区域为空或者不是回复同一个人时才添加回复前缀
+            textarea.value = `@${postUsername} `;
+            
+            // 滚动到编辑器并聚焦
+            replyEditor.scrollIntoView({ behavior: 'smooth' });
+            textarea.focus();
+        });
+    });
+    
+    // 取消回复按钮
+    const cancelBtn = document.querySelector('.cancel-btn');
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', function() {
+            const textarea = document.querySelector('.editor-input');
+            const replyEditor = document.querySelector('.reply-editor');
+            
+            // 如果有内容，显示确认对话框
+            if (textarea.value.trim()) {
+                showDialog();
+            } else {
+                // 如果没有内容，清空输入框并重置回复对象
+                textarea.value = '';
+                // 默认回复主帖
+                replyEditor.dataset.replyTo = 'post1';
+            }
+        });
+    }
+    
+    // 提交回复按钮
+    const submitBtn = document.querySelector('.submit-btn');
+    if (submitBtn) {
+        submitBtn.addEventListener('click', function() {
+            const replyEditor = document.querySelector('.reply-editor');
+            const content = replyEditor.querySelector('.editor-input').value.trim();
+            const replyToId = replyEditor.dataset.replyTo || 'post1'; // 默认回复主帖
+            
+            if (!content) {
+                alert('请输入回复内容');
+                return;
+            }
+            
+            // 模拟添加回复 - 实际项目中应该发送到服务器
+            addReplyToPost(replyToId, content);
+            
+            // 清空输入框并重置回复对象为主帖
+            replyEditor.querySelector('.editor-input').value = '';
+            replyEditor.dataset.replyTo = 'post1'; // 重置为回复主帖
+        });
+    }
+    
+    // 点击编辑器控件时阻止冒泡
+    const editorControls = document.querySelector('.editor-toolbar');
+    if (editorControls) {
+        editorControls.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    }
+}
+
+// 初始化回复折叠/展开功能
+function initToggleReplies() {
+    // 先计算并更新所有嵌套回复的数量
+    updateAllReplyCounters();
+    
+    // 添加展开/折叠事件处理
+    document.querySelectorAll('.toggle-replies').forEach(button => {
+        button.addEventListener('click', function() {
+            const postCard = this.closest('.post-card');
+            const nestedReplies = postCard.querySelector('.nested-replies');
+            
+            if (nestedReplies) {
+                // 切换嵌套回复的展开状态
+                nestedReplies.classList.toggle('expanded');
+                const isExpanded = nestedReplies.classList.contains('expanded');
+                
+                // 同步按钮的状态
+                this.classList.toggle('expanded', isExpanded);
+                
+                // 更新按钮文本和图标
+                const replyCount = countNestedReplies(nestedReplies);
+                
+                if (isExpanded) {
+                    this.innerHTML = `<i class="fas fa-chevron-up"></i> 隐藏回复 (${replyCount})`;
+                } else {
+                    this.innerHTML = `<i class="fas fa-chevron-down"></i> 显示回复 (${replyCount})`;
+                }
+            }
+        });
+    });
+}
+
+// 计算并更新所有嵌套回复的数量
+function updateAllReplyCounters() {
+    document.querySelectorAll('.post-card').forEach(postCard => {
+        const toggleButton = postCard.querySelector('.toggle-replies');
+        const nestedReplies = postCard.querySelector('.nested-replies');
+        
+        if (toggleButton && nestedReplies) {
+            const replyCount = countNestedReplies(nestedReplies);
+            
+            // 更新按钮文本显示正确的回复数量
+            const isExpanded = nestedReplies.classList.contains('expanded');
+            
+            if (isExpanded) {
+                toggleButton.innerHTML = `<i class="fas fa-chevron-up"></i> 隐藏回复 (${replyCount})`;
+            } else {
+                toggleButton.innerHTML = `<i class="fas fa-chevron-down"></i> 显示回复 (${replyCount})`;
+            }
+            
+            // 如果没有回复，隐藏按钮
+            if (replyCount === 0) {
+                toggleButton.style.display = 'none';
+            } else {
+                toggleButton.style.display = 'inline-flex';
+            }
+        }
+    });
+}
+
+// 计算嵌套回复的数量 - 改进版可以处理深层嵌套
+function countNestedReplies(container) {
+    if (!container) return 0;
+    
+    // 计算直接子回复数量
+    const directReplyCards = container.querySelectorAll(':scope > .post-card').length;
+    let totalCount = directReplyCards;
+    
+    // 递归计算子嵌套容器中的回复
+    container.querySelectorAll(':scope > .post-card').forEach(card => {
+        const childContainer = card.querySelector('.nested-replies');
+        if (childContainer) {
+            totalCount += countNestedReplies(childContainer);
+        }
+    });
+    
+    return totalCount;
+}
+
+// 模拟添加回复的函数 (实际项目中应该发送到服务器)
+function addReplyToPost(postId, content) {
+    // 生成唯一ID
+    const replyId = 'reply' + Date.now();
+    const currentUser = getCurrentUser() || {
+        name: '测试用户',
+        avatar: 'images/default-avatar.svg',
+        role: 'learner'
+    };
+    
+    // 构建回复HTML
+    const replyHtml = `
+        <article class="post-card ${postId === 'post1' ? 'reply-card' : 'nested-reply-card'}" id="${replyId}">
+            <div class="post-card-left">
+                <div class="post-avatar">
+                    <img src="${currentUser.avatar}" alt="用户头像" onerror="this.src='images/default-avatar.svg'">
+                    <div class="user-role-badge ${currentUser.role}">${getUserRoleText(currentUser.role)}</div>
+                </div>
+            </div>
+            <div class="post-card-right">
+                <div class="post-header">
+                    <div class="post-author">
+                        <span class="username">${currentUser.name}</span>
+                        <span class="post-date">${formatDate(new Date())}</span>
+                    </div>
+                    <div class="post-options">
+                        <button class="post-options-btn">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="post-content">
+                    <p>${content}</p>
+                </div>
+                <div class="post-actions">
+                    <button class="post-reply-btn" data-require-login="true">
+                        <i class="fas fa-reply"></i>
+                        回复
+                    </button>
+                    <div class="nested-replies"></div>
+                </div>
+            </div>
+        </article>
+    `;
+    
+    // 寻找目标容器并添加回复
+    const targetPost = document.getElementById(postId);
+    if (!targetPost) return;
+    
+    // 判断是回复主帖还是回复其他评论
+    if (postId === 'post1') {
+        // 如果是回复主帖，添加到reply-cards容器中
+        const replyCardsContainer = document.querySelector('.reply-cards');
+        if (replyCardsContainer) {
+            replyCardsContainer.insertAdjacentHTML('beforeend', replyHtml);
+            
+            // 更新回复计数 - 这里应该更新主页面的回复数
+            const replyCount = document.querySelectorAll('.reply-cards > .post-card').length;
+            const repliesHeading = document.querySelector('.replies-heading');
+            if (repliesHeading) {
+                repliesHeading.innerHTML = `<i class="fas fa-comments"></i> 回复 (${replyCount})`;
+            }
+        }
+    } else {
+        // 检查目标容器是否有嵌套回复容器
+        let nestedRepliesContainer = targetPost.querySelector('.nested-replies');
+        
+        // 如果没有嵌套回复容器，创建一个
+        if (!nestedRepliesContainer) {
+            nestedRepliesContainer = document.createElement('div');
+            nestedRepliesContainer.className = 'nested-replies';
+            targetPost.querySelector('.post-actions').insertAdjacentElement('afterend', nestedRepliesContainer);
+            
+            // 添加切换回复按钮
+            let toggleButton = targetPost.querySelector('.toggle-replies');
+            if (!toggleButton) {
+                toggleButton = document.createElement('button');
+                toggleButton.className = 'toggle-replies';
+                toggleButton.innerHTML = '<i class="fas fa-chevron-down"></i> 显示回复 (0)';
+                targetPost.querySelector('.post-actions').appendChild(toggleButton);
+                
+                // 为新按钮添加事件处理
+                toggleButton.addEventListener('click', function() {
+                    const nestedReplies = targetPost.querySelector('.nested-replies');
+                    if (nestedReplies) {
+                        nestedReplies.classList.toggle('expanded');
+                        const isExpanded = nestedReplies.classList.contains('expanded');
+                        const replyCount = countNestedReplies(nestedReplies);
+                        
+                        if (isExpanded) {
+                            this.innerHTML = `<i class="fas fa-chevron-up"></i> 隐藏回复 (${replyCount})`;
+                        } else {
+                            this.innerHTML = `<i class="fas fa-chevron-down"></i> 显示回复 (${replyCount})`;
+                        }
+                    }
+                });
+            }
+        }
+        
+        // 添加回复到嵌套回复容器
+        nestedRepliesContainer.insertAdjacentHTML('beforeend', replyHtml);
+        
+        // 确保嵌套回复容器是展开的
+        nestedRepliesContainer.classList.add('expanded');
+    }
+    
+    // 更新回复计数器
+    updateAllReplyCounters();
+    
+    // 为新添加的回复按钮添加事件处理
+    const newReplyButton = document.getElementById(replyId).querySelector('.post-reply-btn');
+    newReplyButton.addEventListener('click', function(e) {
+        const replyEditor = document.querySelector('.reply-editor');
+        const postElement = this.closest('.post-card');
+        const postId = postElement.id;
+        const postUsername = postElement.querySelector('.username').textContent;
+        
+        replyEditor.classList.remove('collapsed');
+        replyEditor.dataset.replyTo = postId;
+        
+        const textarea = replyEditor.querySelector('.editor-input');
+        textarea.value = `@${postUsername} `;
+        
+        replyEditor.scrollIntoView({ behavior: 'smooth' });
+        textarea.focus();
+    });
+}
+
+// 设置编辑器工具栏
+function setupEditorToolbar() {
+    // 处理格式化按钮
+    document.querySelectorAll('.format-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const editor = document.querySelector('.editor-input');
+            const selection = editor.value.substring(editor.selectionStart, editor.selectionEnd);
+            let formattedText = '';
+            
+            // 根据按钮类型执行不同操作
+            const btnType = this.title;
+            
+            switch(btnType) {
+                case '粗体':
+                    formattedText = `**${selection || '粗体文字'}**`;
+                    break;
+                case '斜体':
+                    formattedText = `*${selection || '斜体文字'}*`;
+                    break;
+                case '插入链接':
+                    const url = prompt('请输入链接地址:', 'https://');
+                    const text = selection || '链接文字';
+                    formattedText = url ? `[${text}](${url})` : selection;
+                    break;
+                case '插入代码':
+                    formattedText = selection ? `\`${selection}\`` : '`代码`';
+                    break;
+                case '插入图片':
+                    const imgUrl = prompt('请输入图片链接:', 'https://');
+                    formattedText = imgUrl ? `![图片](${imgUrl})` : selection;
+                    break;
+                default:
+                    formattedText = selection;
+            }
+            
+            // 将格式化文本插入编辑器
+            if (formattedText) {
+                insertAtCursor(editor, formattedText);
+            }
+        });
+    });
+}
+
+// 在光标位置插入文本
+function insertAtCursor(input, text) {
+    const start = input.selectionStart;
+    const end = input.selectionEnd;
+    const value = input.value;
+    
+    input.value = value.substring(0, start) + text + value.substring(end);
+    input.focus();
+    input.selectionStart = input.selectionEnd = start + text.length;
+}
+
+// 设置确认弹窗功能
+function setupDialogBox() {
+    const dialogOverlay = document.querySelector('.dialog-overlay');
+    const dialogClose = document.querySelector('.dialog-close');
+    const cancelDialog = document.querySelector('.cancel-dialog');
+    const confirmDialog = document.querySelector('.confirm-dialog');
+    
+    if (!dialogOverlay) return;
+    
+    // 显示确认弹窗
+    window.showDialog = function() {
+        dialogOverlay.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    };
+    
+    // 隐藏确认弹窗
+    window.hideDialog = function() {
+        dialogOverlay.style.display = 'none';
+        document.body.style.overflow = '';
+    };
+    
+    // 折叠编辑器
+    window.collapseEditor = function() {
+        const replyEditor = document.querySelector('.reply-editor');
+        const editorInput = document.querySelector('.editor-input');
+        
+        editorInput.value = '';
+        editorInput.blur();
+        
+        // 重置为回复主帖
+        replyEditor.dataset.replyTo = 'post1';
+        
+        hideDialog();
+    };
+    
+    // 点击关闭弹窗按钮
+    if (dialogClose) dialogClose.addEventListener('click', hideDialog);
+    if (cancelDialog) cancelDialog.addEventListener('click', hideDialog);
+    if (confirmDialog) confirmDialog.addEventListener('click', collapseEditor);
+    
+    // 点击弹窗外部关闭弹窗
+    dialogOverlay.addEventListener('click', function(e) {
+        if (e.target === dialogOverlay) {
+            hideDialog();
+        }
+    });
+}
+
+// 更新用户角色名牌显示
+function updateUserRoleBadges() {
+    // 获取所有用户名牌
+    const userBadges = document.querySelectorAll('.user-badge.member');
+    
+    // 如果找到了带有member类的名牌元素
+    if (userBadges.length > 0) {
+        // 模拟从API获取用户角色信息
+        // 在实际项目中，这里应该从后端API获取用户角色信息
+        // 为演示目的，我们会随机分配角色或使用预设数据
+        
+        userBadges.forEach(badge => {
+            // 获取用户名元素
+            const usernameElement = badge.closest('.user-details').querySelector('.username');
+            if (!usernameElement) return;
+            
+            // 获取用户名
+            const username = usernameElement.textContent.trim();
+            
+            // 确定用户角色
+            // 这里仅作演示，实际项目中应该从后端获取真实数据
+            let userRole;
+            
+            // 模拟特定用户的固定角色（管理员除外，管理员已有特殊标记）
+            if (username === '张三') {
+                // 跳过管理员
+                return;
+            } else if (username === '李四' || username === '赵六') {
+                userRole = 'teacher';
+            } else {
+                userRole = 'learner';
+            }
+            
+            // 更新名牌文本和类
+            badge.textContent = userRole === 'teacher' ? '教师' : '学习者';
+            badge.classList.remove('member');
+            badge.classList.add(userRole);
+        });
+    }
+}
+
+// 设置回复编辑器的用户信息显示
+function setupReplyEditor() {
+    // 为主回复编辑器设置默认回复对象为主帖
+    const mainReplyEditor = document.querySelector('.reply-editor');
+    if (mainReplyEditor) {
+        mainReplyEditor.dataset.replyTo = 'post1'; // 默认回复主帖
+    }
+
+    // 检查是否登录，如果登录获取用户信息
+    if (isLoggedIn()) {
+        // 获取当前用户
+        const currentUser = getCurrentUser();
+        if (currentUser) {
+            // 设置编辑器中的用户头像
+            const editorAvatar = document.getElementById('editorAvatar');
+            if (editorAvatar && currentUser.avatar) {
+                editorAvatar.src = currentUser.avatar;
+            }
+            
+            // 如果需要显示当前用户角色标识，可以在这里添加代码
+            // 例如在回复编辑器上方显示用户名和角色标识
+            const replyEditor = document.querySelector('.reply-editor');
+            if (replyEditor) {
+                const roleInfo = document.createElement('div');
+                roleInfo.className = 'editor-role-info';
+                
+                // 确定用户角色显示文本
+                let roleText = getUserRoleText(currentUser.role);
+                
+                roleInfo.innerHTML = `<span class="editor-username">${currentUser.name}</span> <span class="user-badge ${currentUser.role}">${roleText}</span>`;
+                
+                // 插入到编辑器之前
+                const editorContainer = replyEditor.querySelector('.editor-container');
+                if (editorContainer && !replyEditor.querySelector('.editor-role-info')) {
+                    editorContainer.insertBefore(roleInfo, editorContainer.firstChild);
+                }
+            }
+        }
+    }
+    
+    // 隐藏登录提示，显示回复编辑器，或相反
+    const replyEditor = document.querySelector('.reply-editor');
+    const loginNotice = document.getElementById('replyLoginNotice');
+    
+    if (replyEditor && loginNotice) {
+        if (isLoggedIn()) {
+            replyEditor.style.display = 'flex';
+            loginNotice.style.display = 'none';
+        } else {
+            replyEditor.style.display = 'none';
+            loginNotice.style.display = 'block';
+        }
+    }
+}
+
+// 添加测试数据 - 创建多层嵌套回复用于测试
+function addTestNestedReplies() {
+    // 获取一个现有回复作为测试基础
+    const testBaseReply = document.getElementById('nested1');
+    if (!testBaseReply) return;
+    
+    // 创建嵌套回复容器
+    let nestedContainer = testBaseReply.querySelector('.nested-replies');
+    if (!nestedContainer) {
+        nestedContainer = document.createElement('div');
+        nestedContainer.className = 'nested-replies';
+        testBaseReply.querySelector('.post-actions').insertAdjacentElement('afterend', nestedContainer);
+        
+        // 添加切换回复按钮
+        const toggleButton = document.createElement('button');
+        toggleButton.className = 'toggle-replies';
+        toggleButton.innerHTML = '<i class="fas fa-chevron-down"></i> 显示回复 (0)';
+        testBaseReply.querySelector('.post-actions').appendChild(toggleButton);
+        
+        // 为新按钮添加事件处理
+        toggleButton.addEventListener('click', function() {
+            nestedContainer.classList.toggle('expanded');
+            const isExpanded = nestedContainer.classList.contains('expanded');
+            const replyCount = countNestedReplies(nestedContainer);
+            
+            if (isExpanded) {
+                this.innerHTML = `<i class="fas fa-chevron-up"></i> 隐藏回复 (${replyCount})`;
+            } else {
+                this.innerHTML = `<i class="fas fa-chevron-down"></i> 显示回复 (${replyCount})`;
+            }
+        });
+    }
+    
+    // 创建3层嵌套回复
+    createTestReply(nestedContainer, '嵌套回复测试 - 3级', 'test-nested-1');
+    
+    // 创建4层嵌套
+    const level3Reply = document.getElementById('test-nested-1');
+    let level3Container = document.createElement('div');
+    level3Container.className = 'nested-replies';
+    level3Reply.querySelector('.post-actions').insertAdjacentElement('afterend', level3Container);
+    
+    // 添加切换回复按钮
+    const toggleButtonL3 = document.createElement('button');
+    toggleButtonL3.className = 'toggle-replies';
+    toggleButtonL3.innerHTML = '<i class="fas fa-chevron-down"></i> 显示回复 (0)';
+    level3Reply.querySelector('.post-actions').appendChild(toggleButtonL3);
+    
+    // 为新按钮添加事件处理
+    toggleButtonL3.addEventListener('click', function() {
+        level3Container.classList.toggle('expanded');
+        const isExpanded = level3Container.classList.contains('expanded');
+        const replyCount = countNestedReplies(level3Container);
+        
+        if (isExpanded) {
+            this.innerHTML = `<i class="fas fa-chevron-up"></i> 隐藏回复 (${replyCount})`;
+        } else {
+            this.innerHTML = `<i class="fas fa-chevron-down"></i> 显示回复 (${replyCount})`;
+        }
+    });
+    
+    // 添加多个4级回复
+    createTestReply(level3Container, '嵌套回复测试 - 4级 (1)', 'test-nested-2');
+    createTestReply(level3Container, '嵌套回复测试 - 4级 (2)', 'test-nested-3');
+    
+    // 创建5层嵌套
+    const level4Reply = document.getElementById('test-nested-2');
+    let level4Container = document.createElement('div');
+    level4Container.className = 'nested-replies';
+    level4Reply.querySelector('.post-actions').insertAdjacentElement('afterend', level4Container);
+    
+    // 添加切换回复按钮
+    const toggleButtonL4 = document.createElement('button');
+    toggleButtonL4.className = 'toggle-replies';
+    toggleButtonL4.innerHTML = '<i class="fas fa-chevron-down"></i> 显示回复 (0)';
+    level4Reply.querySelector('.post-actions').appendChild(toggleButtonL4);
+    
+    // 为新按钮添加事件处理
+    toggleButtonL4.addEventListener('click', function() {
+        level4Container.classList.toggle('expanded');
+        const isExpanded = level4Container.classList.contains('expanded');
+        const replyCount = countNestedReplies(level4Container);
+        
+        if (isExpanded) {
+            this.innerHTML = `<i class="fas fa-chevron-up"></i> 隐藏回复 (${replyCount})`;
+        } else {
+            this.innerHTML = `<i class="fas fa-chevron-down"></i> 显示回复 (${replyCount})`;
+        }
+    });
+    
+    // 添加5级回复
+    createTestReply(level4Container, '嵌套回复测试 - 5级', 'test-nested-4');
+
+    // 更新所有回复计数
+    updateAllReplyCounters();
+}
+
+// 辅助函数 - 创建测试回复
+function createTestReply(container, content, id) {
+    const replyHtml = `
+        <article class="post-card nested-reply-card" id="${id}">
+            <div class="post-card-left">
+                <div class="post-avatar">
+                    <img src="images/default-avatar.svg" alt="用户头像" onerror="this.src='images/default-avatar.svg'">
+                    <div class="user-role-badge learner">学习者</div>
+                </div>
+            </div>
+            <div class="post-card-right">
+                <div class="post-header">
+                    <div class="post-author">
+                        <span class="username">测试用户</span>
+                        <span class="post-date">${formatDate(new Date())}</span>
+                    </div>
+                    <div class="post-options">
+                        <button class="post-options-btn">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="post-content">
+                    <p>${content}</p>
+                </div>
+                <div class="post-actions">
+                    <button class="post-reply-btn" data-require-login="true">
+                        <i class="fas fa-reply"></i>
+                        回复
+                    </button>
+                </div>
+            </div>
+        </article>
+    `;
+    
+    container.insertAdjacentHTML('beforeend', replyHtml);
+    
+    // 为新添加的回复按钮添加事件处理
+    const newReplyButton = document.getElementById(id).querySelector('.post-reply-btn');
+    newReplyButton.addEventListener('click', function(e) {
+        const replyEditor = document.querySelector('.reply-editor');
+        const postElement = this.closest('.post-card');
+        const postId = postElement.id;
+        const postUsername = postElement.querySelector('.username').textContent;
+        
+        replyEditor.classList.remove('collapsed');
+        replyEditor.dataset.replyTo = postId;
+        
+        const textarea = replyEditor.querySelector('.editor-input');
+        textarea.value = `@${postUsername} `;
+        
+        replyEditor.scrollIntoView({ behavior: 'smooth' });
+        textarea.focus();
+    });
+}
+
+// 辅助函数 - 格式化日期
+function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    
+    return `${year}年${month}月${day}日 ${hours}:${minutes}`;
+}
+
+// 辅助函数 - 获取用户角色显示文本
+function getUserRoleText(role) {
+    switch(role) {
+        case 'admin': return '管理员';
+        case 'staff': return '管理员';
+        case 'teacher': return '教师';
+        case 'learner': return '学习者';
+        case 'member': return '会员';
+        default: return '学习者';
+    }
+}
+
+// 模拟获取当前用户信息
+function getCurrentUser() {
+    // 在实际项目中，这应该从localStorage, sessionStorage或API获取
+    return {
+        name: '当前用户',
+        avatar: 'images/default-avatar.svg',
+        role: 'learner'
+    };
+}
+
+// 模拟登录状态检查
+function isLoggedIn() {
+    // 在实际项目中，这应该检查localStorage, sessionStorage或API
+    return true; // 永远返回true以便测试
+} 

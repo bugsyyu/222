@@ -1,0 +1,720 @@
+/* 仪表盘页面样式 */
+:root {
+    --primary-color: #4a6baf;
+    --primary-dark: #3a5a9f;
+    --primary-light: #5a7bbf;
+    --secondary-color: #5bc0de;
+    --success-color: #5cb85c;
+    --warning-color: #f0ad4e;
+    --danger-color: #d9534f;
+    --dark-color: #343a40;
+    --light-color: #f8f9fa;
+    --gray-color: #adb5bd;
+    --gray-dark: #495057;
+    --gray-light: #e9ecef;
+    --white: #ffffff;
+    --card-border-radius: 10px;
+    --transition-speed: 0.3s;
+    --glass-bg: rgba(255, 255, 255, 0.2);
+    --glass-border: rgba(255, 255, 255, 0.25);
+    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    --glass-blur: 8px;
+}
+
+/* 导航栏样式 */
+.logo h1 a {
+    color: white;
+    text-decoration: none;
+}
+
+/* 全局布局样式 - 确保页面充满整个视口 */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/* 重置body样式为单一背景 */
+body {
+    background: linear-gradient(125deg, #e8eaf6, #e3f2fd); /* 淡蓝色渐变背景 */
+    min-height: 100vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* 添加页面主背景装饰 - 使用渐变代替图片 */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at top right, rgba(74, 107, 175, 0.1), transparent 70%),
+                radial-gradient(ellipse at bottom left, rgba(91, 192, 222, 0.1), transparent 70%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* 仪表盘容器 */
+.dashboard-container {
+    width: 100%;
+    margin: 70px 0 0 0; /* 只保留顶部外边距，其他边距移除 */
+    padding: 0; /* 完全移除内边距 */
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 仪表盘内容区域 */
+.dashboard-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 20px;
+    flex: 1 0 auto; /* 确保内容区域可以扩展填充可用空间 */
+}
+
+/* 添加装饰圆形-仅保留一个简单的装饰 */
+.dashboard-container::before {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(91, 192, 222, 0.07), rgba(74, 107, 175, 0.03));
+    top: 10%;
+    right: 5%;
+    border-radius: 50%;
+    z-index: -1;
+}
+
+.dashboard-header {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(74, 107, 175, 0.1);
+    width: 100%;
+}
+
+.dashboard-header h1 {
+    margin-bottom: 10px;
+    color: var(--dark-color);
+    font-size: 2rem;
+}
+
+.user-greeting {
+    color: var(--gray-dark);
+    font-size: 1.1rem;
+}
+
+/* 返回个人主页按钮 */
+.btn-back-profile {
+    display: inline-block;
+    background-color: rgba(74, 107, 175, 0.8);
+    color: var(--white);
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    transition: all var(--transition-speed);
+    margin-top: 10px;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-back-profile:hover {
+    background-color: rgba(58, 90, 159, 0.9);
+    box-shadow: 0 4px 15px rgba(74, 107, 175, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-back-profile i {
+    margin-right: 5px;
+}
+
+/* 仪表盘网格布局 */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 30px;
+    margin-bottom: 60px; /* 增加底部边距，保证与页脚有合适的距离 */
+    width: 100%;
+}
+
+@media (max-width: 1200px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 20px;
+    }
+    .dashboard-content {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        grid-gap: 15px;
+    }
+    .dashboard-container {
+        margin-top: 60px;
+    }
+    .dashboard-header h1 {
+        font-size: 1.8rem;
+    }
+    .dashboard-content {
+        padding: 10px;
+    }
+    .card-body {
+        padding: 15px;
+    }
+    .card-footer {
+        padding: 12px 15px;
+    }
+}
+
+/* 卡片样式 - 玻璃拟态效果 */
+.dashboard-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border-radius: var(--card-border-radius);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    padding: 18px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(74, 107, 175, 0.75);
+    color: var(--white);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 卡片头部添加光晕效果 */
+.card-header::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        rgba(255, 255, 255, 0.15),
+        rgba(255, 255, 255, 0.05),
+        transparent
+    );
+    transform: rotate(30deg);
+    pointer-events: none;
+}
+
+.card-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    position: relative;
+    z-index: 1;
+}
+
+.card-icon {
+    font-size: 1.4rem;
+    position: relative;
+    z-index: 1;
+}
+
+.card-body {
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+}
+
+.card-footer {
+    padding: 15px 20px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+}
+
+/* 页脚样式优化 */
+.main-footer {
+    background-color: var(--dark-color);
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    padding: 25px 0;
+    margin-top: auto; /* 确保页脚始终在底部 */
+    flex-shrink: 0; /* 防止页脚被压缩 */
+}
+
+/* 课程进度卡片样式 */
+.course-progress {
+    color: var(--dark-color);
+}
+
+.course-progress-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.progress-item {
+    width: 100%;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.progress-info h4 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--dark-color);
+}
+
+.progress-bar {
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    overflow: hidden;
+    backdrop-filter: blur(2px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-light), var(--primary-color));
+    border-radius: 5px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-all-courses {
+    display: inline-block;
+    background-color: rgba(74, 107, 175, 0.7);
+    color: var(--white);
+    text-decoration: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    transition: all var(--transition-speed);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+    text-align: center;
+}
+
+.btn-all-courses:hover {
+    background-color: rgba(74, 107, 175, 0.9);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(74, 107, 175, 0.3);
+}
+
+/* 每日打卡卡片样式 */
+.daily-checkin {
+    color: var(--dark-color);
+}
+
+.checkin-status {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.checkin-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: var(--gray-dark);
+    margin-bottom: 10px;
+    transition: all var(--transition-speed);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(4px);
+}
+
+.checkin-circle.checked {
+    background-color: rgba(92, 184, 92, 0.3);
+    color: #fff;
+    border-color: rgba(92, 184, 92, 0.5);
+}
+
+.checkin-message {
+    font-size: 1rem;
+    color: var(--gray-dark);
+    margin: 0;
+}
+
+.checkin-streak {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.streak-count {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    transition: all 0.3s ease;
+    text-shadow: 0 0 10px rgba(74, 107, 175, 0.5);
+}
+
+.streak-label {
+    font-size: 0.9rem;
+    color: var(--gray-dark);
+}
+
+/* 新的打卡按钮样式 - 使用提供的custom-button样式并适配网站 */
+.btn-checkin {
+    background-color: rgba(26, 26, 46, 0.8); /* 半透明深色背景，适配玻璃态 */
+    color: var(--primary-color); /* 使用我们的主色调 */
+    border: none;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 30px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    z-index: 5;
+    width: 100%;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
+
+.btn-checkin::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    background-color: var(--primary-color);
+    transition: all 0.3s ease;
+    border-radius: 50%;
+    z-index: -1;
+    transform: translate(-50%, -50%) scale(0);
+}
+
+.btn-checkin:hover::before {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.9;
+}
+
+.btn-checkin:hover {
+    box-shadow: 0 15px 20px rgba(74, 107, 175, 0.4);
+    transform: translateY(-5px);
+    color: #fff;
+}
+
+/* 按压波浪效果 */
+.btn-checkin:active::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    animation: ripple 0.6s ease-out;
+    z-index: -1;
+}
+
+@keyframes ripple {
+    to {
+        transform: translate(-50%, -50%) scale(4);
+        opacity: 0;
+    }
+}
+
+/* 文本闪光效果 */
+.btn-checkin::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.8) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    transform: skewX(-25deg);
+    transition: all 0.3s ease;
+    z-index: -1;
+}
+
+.btn-checkin:hover::after {
+    left: 100%;
+    transition: all 0.5s ease;
+}
+
+/* 禁用状态时的样式 */
+.btn-checkin:disabled {
+    background-color: rgba(173, 181, 189, 0.3);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.btn-checkin:disabled::before,
+.btn-checkin:disabled::after {
+    display: none;
+}
+
+/* 按钮内容布局 */
+.btn-checkin .btn-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-checkin i {
+    margin-right: 8px;
+    font-size: 1.2em;
+}
+
+/* 打卡历史卡片样式 */
+.checkin-history {
+    color: var(--dark-color);
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.calendar-weekday {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--gray-dark);
+    margin-bottom: 10px;
+}
+
+.calendar-day {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: var(--dark-color);
+    font-size: 0.9rem;
+    transition: all var(--transition-speed);
+    backdrop-filter: blur(2px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+}
+
+.calendar-day.completed {
+    background-color: rgba(92, 184, 92, 0.4);
+    color: white;
+    border-color: rgba(92, 184, 92, 0.5);
+    box-shadow: 0 0 10px rgba(92, 184, 92, 0.3);
+}
+
+.calendar-day.today {
+    background-color: rgba(91, 192, 222, 0.4);
+    color: white;
+    border-color: rgba(91, 192, 222, 0.5);
+    box-shadow: 0 0 10px rgba(91, 192, 222, 0.3);
+}
+
+.calendar-legend {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9rem;
+}
+
+/* 添加动画效果 */
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(74, 107, 175, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(74, 107, 175, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(74, 107, 175, 0); }
+}
+
+.streak-count {
+    animation: pulse 2s infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0px); }
+}
+
+.dashboard-card {
+    animation: none; /* 移除浮动动画 */
+}
+
+.dashboard-card:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.dashboard-card:nth-child(2) {
+    animation-delay: 2s;
+}
+
+.dashboard-card:nth-child(3) {
+    animation-delay: 4s;
+}
+
+/* 按钮呼吸光效 */
+@keyframes button-glow {
+    0% { box-shadow: 0 0 5px rgba(74, 107, 175, 0.3); }
+    50% { box-shadow: 0 0 15px rgba(74, 107, 175, 0.6); }
+    100% { box-shadow: 0 0 5px rgba(74, 107, 175, 0.3); }
+}
+
+.btn-checkin:not(:disabled) {
+    animation: button-glow 2s infinite;
+}
+
+/* 按钮图标动画 */
+@keyframes icon-bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+.btn-checkin:hover i {
+    animation: icon-bounce 0.6s ease infinite;
+}
+
+/* 打卡成功动画效果 */
+@keyframes countUp {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.count-animation {
+    animation: countUp 0.5s ease-out;
+}
+
+/* 确保内容不会被透明度影响 */
+.dashboard-card * {
+    position: relative;
+    z-index: 2;
+}
+
+/* 确保卡片内部内容清晰可见 */
+.progress-item, .checkin-status, .calendar-grid {
+    width: 100%;
+}
+
+/* 确保立即打卡按钮可点击 */
+.btn-checkin {
+    position: relative;
+    z-index: 5;
+}
+
+/* 创建更好的玻璃态效果的装饰 */
+.dashboard-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-item:hover .progress-fill {
+    box-shadow: 0 0 10px rgba(74, 107, 175, 0.5);
+}
+
+/* 打卡状态交互效果 */
+.checkin-circle i {
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.checkin-circle.checked i {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+/* 优化日历显示 - 确保样式一致 */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+}
+
+/* 优化大字号显示 */
+.streak-count {
+    background: linear-gradient(135deg, #4a6baf, #5bc0de);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+} 

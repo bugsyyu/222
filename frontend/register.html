@@ -7,6 +7,19 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/auth.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <!-- 检查登录状态，已登录用户直接跳转 -->
+    <script>
+        // 页面加载前检查登录状态
+        (function() {
+            // 检查用户是否已登录
+            const userData = localStorage.getItem('eduwebUser');
+            if (userData) {
+                // 用户已登录，重定向到首页
+                window.location.href = 'index.html';
+            }
+        })();
+    </script>
 </head>
 <body>
     <header class="main-header">
@@ -15,9 +28,10 @@
                 <a href="index.html"><h1>EduWeb</h1></a>
             </div>
             <div class="nav-links">
+                <a href="index.html">首页</a>
                 <a href="courses.html">课程</a>
-                <a href="community.html">社区</a>
-                <a href="about.html">关于</a>
+                <a href="community-loading.html">社区</a>
+                <a href="dashboard.html" data-require-login="true">仪表盘</a>
             </div>
             <div class="auth-buttons">
                 <a href="login.html" class="btn btn-login">登录</a>
@@ -37,34 +51,12 @@
                 <p class="signup-subtitle">免费加入EduWeb</p>
 
                 <div class="signup-role-selector">
-                    <button class="role-btn active" data-role="learner">学习者</button>
-                    <button class="role-btn" data-role="teacher">教师</button>
-                    <button class="role-btn" data-role="parent">家长</button>
+                    <a href="#" class="role-btn active" data-role="learner">学习者</a>
+                    <a href="#" class="role-btn" data-role="teacher">教师</a>
                 </div>
 
                 <div class="signup-form-container">
                     <form id="registerForm" class="auth-form" action="/api/register.php" method="POST">
-                        <div class="form-group">
-                            <label for="birthdate">出生日期</label>
-                            <div class="birthdate-inputs">
-                                <select name="month" id="month" required>
-                                    <option value="">月份</option>
-                                    <option value="1">1月</option>
-                                    <!-- 其他月份选项 -->
-                                </select>
-                                <select name="day" id="day" required>
-                                    <option value="">日期</option>
-                                    <option value="1">1</option>
-                                    <!-- 其他日期选项 -->
-                                </select>
-                                <select name="year" id="year" required>
-                                    <option value="">年份</option>
-                                    <option value="2010">2010</option>
-                                    <!-- 其他年份选项 -->
-                                </select>
-                            </div>
-                        </div>
-
                         <div class="form-group">
                             <label for="email">邮箱</label>
                             <input type="email" id="email" name="email" required>
@@ -86,9 +78,13 @@
                                 <span class="strength-text"></span>
                             </div>
                         </div>
-
+                        
                         <div class="form-group">
-                            <input type="text" id="class-code" name="class-code" placeholder="班级代码（可选）">
+                            <label for="confirm_password">确认密码</label>
+                            <div class="password-input">
+                                <input type="password" id="confirm_password" name="confirm_password" required>
+                                <i class="fas fa-eye-slash toggle-password"></i>
+                            </div>
                         </div>
 
                         <div class="form-group terms">
@@ -101,21 +97,6 @@
                         <button type="submit" class="btn btn-primary btn-block">创建账号</button>
                     </form>
 
-                    <div class="auth-divider">
-                        <span>或</span>
-                    </div>
-
-                    <div class="social-login">
-                        <button class="btn btn-social btn-google">
-                            <i class="fab fa-google"></i>
-                            使用Google账号注册
-                        </button>
-                        <button class="btn btn-social btn-github">
-                            <i class="fab fa-github"></i>
-                            使用GitHub账号注册
-                        </button>
-                    </div>
-
                     <p class="auth-footer">
                         已有账号？ <a href="login.html">立即登录</a>
                     </p>
@@ -125,5 +106,6 @@
     </div>
 
     <script src="js/auth.js"></script>
+    <script src="js/common.js"></script>
 </body>
 </html> 

@@ -10,7 +10,7 @@ body {
 
 main {
     flex: 1 0 auto;
-    padding-top: 80px;
+    padding-top: 160px; /* 增加到160px，为导航栏留出两倍空间 */
     background-color: var(--background-color);
 }
 
@@ -20,9 +20,9 @@ main {
     padding: 0 2rem;
 }
 
-/* 页脚间距 */
+/* 页脚间距 - 加倍 */
 .main-footer {
-    margin-top: 4rem;
+    margin-top: 8rem; /* 从4rem增加到8rem，使页脚距离加倍 */
     padding-top: 3rem;
 }
 
@@ -53,7 +53,7 @@ main {
     font-size: 1.75rem;
     font-weight: 600;
     color: var(--text-color);
-    margin-bottom: 1.5rem;
+    margin-bottom: 0;
     padding-top: 0.5rem;
 }
 
@@ -62,79 +62,100 @@ main {
     margin-bottom: 3rem;
 }
 
-/* 搜索栏样式 */
-.search-section {
-    margin: 2rem 0;
-}
-
-.search-section .input-group {
-    display: flex;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.search-section input {
-    flex: 1;
-    padding: 1rem 1.5rem;
-    border: 1px solid var(--border-color);
-    border-radius: 50px 0 0 50px;
-    font-size: 1rem;
-    outline: none;
-}
-
-.search-section button {
-    padding: 1rem 2rem;
-    background-color: var(--primary-color);
-    border: none;
-    border-radius: 0 50px 50px 0;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.search-section button:hover {
-    background-color: #2577b5;
-}
-
-.search-section i {
-    font-size: 1.2rem;
-}
-
-/* 分类卡片样式 */
+/* 分类卡片样式 - 拟态UI效果 */
 .category-card {
     text-decoration: none;
     color: inherit;
     display: block;
-    transition: transform 0.2s;
-}
-
-.category-card:hover {
-    transform: translateY(-5px);
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    perspective: 1000px;
 }
 
 .category-card .card {
     background: white;
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 1.5rem;
+    border-radius: 16px;
+    padding: 1.75rem;
     height: 100%;
-    transition: box-shadow 0.2s;
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 
+        8px 8px 16px rgba(200, 210, 230, 0.3),
+        -8px -8px 16px rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(200, 210, 230, 0.2);
+    transform-origin: center center;
+    transform-style: preserve-3d;
+    position: relative;
+    overflow: hidden;
+}
+
+.category-card:hover {
+    transform: translateY(-10px);
 }
 
 .category-card:hover .card {
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 
+        12px 12px 24px rgba(200, 210, 230, 0.4),
+        -12px -12px 24px rgba(255, 255, 255, 0.9);
+    transform: rotateX(10deg);
+}
+
+/* 自定义图标颜色 */
+.category-card:nth-child(1) .category-icon {
+    color: #3498db;
+}
+
+.category-card:nth-child(2) .category-icon {
+    color: #2ecc71;
+}
+
+.category-card:nth-child(3) .category-icon {
+    color: #e74c3c;
+}
+
+.category-card:nth-child(4) .category-icon {
+    color: #f39c12;
+}
+
+.category-card:nth-child(5) .category-icon {
+    color: #9b59b6;
+}
+
+.category-card:nth-child(6) .category-icon {
+    color: #1abc9c;
+}
+
+.category-card:nth-child(7) .category-icon {
+    color: #e84393;
+}
+
+.category-card:nth-child(8) .category-icon {
+    color: #f1c40f;
 }
 
 .category-icon {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    color: var(--primary-color);
+    font-size: 2.2rem;
+    margin-bottom: 1.2rem;
+    height: 2.2rem;
+    display: flex;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.category-card .card-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0;
+    position: relative;
+    z-index: 2;
 }
 
 .category-card .card-title {
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
     color: var(--text-color);
 }
 
@@ -142,66 +163,100 @@ main {
     font-size: 0.9rem;
     color: #6c757d;
     margin-bottom: 0;
+    line-height: 1.5;
 }
 
-/* 热门课程卡片样式 */
+/* 热门课程卡片样式 - 美化UI */
 .course-card {
-    background: white;
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(240,245,255,0.95) 100%);
+    border: 1px solid rgba(200, 210, 230, 0.3);
+    border-radius: 16px;
     overflow: hidden;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: all 0.3s ease;
     height: 100%;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
+    backdrop-filter: blur(5px);
 }
 
 .course-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+    border-color: rgba(180, 200, 230, 0.5);
 }
 
 .course-card img {
     width: 100%;
-    height: 160px;
+    height: 180px;
     object-fit: cover;
+    transition: all 0.5s ease;
+}
+
+.course-card:hover img {
+    transform: scale(1.05);
 }
 
 .course-card .card-body {
-    padding: 1.25rem;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
 }
 
 .course-card .course-category {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     color: var(--primary-color);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+    font-weight: 500;
 }
 
 .course-card .card-title {
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
     color: var(--text-color);
+    line-height: 1.4;
 }
 
 .course-card .instructor {
     font-size: 0.9rem;
     color: #6c757d;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+}
+
+.course-card .instructor i {
+    margin-right: 5px;
+    font-size: 1rem;
+    color: #888;
 }
 
 .course-card .course-stats {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     color: #6c757d;
     margin-top: auto;
 }
 
 .course-card .rating {
     color: #ffc107;
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+}
+
+.course-card .rating i {
+    margin-right: 5px;
+}
+
+.course-card .students {
+    display: flex;
+    align-items: center;
+}
+
+.course-card .students i {
+    margin-right: 5px;
+    color: #888;
 }
 
 /* 响应式布局 */
@@ -239,71 +294,463 @@ main {
     }
 }
 
-/* 暗色模式支持 */
+@media (max-width: 768px) {
+    .col-md-4 {
+        width: 100%;
+    }
+    
+    .col-md-6 {
+        width: 100%;
+    }
+    
+    main {
+        padding-top: 120px; /* 移动端适当减少顶部间距，但仍保持比原来大 */
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+    }
+    
+    .category-card .card {
+        padding: 1.2rem;
+    }
+    
+    .category-icon {
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+    }
+    
+    .search-icon {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .search-container {
+        width: 95%;
+        padding: 1.8rem;
+    }
+    
+    .overlay-search-input {
+        padding: 1.2rem 1.5rem;
+        font-size: 1.1rem;
+    }
+    
+    .close-search {
+        top: 15px;
+        right: 15px;
+        width: 40px;
+        height: 40px;
+    }
+    
+    .search-container h2 {
+        font-size: 1.5rem;
+    }
+    
+    .search-results {
+        max-height: 60vh; /* 在移动设备上允许更多的滚动空间 */
+    }
+}
+
+/* 移动设备和平板设备的额外响应式优化 */
+@media (max-width: 576px) {
+    main {
+        padding-top: 100px; /* 进一步减少顶部间距在手机上 */
+    }
+    
+    .section-header {
+        flex-direction: row; /* 确保在小屏幕上仍然水平排列 */
+    }
+    
+    .section-title {
+        font-size: 1.3rem;
+    }
+    
+    .search-icon {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .search-icon i {
+        font-size: 1rem;
+    }
+    
+    .category-card .card {
+        padding: 1rem;
+    }
+    
+    .category-icon {
+        font-size: 1.5rem;
+        margin-bottom: 0.8rem;
+    }
+    
+    .category-card .card-title {
+        font-size: 1rem;
+    }
+    
+    .category-card .card-text {
+        font-size: 0.8rem;
+    }
+    
+    .search-container {
+        padding: 1.5rem;
+    }
+    
+    .search-container h2 {
+        font-size: 1.3rem;
+    }
+    
+    .search-container h2::after {
+        width: 30px;
+        height: 2px;
+        bottom: -6px;
+    }
+    
+    .overlay-search-input {
+        padding: 1rem 1.2rem;
+        font-size: 1rem;
+    }
+    
+    .close-search {
+        top: 10px;
+        right: 10px;
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+}
+
+@media (min-width: 577px) and (max-width: 991px) {
+    main {
+        padding-top: 130px; /* 在中等屏幕上的适当间距 */
+    }
+    
+    .search-icon {
+        width: 42px;
+        height: 42px;
+    }
+    
+    .search-container h2 {
+        font-size: 1.6rem;
+    }
+    
+    .search-container {
+        padding: 2rem;
+    }
+}
+
+/* 针对所有设备类型的优化动画效果 */
+@media (prefers-reduced-motion: reduce) {
+    .search-overlay,
+    .search-container,
+    .close-search,
+    .search-icon,
+    .category-card,
+    .category-card .card {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* 大屏幕和高清屏优化 */
+@media (min-width: 1600px) {
+    .container {
+        max-width: 1400px;
+    }
+    
+    main {
+        padding-top: 180px;
+    }
+    
+    .search-icon {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .search-icon i {
+        font-size: 1.4rem;
+    }
+    
+    .search-container {
+        max-width: 850px;
+    }
+    
+    .overlay-search-input {
+        padding: 1.6rem 2rem;
+        font-size: 1.3rem;
+    }
+}
+
 @media (prefers-color-scheme: dark) {
     :root {
-        color-scheme: dark;
+        --background-color: #121212;
+        --text-color: #e0e0e0;
     }
-
+    
     body {
-        background-color: var(--background-dark);
-        color: white;
+        background-color: var(--background-color);
+        color: var(--text-color);
     }
-
+    
     main {
-        background-color: var(--background-dark);
+        background-color: var(--background-color);
     }
-
+    
     .section-title {
-        color: white;
+        color: var(--text-color);
     }
-
-    .search-section input {
-        background-color: #2d2d2d;
-        border-color: rgba(255, 255, 255, 0.1);
-        color: white;
+    
+    .category-card .card {
+        background-color: #1e1e1e;
+        box-shadow: 
+            8px 8px 16px rgba(0, 0, 0, 0.3),
+            -8px -8px 16px rgba(40, 40, 40, 0.2);
+        border: 1px solid rgba(60, 60, 60, 0.3);
     }
-
-    .search-section input::placeholder {
-        color: #adb5bd;
+    
+    .category-card:hover .card {
+        box-shadow: 
+            12px 12px 24px rgba(0, 0, 0, 0.4),
+            -12px -12px 24px rgba(40, 40, 40, 0.3);
     }
-
-    .search-section button {
-        background-color: var(--primary-color);
+    
+    .category-card .card-title {
+        color: var(--text-color);
     }
-
-    .category-card .card,
+    
+    .category-card .card-text {
+        color: rgba(220, 220, 220, 0.7);
+    }
+    
     .course-card {
-        background-color: #2d2d2d;
-        border-color: rgba(255, 255, 255, 0.1);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        background: linear-gradient(135deg, rgba(30,32,36,0.95) 0%, rgba(25,27,32,0.95) 100%);
+        border-color: rgba(60, 65, 75, 0.3);
     }
-
-    .category-card .card-title,
+    
+    .course-card:hover {
+        border-color: rgba(80, 90, 110, 0.5);
+    }
+    
     .course-card .card-title {
-        color: white;
+        color: var(--text-color);
     }
-
-    .category-card .card-text,
+    
+    .course-card .course-category {
+        color: #62b7ff;
+    }
+    
     .course-card .instructor,
     .course-card .course-stats {
         color: #adb5bd;
     }
-
-    .category-icon {
-        color: var(--primary-color);
+    
+    .spinner {
+        border-color: rgba(255, 255, 255, 0.1) !important;
+        border-top-color: var(--primary-color) !important;
     }
+}
 
-    .course-card .course-category {
-        color: var(--primary-color);
-    }
+/* 课程链接样式 */
+.course-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    height: 100%;
+}
 
-    .course-card .rating {
-        color: #ffd43b;
-    }
+/* 空结果样式 */
+.empty-results {
+    padding: 2rem;
+    text-align: center;
+}
 
-    .category-card:hover .card,
-    .course-card:hover {
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+.empty-results i {
+    font-size: 3rem;
+    color: #ccc;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.empty-results h3 {
+    color: #555;
+    margin-bottom: 0.5rem;
+}
+
+.empty-results p {
+    color: #777;
+}
+
+/* 覆盖层中搜索结果样式 */
+.search-overlay .list-group-item {
+    border-radius: 10px;
+    margin-bottom: 0.75rem;
+    border: 1px solid rgba(0,0,0,0.08);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    padding: 0.75rem 1.25rem;
+}
+
+.search-overlay .list-group-item:hover {
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    border-color: rgba(66, 153, 225, 0.3);
+}
+
+.search-overlay .list-group-item h5 {
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.search-overlay .list-group-item:hover h5 {
+    color: var(--primary-color);
+}
+
+.search-overlay .list-group-item p {
+    margin-bottom: 0.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+    .search-overlay .list-group-item {
+        background-color: #2a2a2a;
+        border-color: rgba(255,255,255,0.1);
+        color: var(--text-color);
     }
+    
+    .search-overlay .list-group-item:hover {
+        background-color: #333;
+        border-color: rgba(66, 153, 225, 0.4);
+    }
+    
+    .search-overlay .list-group-item small {
+        color: rgba(255,255,255,0.6);
+    }
+    
+    .search-overlay .list-group-item p {
+        color: rgba(255,255,255,0.8);
+    }
+    
+    .empty-results i {
+        color: #444;
+    }
+    
+    .empty-results h3 {
+        color: #ddd;
+    }
+    
+    .empty-results p {
+        color: #aaa;
+    }
+}
+
+/* 搜索覆盖层和图标的稳定性增强 */
+.search-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 2000 !important;
+}
+
+.search-overlay.active {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: flex !important;
+}
+
+.search-icon {
+    position: relative;
+    z-index: 100;
+}
+
+/* 增强搜索动画可见性 */
+.search-animation {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 2500 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px) !important;
+}
+
+.search-animation.active {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: flex !important;
+}
+
+/* 更明显的搜索加载动画 */
+.search-loading {
+    width: 70px;
+    height: 70px;
+    position: relative;
+    perspective: 600px;
+    z-index: 2600 !important; /* 确保动画在最顶层 */
+}
+
+.search-loading div {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    animation: search-loading 1.5s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    box-shadow: 0 0 15px rgba(26, 106, 173, 0.7), 0 0 5px rgba(26, 106, 173, 0.5);
+}
+
+/* 修复搜索框输入文字颜色对比度 */
+.overlay-search-input {
+    color: #333 !important; /* 确保输入文字在浅色背景下可见 */
+}
+
+.has-content {
+    color: #333 !important;
+    font-weight: 500 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+    .overlay-search-input {
+        color: #ffffff !important; /* 确保输入文字在暗色模式下可见 */
+    }
+    
+    .has-content {
+        color: #ffffff !important;
+    }
+    
+    .search-animation {
+        background-color: rgba(0, 0, 0, 0.4) !important;
+    }
+    
+    /* 增强暗模式下搜索点的可见性 */
+    .search-loading div {
+        box-shadow: 0 0 15px rgba(66, 153, 225, 0.8), 0 0 5px rgba(66, 153, 225, 0.6);
+    }
+}
+
+/* 修复在某些浏览器下闪烁问题 */
+.search-container {
+    will-change: transform, opacity;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+/* 确保动画流畅 */
+@media screen and (min-width: 1px) {
+    .search-overlay,
+    .search-animation,
+    .search-container,
+    .close-search {
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+    }
+}
+
+/* 确保所有动画元素在不活跃时不会意外显示 */
+.search-overlay:not(.active),
+.search-animation:not(.active) {
+    pointer-events: none !important;
 } 

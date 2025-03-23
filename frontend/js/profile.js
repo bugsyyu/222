@@ -1,100 +1,413 @@
-// 页面加载完成后执行
 document.addEventListener('DOMContentLoaded', function() {
-    // 初始化用户信息
-    initializeUserInfo();
-    
-    // 绑定事件监听器
-    bindEventListeners();
-    
-    // 加载用户数据
-    loadUserData();
+    try {
+        // 确保UserInfoManager已加载
+        if (window.UserInfoManager) {
+            initUserInfo();
+            setupEventListeners();
+            const oldBindFn = window.bindEventListeners;
+            if (typeof oldBindFn === 'function') {
+                window.bindEventListeners = function() {
+                    console.log('Using new event handlers instead');
+                };
+            }
+
+            // 获取通知设置相关元素
+            const openNotificationSettingsBtn = document.getElementById('openNotificationSettingsBtn');
+            const closeNotificationSettingsBtn = document.getElementById('closeNotificationSettingsBtn');
+            const cancelNotificationSettingsBtn = document.getElementById('cancelNotificationSettingsBtn');
+            const saveNotificationSettingsBtn = document.getElementById('saveNotificationSettingsBtn');
+            const notificationSettingsModal = document.getElementById('notificationSettingsModal');
+            
+            // 设置通知设置弹窗相关事件
+            if (openNotificationSettingsBtn) {
+                openNotificationSettingsBtn.addEventListener('click', openNotificationSettingsModal);
+            }
+            
+            if (closeNotificationSettingsBtn) {
+                closeNotificationSettingsBtn.addEventListener('click', closeNotificationSettingsModal);
+            }
+            
+            if (cancelNotificationSettingsBtn) {
+                cancelNotificationSettingsBtn.addEventListener('click', closeNotificationSettingsModal);
+            }
+            
+            if (saveNotificationSettingsBtn) {
+                saveNotificationSettingsBtn.addEventListener('click', saveNotificationSettings);
+            }
+            
+            // 从localStorage加载用户的通知设置
+            loadNotificationSettings();
+        } else {
+            console.warn('UserInfoManager 未加载，等待加载...');
+            // 延迟重试
+            setTimeout(function() {
+                const event = new Event('DOMContentLoaded');
+                document.dispatchEvent(event);
+            }, 100);
+        }
+    } catch (error) {
+        console.error('初始化页面时出错:', error);
+    }
 });
 
-// 初始化用户信息
-function initializeUserInfo() {
-    // 从localStorage获取用户信息，如果没有则使用默认值
-    const userInfo = JSON.parse(localStorage.getItem('userInfo')) || {
-        username: '用户名',
-        email: 'user@example.com',
-        avatar: 'https://via.placeholder.com/150',
-        bio: '这个人很懒，什么都没写...'
-    };
+function initUserInfo() {
+    // 使用UserInfoManager获取用户信息
+    const userData = window.UserInfoManager.getUserInfo();
     
-    // 更新页面显示
-    document.querySelector('.user-info h2').textContent = userInfo.username;
-    document.querySelector('.user-info p').textContent = userInfo.email;
-    document.getElementById('userAvatar').src = userInfo.avatar;
-    document.getElementById('profileAvatar').src = userInfo.avatar;
+    // 更新DOM元素
+    if (document.getElementById('userAvatar')) {
+        document.getElementById('userAvatar').src = userData.avatar;
+    }
     
-    // 更新模态框表单
-    if (document.getElementById('editUsername')) {
-        document.getElementById('editUsername').value = userInfo.username;
-        document.getElementById('editEmail').value = userInfo.email;
-        document.getElementById('editBio').value = userInfo.bio || '';
+    if (document.getElementById('greetingName')) {
+        document.getElementById('greetingName').textContent = userData.name;
+    }
+    
+    if (document.getElementById('userName')) {
+        document.getElementById('userName').textContent = userData.name;
+    }
+    
+    if (document.getElementById('userEmail')) {
+        document.getElementById('userEmail').textContent = userData.email;
+    }
+    
+    if (document.getElementById('profileAvatar')) {
+        document.getElementById('profileAvatar').src = userData.avatar;
+    }
+    
+    const bioElement = document.querySelector('.user-bio');
+    if (bioElement && userData.bio) {
+        bioElement.textContent = userData.bio;
+    }
+    
+    // 如果有统计数据，则更新
+    if (userData.stats) {
+        if (document.getElementById('stats-hours')) {
+            document.getElementById('stats-hours').textContent = userData.stats.hours || 120;
+        }
+        if (document.getElementById('stats-courses')) {
+            document.getElementById('stats-courses').textContent = userData.stats.courses || 5;
+        }
+        if (document.getElementById('stats-streak')) {
+            document.getElementById('stats-streak').textContent = userData.stats.streak || 7;
+        }
+    }
+    
+    // 设置头像加载失败时的默认图片
+    if (document.getElementById('userAvatar')) {
+        document.getElementById('userAvatar').onerror = function() { this.src = 'images/default-avatar.svg'; };
+    }
+    if (document.getElementById('profileAvatar')) {
+        document.getElementById('profileAvatar').onerror = function() { this.src = 'images/default-avatar.svg'; };
+    }
+    
+    // 检查用户角色并显示对应功能入口
+    if (userData.roles && userData.roles.includes('teacher')) {
+        showTeacherActions();
+    }
+    
+    // 监听用户信息变化
+    window.UserInfoManager.onChange(function(updatedUserData) {
+        // 当用户信息发生变化时，更新页面
+        if (document.getElementById('userAvatar')) {
+            document.getElementById('userAvatar').src = updatedUserData.avatar;
+        }
+        if (document.getElementById('greetingName')) {
+            document.getElementById('greetingName').textContent = updatedUserData.name;
+        }
+        if (document.getElementById('userName')) {
+            document.getElementById('userName').textContent = updatedUserData.name;
+        }
+        if (document.getElementById('userEmail')) {
+            document.getElementById('userEmail').textContent = updatedUserData.email;
+        }
+        if (document.getElementById('profileAvatar')) {
+            document.getElementById('profileAvatar').src = updatedUserData.avatar;
+        }
+        const bioElement = document.querySelector('.user-bio');
+        if (bioElement && updatedUserData.bio) {
+            bioElement.textContent = updatedUserData.bio;
+        }
+    });
+}
+
+// 显示教师功能入口
+function showTeacherActions() {
+    const teacherActions = document.getElementById('teacherActions');
+    if (teacherActions) {
+        teacherActions.style.display = 'block';
     }
 }
 
-// 绑定事件监听器
-function bindEventListeners() {
-    // 编辑个人资料按钮
-    const editBtn = document.querySelector('.edit-profile-btn');
-    if (editBtn) {
-        editBtn.addEventListener('click', function() {
-            const modal = document.getElementById('editProfileModal');
-            if (modal) modal.style.display = 'flex';
+function setupEventListeners() {
+    // 个人资料编辑按钮
+    const editProfileBtn = document.getElementById('editProfileBtn');
+    if (editProfileBtn) {
+        editProfileBtn.addEventListener('click', function() {
+            openEditProfileModal();
         });
     }
     
-    // 关闭模态框按钮
-    const closeBtn = document.getElementById('closeModalBtn');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', function() {
-            const modal = document.getElementById('editProfileModal');
-            if (modal) modal.style.display = 'none';
+    // 退出登录按钮
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', handleLogout);
+    }
+    
+    // 关闭编辑资料模态框按钮
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', closeEditProfileModal);
+    }
+    
+    // 取消编辑资料按钮
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+    if (cancelEditBtn) {
+        cancelEditBtn.addEventListener('click', closeEditProfileModal);
+    }
+    
+    // 保存资料按钮
+    const saveProfileBtn = document.getElementById('saveProfileBtn');
+    if (saveProfileBtn) {
+        saveProfileBtn.addEventListener('click', saveUserProfile);
+    }
+    
+    // 更换头像按钮
+    const changeAvatarBtn = document.getElementById('changeAvatarBtn');
+    if (changeAvatarBtn) {
+        changeAvatarBtn.addEventListener('click', openAvatarUploadDialog);
+    }
+    
+    // 继续学习按钮
+    const continueBtns = document.querySelectorAll('.btn-continue');
+    if (continueBtns.length > 0) {
+        continueBtns.forEach(btn => {
+            btn.addEventListener('click', handleContinueLearning);
         });
     }
     
-    // 取消按钮
-    const cancelBtn = document.getElementById('cancelEditBtn');
-    if (cancelBtn) {
-        cancelBtn.addEventListener('click', function() {
-            const modal = document.getElementById('editProfileModal');
-            if (modal) modal.style.display = 'none';
+    // 查看全部课程按钮
+    const viewAllCoursesBtn = document.querySelector('.recent-courses .btn-view-all');
+    if (viewAllCoursesBtn) {
+        viewAllCoursesBtn.addEventListener('click', handleViewAllCourses);
+    }
+    
+    // 开始学习按钮
+    const startLearningBtns = document.querySelectorAll('.btn-start');
+    if (startLearningBtns.length > 0) {
+        startLearningBtns.forEach(btn => {
+            btn.addEventListener('click', handleStartLearning);
         });
     }
     
-    // 保存个人资料按钮
-    const saveBtn = document.getElementById('saveProfileBtn');
-    if (saveBtn) {
-        saveBtn.addEventListener('click', handleSaveProfile);
-    }
-    
-    // 收藏/取消收藏按钮
+    // 取消收藏按钮
     const unfavBtns = document.querySelectorAll('.btn-unfavorite');
-    unfavBtns.forEach(btn => {
-        btn.addEventListener('click', handleUnfavorite);
-    });
+    if (unfavBtns.length > 0) {
+        unfavBtns.forEach(btn => {
+            btn.addEventListener('click', handleUnfavorite);
+        });
+    }
     
-    // 点击空白区域关闭模态框
+    // 查看全部收藏按钮
+    const viewAllFavoritesBtn = document.getElementById('viewAllFavorites');
+    if (viewAllFavoritesBtn) {
+        viewAllFavoritesBtn.addEventListener('click', handleViewAllFavorites);
+    }
+    
+    // 通知设置按钮
+    const openNotificationSettingsBtn = document.getElementById('openNotificationSettingsBtn');
+    if (openNotificationSettingsBtn) {
+        openNotificationSettingsBtn.addEventListener('click', openNotificationSettingsModal);
+    }
+    
+    // 关闭通知设置模态框按钮
+    const closeNotificationSettingsBtn = document.getElementById('closeNotificationSettingsBtn');
+    if (closeNotificationSettingsBtn) {
+        closeNotificationSettingsBtn.addEventListener('click', closeNotificationSettingsModal);
+    }
+    
+    // 取消通知设置按钮
+    const cancelNotificationSettingsBtn = document.getElementById('cancelNotificationSettingsBtn');
+    if (cancelNotificationSettingsBtn) {
+        cancelNotificationSettingsBtn.addEventListener('click', closeNotificationSettingsModal);
+    }
+    
+    // 保存通知设置按钮
+    const saveNotificationSettingsBtn = document.getElementById('saveNotificationSettingsBtn');
+    if (saveNotificationSettingsBtn) {
+        saveNotificationSettingsBtn.addEventListener('click', saveNotificationSettings);
+    }
+}
+
+function openEditProfileModal() {
     const modal = document.getElementById('editProfileModal');
     if (modal) {
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-                modal.style.display = 'none';
+        // 填充表单数据
+        document.getElementById('editUsername').value = document.getElementById('userName').textContent;
+        document.getElementById('editEmail').value = document.getElementById('userEmail').textContent;
+        document.getElementById('editBio').value = document.querySelector('.user-bio').textContent;
+        
+        // 显示模态框
+        modal.classList.add('active');
+    }
+}
+
+function closeEditProfileModal() {
+    const modal = document.getElementById('editProfileModal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+}
+
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('editProfileModal');
+    if (modal && event.target === modal) {
+        closeEditProfileModal();
+    }
+});
+
+function openAvatarUploadDialog() {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+    fileInput.style.display = 'none';
+    document.body.appendChild(fileInput);
+    
+    fileInput.click();
+    
+    fileInput.onchange = function() {
+        if (this.files && this.files[0]) {
+            const file = this.files[0];
+            
+            if (file.size > 2 * 1024 * 1024) {
+                showToast('文件大小不能超过2MB', 'error');
+                document.body.removeChild(fileInput);
+                return;
             }
-        });
+            
+            const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (!validTypes.includes(file.type)) {
+                showToast('请选择JPEG, PNG或GIF格式的图片', 'error');
+                document.body.removeChild(fileInput);
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imageDataUrl = e.target.result;
+                
+                // 使用UserInfoManager更新头像
+                window.UserInfoManager.updateAvatar(imageDataUrl);
+                
+                showToast('头像已更新', 'success');
+            };
+            
+            reader.readAsDataURL(file);
+        }
+        
+        document.body.removeChild(fileInput);
+    };
+}
+
+function saveUserProfile() {
+    const username = document.getElementById('editUsername').value;
+    const email = document.getElementById('editEmail').value;
+    const bio = document.getElementById('editBio').value;
+    
+    if (!username || !email) {
+        showToast('用户名和邮箱不能为空', 'error');
+        return;
     }
     
-    // 我的收藏链接
+    // 使用UserInfoManager更新用户信息
+    window.UserInfoManager.updateUserInfo({
+        name: username,
+        email: email,
+        bio: bio
+    });
+    
+    closeEditProfileModal();
+    showToast('个人资料已更新', 'success');
+}
+
+function handleContinueLearning(e) {
+    e.preventDefault();
+    const courseItem = e.target.closest('.course-item');
+    const courseName = courseItem.querySelector('h3').textContent;
+    let courseId;
+    switch(courseName) {
+        case 'Python基础课程':
+            courseId = '1';
+            break;
+        case 'Web开发入门':
+            courseId = '2';
+            break;
+        default:
+            courseId = '1';
+    }
+    window.location.href = `course-learn.html?id=${courseId}`;
+}
+
+function handleViewAllCourses(e) {
+    e.preventDefault();
+    window.location.href = 'courses.html';
+}
+
+function handleStartLearning(e) {
+    e.preventDefault();
+    
+    // 获取课程名称
+    const favoriteCard = e.target.closest('.favorite-card');
+    const courseName = favoriteCard.querySelector('h3').textContent;
+    
+    // 根据课程名称生成课程ID (实际项目中应该从后端API获取)
+    let courseId;
+    switch(courseName) {
+        case '数据结构与算法':
+            courseId = '3';
+            break;
+        case '机器学习基础':
+            courseId = '4';
+            break;
+        default:
+            courseId = '1';
+    }
+    
+    // 跳转到课程学习页面
+    window.location.href = `course-learn.html?id=${courseId}`;
+}
+
+function handleUnfavorite(e) {
+    e.preventDefault();
+    
+    if (confirm('确定要取消收藏此课程吗？')) {
+        // 移除收藏卡片
+        const favoriteCard = e.target.closest('.favorite-card');
+        favoriteCard.remove();
+        
+        // 显示提示
+        showToast('课程已从收藏中移除');
+    }
+}
+
+function handleViewAllFavorites(e) {
+    e.preventDefault();
+    
+    // 在实际项目中，这里应该从后端获取所有收藏课程
+    // 这里模拟显示收藏页面
+    
+    // 临时方案：跳转到课程列表页面，并附加查询参数表示显示收藏
+    window.location.href = 'courses.html?favorites=true';
+}
+
+function bindEventListeners() {
     const favoritesLink = document.getElementById('favoritesLink');
     if (favoritesLink) {
         favoritesLink.addEventListener('click', function(e) {
             e.preventDefault();
-            showFavoritesPage();
+            handleViewAllFavorites(e);
         });
     }
-    
-    // 设置链接
     const settingsLink = document.getElementById('settingsLink');
     if (settingsLink) {
         settingsLink.addEventListener('click', function(e) {
@@ -102,218 +415,22 @@ function bindEventListeners() {
             showSettingsPage();
         });
     }
-    
-    // 查看全部收藏链接
-    const viewAllFavorites = document.getElementById('viewAllFavorites');
-    if (viewAllFavorites) {
-        viewAllFavorites.addEventListener('click', function(e) {
-            e.preventDefault();
-            showFavoritesPage();
-        });
-    }
-    
-    // 退出登录
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            // 清除本地存储的用户信息
             localStorage.removeItem('userInfo');
-            // 提示用户已退出
             showToast('已成功退出登录');
-            // 延迟跳转到登录页
             setTimeout(() => {
                 window.location.href = 'login.html';
             }, 1000);
         });
     }
-    
-    // 头像上传按钮
-    const changeAvatarBtn = document.getElementById('changeAvatarBtn');
-    if (changeAvatarBtn) {
-        changeAvatarBtn.addEventListener('click', handleAvatarUpload);
-    }
 }
 
-// 保存个人资料
-function handleSaveProfile() {
-    // 获取表单数据
-    const username = document.getElementById('editUsername').value;
-    const email = document.getElementById('editEmail').value;
-    const bio = document.getElementById('editBio').value;
-    
-    // 验证数据
-    if (!username || !email) {
-        showToast('用户名和邮箱不能为空', 'error');
-        return;
-    }
-    
-    // 保存到本地存储
-    const userInfo = JSON.parse(localStorage.getItem('userInfo')) || {};
-    userInfo.username = username;
-    userInfo.email = email;
-    userInfo.bio = bio;
-    localStorage.setItem('userInfo', JSON.stringify(userInfo));
-    
-    // 更新页面显示
-    document.querySelector('.user-info h2').textContent = username;
-    document.querySelector('.user-info p').textContent = email;
-    
-    // 关闭模态框
-    const modal = document.getElementById('editProfileModal');
-    if (modal) modal.style.display = 'none';
-    
-    // 显示成功消息
-    showToast('个人资料已更新');
-}
-
-// 取消收藏
-function handleUnfavorite(e) {
-    const card = e.target.closest('.favorite-card');
-    if (card) {
-        // 添加动画效果
-        card.style.transition = 'opacity 0.3s, transform 0.3s';
-        card.style.opacity = '0';
-        card.style.transform = 'scale(0.8)';
-        
-        setTimeout(() => {
-            card.remove();
-            showToast('已取消收藏');
-        }, 300);
-    }
-}
-
-// 处理头像上传
-function handleAvatarUpload() {
-    // 创建一个隐藏的文件输入框
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = 'image/*';
-    fileInput.style.display = 'none';
-    document.body.appendChild(fileInput);
-    
-    // 触发点击文件选择
-    fileInput.click();
-    
-    // 处理文件选择
-    fileInput.addEventListener('change', function() {
-        if (this.files && this.files[0]) {
-            const file = this.files[0];
-            const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                // 获取图片数据
-                const imageData = e.target.result;
-                
-                // 更新头像
-                document.getElementById('profileAvatar').src = imageData;
-                document.getElementById('userAvatar').src = imageData;
-                
-                // 保存到localStorage
-                const userInfo = JSON.parse(localStorage.getItem('userInfo')) || {};
-                userInfo.avatar = imageData;
-                localStorage.setItem('userInfo', JSON.stringify(userInfo));
-                
-                // 显示成功消息
-                showToast('头像已更新');
-            };
-            
-            // 读取文件为DataURL
-            reader.readAsDataURL(file);
-        }
-        
-        // 移除文件输入框
-        document.body.removeChild(fileInput);
-    });
-}
-
-// 显示收藏页面
-function showFavoritesPage() {
-    const pageContent = document.getElementById('pageContent');
-    if (!pageContent) return;
-    
-    // 创建收藏页面内容
-    pageContent.innerHTML = `
-        <div class="settings-container">
-            <div class="settings-header">
-                <h1>我的收藏</h1>
-                <button class="btn-cancel" id="closeFavoritesPage">返回</button>
-            </div>
-            
-            <div class="favorites-grid" id="allFavorites">
-                <!-- 收藏内容将通过JavaScript添加 -->
-            </div>
-        </div>
-    `;
-    
-    // 显示页面
-    pageContent.classList.add('show');
-    
-    // 加载收藏内容
-    const allFavorites = document.getElementById('allFavorites');
-    if (allFavorites) {
-        // 模拟更多收藏数据
-        const favorites = [
-            {
-                title: '数据结构与算法',
-                instructor: '张老师',
-                cover: 'https://via.placeholder.com/300x200'
-            },
-            {
-                title: '机器学习基础',
-                instructor: '李老师',
-                cover: 'https://via.placeholder.com/300x200'
-            },
-            {
-                title: 'Web全栈开发',
-                instructor: '王老师',
-                cover: 'https://via.placeholder.com/300x200'
-            },
-            {
-                title: '数据库原理',
-                instructor: '刘老师',
-                cover: 'https://via.placeholder.com/300x200'
-            }
-        ];
-        
-        // 生成HTML
-        allFavorites.innerHTML = favorites.map(course => `
-            <div class="favorite-card">
-                <div class="favorite-img">
-                    <img src="${course.cover}" alt="${course.title}">
-                </div>
-                <div class="favorite-info">
-                    <h3>${course.title}</h3>
-                    <p>讲师：${course.instructor}</p>
-                    <div class="favorite-actions">
-                        <a href="#" class="btn-start">开始学习</a>
-                        <button class="btn-unfavorite"><i class="bi bi-star-fill"></i></button>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-        
-        // 绑定取消收藏按钮
-        allFavorites.querySelectorAll('.btn-unfavorite').forEach(btn => {
-            btn.addEventListener('click', handleUnfavorite);
-        });
-    }
-    
-    // 返回按钮
-    const closeBtn = document.getElementById('closeFavoritesPage');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', function() {
-            pageContent.classList.remove('show');
-        });
-    }
-}
-
-// 显示设置页面
 function showSettingsPage() {
     const pageContent = document.getElementById('pageContent');
     if (!pageContent) return;
-    
-    // 创建设置页面内容
     pageContent.innerHTML = `
         <div class="settings-container">
             <div class="settings-header">
@@ -375,11 +492,7 @@ function showSettingsPage() {
             </div>
         </div>
     `;
-    
-    // 显示页面
     pageContent.classList.add('show');
-    
-    // 添加开关按钮样式
     const style = document.createElement('style');
     style.textContent = `
         .switch {
@@ -438,8 +551,6 @@ function showSettingsPage() {
         }
     `;
     document.head.appendChild(style);
-    
-    // 返回按钮
     const closeBtn = document.getElementById('closeSettingsPage');
     if (closeBtn) {
         closeBtn.addEventListener('click', function() {
@@ -449,149 +560,23 @@ function showSettingsPage() {
     }
 }
 
-// 加载用户数据
-function loadUserData() {
-    // 模拟从服务器加载数据
-    const userData = {
-        studyHours: 120,
-        completedCourses: 5,
-        recentLearning: [
-            {
-                title: 'Python基础课程',
-                progress: 75,
-                lastAccess: '3天前'
-            },
-            {
-                title: 'Web开发入门',
-                progress: 60,
-                lastAccess: '1周前'
-            }
-        ],
-        favorites: [
-            {
-                title: '数据结构与算法',
-                instructor: '张老师',
-                cover: 'https://via.placeholder.com/300x200'
-            },
-            {
-                title: '机器学习基础',
-                instructor: '李老师',
-                cover: 'https://via.placeholder.com/300x200'
-            }
-        ]
-    };
-    
-    // 更新学习统计
-    updateLearningStats(userData);
-    
-    // 更新最近学习
-    updateRecentLearning(userData.recentLearning);
-    
-    // 更新收藏课程
-    updateFavorites(userData.favorites);
-}
-
-// 更新学习统计
-function updateLearningStats(data) {
-    const hoursElement = document.getElementById('stats-hours');
-    const coursesElement = document.getElementById('stats-courses');
-    
-    if (hoursElement) {
-        hoursElement.textContent = `${data.studyHours}小时`;
-    }
-    
-    if (coursesElement) {
-        coursesElement.textContent = `${data.completedCourses}门`;
-    }
-}
-
-// 更新最近学习
-function updateRecentLearning(courses) {
-    const container = document.querySelector('.course-list');
-    if (!container) return;
-    
-    container.innerHTML = '';
-    
-    courses.forEach(course => {
-        const item = document.createElement('div');
-        item.className = 'course-item';
-        item.innerHTML = `
-            <div class="course-info">
-                <h3>${course.title}</h3>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: ${course.progress}%"></div>
-                </div>
-                <div class="course-meta">
-                    <span class="progress-text">完成度: ${course.progress}%</span>
-                    <span class="course-date">${course.lastAccess}</span>
-                </div>
-            </div>
-        `;
-        container.appendChild(item);
-    });
-}
-
-// 更新收藏课程
-function updateFavorites(favorites) {
-    const container = document.querySelector('.favorites-grid');
-    if (!container) return;
-    
-    container.innerHTML = '';
-    
-    favorites.forEach(course => {
-        const card = document.createElement('div');
-        card.className = 'favorite-card';
-        card.innerHTML = `
-            <div class="favorite-img">
-                <img src="${course.cover}" alt="${course.title}">
-            </div>
-            <div class="favorite-info">
-                <h3>${course.title}</h3>
-                <p>讲师：${course.instructor}</p>
-                <div class="favorite-actions">
-                    <a href="#" class="btn-start">开始学习</a>
-                    <button class="btn-unfavorite"><i class="bi bi-star-fill"></i></button>
-                </div>
-            </div>
-        `;
-        container.appendChild(card);
-        
-        // 绑定取消收藏按钮事件
-        const unfavBtn = card.querySelector('.btn-unfavorite');
-        if (unfavBtn) {
-            unfavBtn.addEventListener('click', handleUnfavorite);
-        }
-    });
-}
-
-// 显示Toast消息
 function showToast(message, type = 'success') {
-    // 移除现有的toast
     const existingToast = document.querySelector('.toast-message');
     if (existingToast) {
         existingToast.remove();
     }
-    
-    // 创建新的toast
     const toast = document.createElement('div');
     toast.className = 'toast-message';
-    
-    // 根据类型设置不同的样式
     if (type === 'error') {
         toast.style.backgroundColor = 'rgba(245, 34, 45, 0.9)';
     } else if (type === 'warning') {
         toast.style.backgroundColor = 'rgba(250, 173, 20, 0.9)';
     }
-    
     toast.textContent = message;
     document.body.appendChild(toast);
-    
-    // 显示toast
     setTimeout(() => {
         toast.classList.add('show');
     }, 10);
-    
-    // 自动隐藏
     setTimeout(() => {
         toast.classList.remove('show');
         setTimeout(() => {
@@ -600,7 +585,6 @@ function showToast(message, type = 'success') {
     }, 3000);
 }
 
-// 添加toast样式到document
 (function() {
     const style = document.createElement('style');
     style.textContent = `
@@ -625,4 +609,138 @@ function showToast(message, type = 'success') {
         }
     `;
     document.head.appendChild(style);
-})(); 
+})();
+
+function handleLogout() {
+    if (confirm('确定要退出登录吗？')) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('eduwebUser');
+        window.location.href = 'index.html';
+    }
+}
+
+// 通知设置相关功能
+/**
+ * 打开通知设置弹窗
+ */
+function openNotificationSettingsModal() {
+    const modal = document.getElementById('notificationSettingsModal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden'; // 防止背景滚动
+    }
+}
+
+/**
+ * 关闭通知设置弹窗
+ */
+function closeNotificationSettingsModal() {
+    const modal = document.getElementById('notificationSettingsModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = ''; // 恢复背景滚动
+    }
+}
+
+/**
+ * 保存通知设置
+ */
+function saveNotificationSettings() {
+    // 收集所有通知设置的状态
+    const settings = {
+        frequency: {
+            realtime: document.getElementById('realtime-notifications').checked,
+            dailyDigest: document.getElementById('daily-digest').checked
+        },
+        types: {
+            courseUpdates: document.getElementById('course-updates').checked,
+            commentReplies: document.getElementById('comment-replies').checked,
+            systemNotifications: document.getElementById('system-notifications').checked,
+            learningReminders: document.getElementById('learning-reminders').checked
+        },
+        methods: {
+            inSite: document.getElementById('in-site-notifications').checked,
+            email: document.getElementById('email-notifications').checked
+        }
+    };
+    
+    // 将设置保存到localStorage
+    localStorage.setItem('eduwebNotificationSettings', JSON.stringify(settings));
+    
+    // 显示成功消息
+    showMessage('通知设置已保存', 'success');
+    
+    // 关闭弹窗
+    closeNotificationSettingsModal();
+    
+    // 在实际应用中，这里会向后端API发送请求
+    console.log('通知设置已保存:', settings);
+}
+
+/**
+ * 从localStorage加载通知设置
+ */
+function loadNotificationSettings() {
+    const savedSettings = localStorage.getItem('eduwebNotificationSettings');
+    
+    if (savedSettings) {
+        const settings = JSON.parse(savedSettings);
+        
+        // 应用频率设置
+        if (settings.frequency) {
+            document.getElementById('realtime-notifications').checked = settings.frequency.realtime;
+            document.getElementById('daily-digest').checked = settings.frequency.dailyDigest;
+        }
+        
+        // 应用类型设置
+        if (settings.types) {
+            document.getElementById('course-updates').checked = settings.types.courseUpdates;
+            document.getElementById('comment-replies').checked = settings.types.commentReplies;
+            document.getElementById('system-notifications').checked = settings.types.systemNotifications;
+            document.getElementById('learning-reminders').checked = settings.types.learningReminders;
+        }
+        
+        // 应用通知方式设置
+        if (settings.methods) {
+            document.getElementById('in-site-notifications').checked = settings.methods.inSite;
+            document.getElementById('email-notifications').checked = settings.methods.email;
+        }
+    }
+}
+
+/**
+ * 显示消息提示
+ * @param {string} message - 要显示的消息
+ * @param {string} type - 消息类型 (success, error, info, warning)
+ */
+function showMessage(message, type = 'info') {
+    // 检查是否已存在消息容器
+    let messageContainer = document.querySelector('.message-container');
+    
+    if (!messageContainer) {
+        messageContainer = document.createElement('div');
+        messageContainer.className = 'message-container';
+        document.body.appendChild(messageContainer);
+    }
+
+    // 创建新消息元素
+    const messageElement = document.createElement('div');
+    messageElement.className = `message message-${type}`;
+    messageElement.textContent = message;
+
+    // 添加消息到容器
+    messageContainer.appendChild(messageElement);
+
+    // 3秒后自动移除消息
+    setTimeout(() => {
+        messageElement.classList.add('message-fade-out');
+        setTimeout(() => {
+            messageContainer.removeChild(messageElement);
+            // 如果没有其他消息，移除容器
+            if (messageContainer.children.length === 0) {
+                document.body.removeChild(messageContainer);
+            }
+        }, 300);
+    }, 3000);
+}

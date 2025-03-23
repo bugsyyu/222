@@ -6,22 +6,22 @@
     <title>EduWeb - 开源在线教育平台</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 </head>
 <body>
     <header class="main-header">
         <nav class="nav-container">
             <div class="logo">
-                <h1>EduWeb</h1>
+                <a href="index.html"><h1>EduWeb</h1></a>
             </div>
             <div class="nav-links">
-                <a href="#" class="active">首页</a>
+                <a href="index.html" class="active">首页</a>
                 <a href="courses.html">课程</a>
-                <a href="community.html">社区</a>
-                <a href="about.html">关于</a>
-                <a href="donate.html">捐助</a>
-                <a href="docs.html">文档</a>
+                <a href="community-loading.html">社区</a>
+                <a href="dashboard.html" data-require-login="true">仪表盘</a>
             </div>
             <div class="auth-buttons">
+                <!-- 此区域将由auth.js根据登录状态动态更新 -->
                 <a href="login.html" class="btn btn-login">登录</a>
                 <a href="register.html" class="btn btn-register">注册</a>
             </div>
@@ -101,24 +101,8 @@
                 <ul>
                     <li><a href="courses.html">所有课程</a></li>
                     <li><a href="community.html">社区讨论</a></li>
-                    <li><a href="docs.html">开发文档</a></li>
-                    <li><a href="help.html">帮助中心</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>资源</h4>
-                <ul>
-                    <li><a href="https://github.com/eduweb">GitHub</a></li>
-                    <li><a href="blog.html">博客</a></li>
-                    <li><a href="donate.html">支持我们</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>联系我们</h4>
-                <ul>
-                    <li><a href="mailto:contact@eduweb.com">Email</a></li>
-                    <li><a href="https://twitter.com/eduweb">Twitter</a></li>
-                    <li><a href="https://discord.gg/eduweb">Discord</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
                 </ul>
             </div>
         </div>
@@ -127,6 +111,8 @@
         </div>
     </footer>
 
-    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/index.js"></script>
 </body>
 </html> 

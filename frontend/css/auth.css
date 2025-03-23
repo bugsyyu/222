@@ -110,12 +110,21 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
 }
 
 .role-btn.active {
     border-color: var(--primary-blue);
     color: var(--primary-blue);
     background-color: rgba(24, 101, 242, 0.1);
+}
+
+.role-btn:hover {
+    border-color: var(--primary-blue);
+    color: var(--primary-blue);
+    background-color: rgba(24, 101, 242, 0.05);
 }
 
 .birthdate-inputs {
@@ -435,4 +444,56 @@
 
 .social-login .btn-apple:hover {
     background-color: #333;
+}
+
+/* 忘记密码页面样式 */
+.reset-steps {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: var(--background-gray);
+    border-radius: 8px;
+}
+
+.reset-steps h3 {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.reset-steps ol {
+    padding-left: 1.5rem;
+}
+
+.reset-steps li {
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+/* 重定向提示样式 */
+.redirect-notice {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-left: 3px solid #4a90e2;
+    padding: 10px 15px;
+    margin-top: 20px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.redirect-notice i {
+    color: #4a90e2;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.redirect-notice span {
+    color: #444;
+    font-size: 14px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
 } 

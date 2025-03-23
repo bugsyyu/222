@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习仪表盘 - EduWeb</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <!-- 引入Chart.js用于绘制图表 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header class="main-header">
+        <nav class="nav-container">
+            <div class="logo">
+                <a href="index.html"><h1>EduWeb</h1></a>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="courses.html">课程</a>
+                <a href="community.html">社区</a>
+                <a href="dashboard.html" class="active">仪表盘</a>
+            </div>
+            <div class="auth-buttons">
+                <!-- 此区域将由auth.js根据登录状态动态更新 -->
+            </div>
+        </nav>
+    </header>
+
+    <main class="dashboard-container">
+        <div class="dashboard-content">
+            <div class="dashboard-header">
+                <h1>学习仪表盘</h1>
+                <div class="user-greeting">
+                    <p>你好，<span id="greetingName">同学</span>！今天是继续学习的好日子。</p>
+                    <a href="profile.html" class="btn btn-back-profile"><i class="bi bi-person"></i> 返回个人主页</a>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <!-- 课程完成进度条 -->
+                <div class="dashboard-card course-progress">
+                    <div class="card-header">
+                        <h3>课程进度</h3>
+                        <span class="card-icon"><i class="bi bi-bar-chart-line"></i></span>
+                    </div>
+                    <div class="card-body">
+                        <div class="course-progress-list">
+                            <div class="progress-item">
+                                <div class="progress-info">
+                                    <h4>Python基础课程</h4>
+                                    <span>75%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 75%;"></div>
+                                </div>
+                            </div>
+                            <div class="progress-item">
+                                <div class="progress-info">
+                                    <h4>Web开发入门</h4>
+                                    <span>60%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 60%;"></div>
+                                </div>
+                            </div>
+                            <div class="progress-item">
+                                <div class="progress-info">
+                                    <h4>数据结构与算法</h4>
+                                    <span>30%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 30%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="courses.html" class="btn btn-all-courses">查看所有课程</a>
+                    </div>
+                </div>
+
+                <!-- 每日打卡 -->
+                <div class="dashboard-card daily-checkin">
+                    <div class="card-header">
+                        <h3>每日打卡</h3>
+                        <span class="card-icon"><i class="bi bi-calendar-check"></i></span>
+                    </div>
+                    <div class="card-body">
+                        <div class="checkin-status">
+                            <div class="checkin-circle" id="checkinCircle">
+                                <i class="bi bi-check-lg"></i>
+                            </div>
+                            <p class="checkin-message" id="checkinMessage">今日尚未打卡</p>
+                        </div>
+                        <div class="checkin-streak">
+                            <span class="streak-count" id="streakCount">5</span>
+                            <span class="streak-label">连续打卡天数</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-checkin" id="checkinBtn">
+                            <span class="btn-content">
+                                <i class="bi bi-check2-circle"></i>
+                                立即打卡
+                            </span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 打卡历史记录 -->
+                <div class="dashboard-card checkin-history">
+                    <div class="card-header">
+                        <h3>打卡历史</h3>
+                        <span class="card-icon"><i class="bi bi-calendar-week"></i></span>
+                    </div>
+                    <div class="card-body">
+                        <div class="calendar-grid" id="checkinCalendar">
+                            <!-- 日历由JS动态生成 -->
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="calendar-legend">
+                            <div class="legend-item">
+                                <span class="calendar-day completed"></span>
+                                <span>已打卡</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="calendar-day today"></span>
+                                <span>今天</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="calendar-day"></span>
+                                <span>未打卡</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>关于我们</h4>
+                <p>EduWeb是一个致力于知识共享的开源教育平台</p>
+            </div>
+            <div class="footer-section">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="courses.html">所有课程</a></li>
+                    <li><a href="community.html">社区讨论</a></li>
+                    <li><a href="terms.html">服务条款</a></li>
+                    <li><a href="privacy.html">隐私政策</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 EduWeb. 采用 AGPLv3 许可证开源</p>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/dashboard.js"></script>
+
+    <!-- 添加紧急修复脚本，确保日历和打卡功能正常 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 生成日历
+            const calendarContainer = document.getElementById('checkinCalendar');
+            if (calendarContainer) {
+                // 清空容器，避免重复添加
+                calendarContainer.innerHTML = '';
+                
+                // 生成一个月的日历
+                const now = new Date();
+                const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+                
+                // 生成日历
+                for (let i = 1; i <= daysInMonth; i++) {
+                    const dayElement = document.createElement('div');
+                    dayElement.className = 'calendar-day';
+                    
+                    // 如果是今天，添加today类
+                    if (i === now.getDate()) {
+                        dayElement.classList.add('today');
+                    }
+                    
+                    // 随机添加一些已完成的日期
+                    if (i < now.getDate() && Math.random() > 0.3) {
+                        dayElement.classList.add('completed');
+                    }
+                    
+                    dayElement.textContent = i;
+                    calendarContainer.appendChild(dayElement);
+                }
+            }
+            
+            // 绑定打卡按钮
+            const checkinBtn = document.getElementById('checkinBtn');
+            if (checkinBtn) {
+                checkinBtn.onclick = function() {
+                    const checkinCircle = document.getElementById('checkinCircle');
+                    const checkinMessage = document.getElementById('checkinMessage');
+                    const streakCountElement = document.getElementById('streakCount');
+                    
+                    // 修改打卡状态
+                    checkinCircle.classList.add('checked');
+                    checkinMessage.textContent = '今日已打卡';
+                    
+                    // 将今天的日历标记为完成
+                    const todayElement = document.querySelector('.calendar-day.today');
+                    if (todayElement) {
+                        todayElement.classList.add('completed');
+                    }
+                    
+                    // 更新连续打卡天数
+                    if (streakCountElement) {
+                        let currentStreak = parseInt(streakCountElement.textContent);
+                        currentStreak += 1; // 增加连续打卡天数
+                        streakCountElement.textContent = currentStreak;
+                        
+                        // 添加动画效果
+                        streakCountElement.classList.add('count-animation');
+                        
+                        // 动画结束后移除动画类
+                        setTimeout(function() {
+                            streakCountElement.classList.remove('count-animation');
+                        }, 500);
+                    }
+                    
+                    // 禁用按钮
+                    checkinBtn.disabled = true;
+                    checkinBtn.innerHTML = '<span class="btn-content"><i class="bi bi-check2-all"></i>已打卡</span>';
+                    
+                    // 提示成功
+                    alert('打卡成功！连续打卡天数+1');
+                };
+            }
+        });
+    </script>
+</body>
+</html> 
