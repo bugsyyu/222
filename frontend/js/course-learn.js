@@ -149,6 +149,9 @@ function updateChapterProgress() {
 
 // 选择课时
 function selectLesson(lessonTitle, lessonElement) {
+    // 清除任何显示的toast消息
+    clearToastMessages();
+    
     // 移除所有active类
     const lessons = document.querySelectorAll('.lesson');
     lessons.forEach(function(item) {
@@ -172,6 +175,13 @@ function selectLesson(lessonTitle, lessonElement) {
     if (videoElement) {
         // 设置视频海报（占位图）
         videoElement.poster = `https://via.placeholder.com/1280x720?text=${lessonTitle}`;
+    }
+    
+    // 重新启用完成学习按钮
+    const completeBtn = document.getElementById('completeBtn');
+    if (completeBtn) {
+        completeBtn.disabled = false;
+        completeBtn.style.pointerEvents = 'auto';
     }
     
     // 更新URL，方便分享和书签（不刷新页面）
@@ -247,6 +257,9 @@ function updateNavigationButtons(currentLesson) {
 
 // 导航到上一课/下一课
 function navigateToLesson(direction) {
+    // 确保任何显示的toast消息被清除
+    clearToastMessages();
+    
     // 获取当前选中的课时
     const currentLesson = document.querySelector('.lesson.active');
     if (!currentLesson) return;
@@ -291,6 +304,24 @@ function navigateToLesson(direction) {
     if (targetLesson) {
         const lessonTitle = targetLesson.querySelector('.lesson-title').textContent;
         selectLesson(lessonTitle, targetLesson);
+    }
+}
+
+// 辅助函数，清除任何显示的toast消息
+function clearToastMessages() {
+    const toastElement = document.getElementById('toastMessage');
+    if (toastElement && toastElement.classList.contains('show')) {
+        toastElement.classList.remove('show');
+        const toastContainer = document.querySelector('.toast-container');
+        if (toastContainer) {
+            toastContainer.style.zIndex = '1000';
+        }
+    }
+    
+    // 清除任何现有的toast超时
+    if (window.toastTimeout) {
+        clearTimeout(window.toastTimeout);
+        window.toastTimeout = null;
     }
 }
 
@@ -344,6 +375,19 @@ function markLessonAsCompleted() {
         // 保存到localStorage
         localStorage.setItem(`courseProgress_${courseId}`, JSON.stringify(learningProgress));
         
+        // 更新按钮状态
+        const completeBtn = document.getElementById('completeBtn');
+        if (completeBtn) {
+            completeBtn.disabled = true;
+            completeBtn.style.pointerEvents = 'none';
+            
+            // 设置一个定时器，在导航到下一课之前恢复按钮状态
+            setTimeout(() => {
+                completeBtn.disabled = false;
+                completeBtn.style.pointerEvents = 'auto';
+            }, 1400);
+        }
+        
         // 提示用户
         showToast('恭喜完成本节学习！');
         
@@ -352,6 +396,19 @@ function markLessonAsCompleted() {
             navigateToLesson('next');
         }, 1500);
     } else {
+        // 更新按钮状态
+        const completeBtn = document.getElementById('completeBtn');
+        if (completeBtn) {
+            completeBtn.disabled = true;
+            completeBtn.style.pointerEvents = 'none';
+            
+            // 设置一个定时器，在一段时间后恢复按钮状态
+            setTimeout(() => {
+                completeBtn.disabled = false;
+                completeBtn.style.pointerEvents = 'auto';
+            }, 1000);
+        }
+        
         showToast('您已完成本节学习');
     }
 }
@@ -362,25 +419,56 @@ function showToast(message, type = 'success') {
     
     if (!toastElement) return;
     
-    // 设置消息内容
-    toastElement.textContent = message;
-    
-    // 设置样式
-    if (type === 'error') {
-        toastElement.style.backgroundColor = 'rgba(231, 76, 60, 0.9)';
-    } else if (type === 'warning') {
-        toastElement.style.backgroundColor = 'rgba(241, 196, 15, 0.9)';
-    } else {
-        toastElement.style.backgroundColor = 'rgba(46, 204, 113, 0.9)';
+    // 清除任何现有的toast超时
+    if (window.toastTimeout) {
+        clearTimeout(window.toastTimeout);
     }
     
-    // 显示Toast
-    toastElement.classList.add('show');
-    
-    // 3秒后隐藏
-    setTimeout(() => {
+    // 如果toast已显示，先移除show类
+    if (toastElement.classList.contains('show')) {
         toastElement.classList.remove('show');
-    }, 3000);
+        // 给动画一点时间完成
+        setTimeout(() => {
+            applyToast();
+        }, 300);
+    } else {
+        applyToast();
+    }
+    
+    function applyToast() {
+        // 设置消息内容
+        toastElement.textContent = message;
+        
+        // 设置样式
+        if (type === 'error') {
+            toastElement.style.backgroundColor = 'rgba(231, 76, 60, 0.9)';
+        } else if (type === 'warning') {
+            toastElement.style.backgroundColor = 'rgba(241, 196, 15, 0.9)';
+        } else {
+            toastElement.style.backgroundColor = 'rgba(46, 204, 113, 0.9)';
+        }
+        
+        // 确保z-index足够高
+        const toastContainer = document.querySelector('.toast-container');
+        if (toastContainer) {
+            toastContainer.style.zIndex = '9999';
+        }
+        
+        // 显示Toast
+        toastElement.classList.add('show');
+        
+        // 3秒后隐藏
+        window.toastTimeout = setTimeout(() => {
+            toastElement.classList.remove('show');
+            
+            // 完全隐藏后，重置z-index
+            setTimeout(() => {
+                if (toastContainer) {
+                    toastContainer.style.zIndex = '1000';
+                }
+            }, 300);
+        }, 3000);
+    }
 }
 
 // 设置返回课程按钮

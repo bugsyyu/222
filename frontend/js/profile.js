@@ -2,41 +2,41 @@ document.addEventListener('DOMContentLoaded', function() {
     try {
         // 确保UserInfoManager已加载
         if (window.UserInfoManager) {
-            initUserInfo();
-            setupEventListeners();
-            const oldBindFn = window.bindEventListeners;
-            if (typeof oldBindFn === 'function') {
-                window.bindEventListeners = function() {
-                    console.log('Using new event handlers instead');
-                };
-            }
+    initUserInfo();
+    setupEventListeners();
+    const oldBindFn = window.bindEventListeners;
+    if (typeof oldBindFn === 'function') {
+        window.bindEventListeners = function() {
+            console.log('Using new event handlers instead');
+        };
+    }
 
-            // 获取通知设置相关元素
-            const openNotificationSettingsBtn = document.getElementById('openNotificationSettingsBtn');
-            const closeNotificationSettingsBtn = document.getElementById('closeNotificationSettingsBtn');
-            const cancelNotificationSettingsBtn = document.getElementById('cancelNotificationSettingsBtn');
-            const saveNotificationSettingsBtn = document.getElementById('saveNotificationSettingsBtn');
-            const notificationSettingsModal = document.getElementById('notificationSettingsModal');
-            
-            // 设置通知设置弹窗相关事件
-            if (openNotificationSettingsBtn) {
-                openNotificationSettingsBtn.addEventListener('click', openNotificationSettingsModal);
-            }
-            
-            if (closeNotificationSettingsBtn) {
-                closeNotificationSettingsBtn.addEventListener('click', closeNotificationSettingsModal);
-            }
-            
-            if (cancelNotificationSettingsBtn) {
-                cancelNotificationSettingsBtn.addEventListener('click', closeNotificationSettingsModal);
-            }
-            
-            if (saveNotificationSettingsBtn) {
-                saveNotificationSettingsBtn.addEventListener('click', saveNotificationSettings);
-            }
-            
-            // 从localStorage加载用户的通知设置
-            loadNotificationSettings();
+    // 获取通知设置相关元素
+    const openNotificationSettingsBtn = document.getElementById('openNotificationSettingsBtn');
+    const closeNotificationSettingsBtn = document.getElementById('closeNotificationSettingsBtn');
+    const cancelNotificationSettingsBtn = document.getElementById('cancelNotificationSettingsBtn');
+    const saveNotificationSettingsBtn = document.getElementById('saveNotificationSettingsBtn');
+    const notificationSettingsModal = document.getElementById('notificationSettingsModal');
+    
+    // 设置通知设置弹窗相关事件
+    if (openNotificationSettingsBtn) {
+        openNotificationSettingsBtn.addEventListener('click', openNotificationSettingsModal);
+    }
+    
+    if (closeNotificationSettingsBtn) {
+        closeNotificationSettingsBtn.addEventListener('click', closeNotificationSettingsModal);
+    }
+    
+    if (cancelNotificationSettingsBtn) {
+        cancelNotificationSettingsBtn.addEventListener('click', closeNotificationSettingsModal);
+    }
+    
+    if (saveNotificationSettingsBtn) {
+        saveNotificationSettingsBtn.addEventListener('click', saveNotificationSettings);
+    }
+    
+    // 从localStorage加载用户的通知设置
+    loadNotificationSettings();
         } else {
             console.warn('UserInfoManager 未加载，等待加载...');
             // 延迟重试
@@ -56,7 +56,7 @@ function initUserInfo() {
     
     // 更新DOM元素
     if (document.getElementById('userAvatar')) {
-        document.getElementById('userAvatar').src = userData.avatar;
+    document.getElementById('userAvatar').src = userData.avatar;
     }
     
     if (document.getElementById('greetingName')) {
@@ -64,15 +64,15 @@ function initUserInfo() {
     }
     
     if (document.getElementById('userName')) {
-        document.getElementById('userName').textContent = userData.name;
+    document.getElementById('userName').textContent = userData.name;
     }
     
     if (document.getElementById('userEmail')) {
-        document.getElementById('userEmail').textContent = userData.email;
+    document.getElementById('userEmail').textContent = userData.email;
     }
     
     if (document.getElementById('profileAvatar')) {
-        document.getElementById('profileAvatar').src = userData.avatar;
+    document.getElementById('profileAvatar').src = userData.avatar;
     }
     
     const bioElement = document.querySelector('.user-bio');
@@ -95,10 +95,10 @@ function initUserInfo() {
     
     // 设置头像加载失败时的默认图片
     if (document.getElementById('userAvatar')) {
-        document.getElementById('userAvatar').onerror = function() { this.src = 'images/default-avatar.svg'; };
+    document.getElementById('userAvatar').onerror = function() { this.src = 'images/default-avatar.svg'; };
     }
     if (document.getElementById('profileAvatar')) {
-        document.getElementById('profileAvatar').onerror = function() { this.src = 'images/default-avatar.svg'; };
+    document.getElementById('profileAvatar').onerror = function() { this.src = 'images/default-avatar.svg'; };
     }
     
     // 检查用户角色并显示对应功能入口
@@ -140,78 +140,65 @@ function showTeacherActions() {
 }
 
 function setupEventListeners() {
-    // 个人资料编辑按钮
+    // 绑定继续学习按钮
+    document.querySelectorAll('.btn-continue').forEach(button => {
+        button.addEventListener('click', handleContinueLearning);
+    });
+    
+    // 绑定"查看全部课程"按钮
+    const viewAllCoursesBtn = document.querySelector('.recent-courses .btn-view-all');
+    if (viewAllCoursesBtn) {
+        viewAllCoursesBtn.removeAttribute('href'); // 移除href属性
+        viewAllCoursesBtn.id = 'viewAllCourses'; // 添加ID
+        viewAllCoursesBtn.addEventListener('click', handleViewAllCourses);
+    }
+    
+    // 绑定开始学习按钮
+    document.querySelectorAll('.btn-start').forEach(button => {
+        button.addEventListener('click', handleStartLearning);
+    });
+    
+    // 绑定取消收藏按钮
+    document.querySelectorAll('.btn-unfavorite').forEach(button => {
+        button.addEventListener('click', handleUnfavorite);
+    });
+    
+    // 绑定"查看全部收藏"按钮
+    const viewAllFavoritesBtn = document.querySelector('.favorite-courses .btn-view-all');
+    if (viewAllFavoritesBtn) {
+        viewAllFavoritesBtn.removeAttribute('href'); // 移除href属性
+        viewAllFavoritesBtn.id = 'viewAllFavorites'; // 确保ID正确
+        viewAllFavoritesBtn.addEventListener('click', handleViewAllFavorites);
+    }
+    
+    // 绑定编辑个人资料按钮
     const editProfileBtn = document.getElementById('editProfileBtn');
     if (editProfileBtn) {
-        editProfileBtn.addEventListener('click', function() {
-            openEditProfileModal();
-        });
+        editProfileBtn.addEventListener('click', openEditProfileModal);
     }
     
-    // 退出登录按钮
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', handleLogout);
-    }
-    
-    // 关闭编辑资料模态框按钮
+    // 绑定关闭模态框按钮
     const closeModalBtn = document.getElementById('closeModalBtn');
     if (closeModalBtn) {
         closeModalBtn.addEventListener('click', closeEditProfileModal);
     }
     
-    // 取消编辑资料按钮
+    // 绑定取消编辑按钮
     const cancelEditBtn = document.getElementById('cancelEditBtn');
     if (cancelEditBtn) {
         cancelEditBtn.addEventListener('click', closeEditProfileModal);
     }
     
-    // 保存资料按钮
+    // 绑定保存资料按钮
     const saveProfileBtn = document.getElementById('saveProfileBtn');
     if (saveProfileBtn) {
         saveProfileBtn.addEventListener('click', saveUserProfile);
     }
     
-    // 更换头像按钮
+    // 绑定更换头像按钮
     const changeAvatarBtn = document.getElementById('changeAvatarBtn');
     if (changeAvatarBtn) {
         changeAvatarBtn.addEventListener('click', openAvatarUploadDialog);
-    }
-    
-    // 继续学习按钮
-    const continueBtns = document.querySelectorAll('.btn-continue');
-    if (continueBtns.length > 0) {
-        continueBtns.forEach(btn => {
-            btn.addEventListener('click', handleContinueLearning);
-        });
-    }
-    
-    // 查看全部课程按钮
-    const viewAllCoursesBtn = document.querySelector('.recent-courses .btn-view-all');
-    if (viewAllCoursesBtn) {
-        viewAllCoursesBtn.addEventListener('click', handleViewAllCourses);
-    }
-    
-    // 开始学习按钮
-    const startLearningBtns = document.querySelectorAll('.btn-start');
-    if (startLearningBtns.length > 0) {
-        startLearningBtns.forEach(btn => {
-            btn.addEventListener('click', handleStartLearning);
-        });
-    }
-    
-    // 取消收藏按钮
-    const unfavBtns = document.querySelectorAll('.btn-unfavorite');
-    if (unfavBtns.length > 0) {
-        unfavBtns.forEach(btn => {
-            btn.addEventListener('click', handleUnfavorite);
-        });
-    }
-    
-    // 查看全部收藏按钮
-    const viewAllFavoritesBtn = document.getElementById('viewAllFavorites');
-    if (viewAllFavoritesBtn) {
-        viewAllFavoritesBtn.addEventListener('click', handleViewAllFavorites);
     }
     
     // 通知设置按钮
@@ -350,7 +337,193 @@ function handleContinueLearning(e) {
 
 function handleViewAllCourses(e) {
     e.preventDefault();
-    window.location.href = 'courses.html';
+    
+    // 获取学习课程数据
+    // 在实际项目中，这里应该从后端获取所有课程
+    const recentCourses = [
+        {
+            id: '1',
+            title: 'Python基础课程',
+            cover: 'images/default-course-cover.svg',
+            progress: 75,
+            date: '3天前'
+        },
+        {
+            id: '2',
+            title: 'Web开发入门',
+            cover: 'images/default-course-cover.svg',
+            progress: 60,
+            date: '1周前'
+        },
+        {
+            id: '3',
+            title: '数据结构与算法',
+            cover: 'images/default-course-cover.svg',
+            progress: 30,
+            date: '2周前'
+        },
+        {
+            id: '4',
+            title: 'JavaScript进阶',
+            cover: 'images/default-course-cover.svg',
+            progress: 45,
+            date: '3周前'
+        }
+    ];
+    
+    // 区分学习中和已完成的课程
+    const inProgressCourses = recentCourses.filter(course => course.progress < 100);
+    const completedCourses = getCompletedCourses();
+    
+    const inProgressCoursesCount = inProgressCourses.length;
+    const completedCoursesCount = completedCourses.length;
+    const totalCoursesCount = inProgressCoursesCount + completedCoursesCount;
+    
+    // 创建页面内容
+    const pageContainer = document.getElementById('pageContent');
+    if (pageContainer) {
+        pageContainer.innerHTML = `
+            <div class="courses-container">
+                <div class="courses-header">
+                    <h1>所有课程 (${totalCoursesCount})</h1>
+                    <button class="btn-back" id="backFromAllCoursesBtn"><i class="bi bi-arrow-left"></i> 返回</button>
+                </div>
+                
+                <div class="course-section">
+                    <h2>学习中的课程 (${inProgressCoursesCount})</h2>
+                    <div class="course-list" id="inProgressCoursesGrid">
+                        ${inProgressCoursesCount > 0 ? '' : '<div class="empty-courses">暂无学习中的课程</div>'}
+                    </div>
+                </div>
+                
+                <div class="course-section">
+                    <h2>已完成的课程 (${completedCoursesCount})</h2>
+                    <div class="course-list" id="completedCoursesGrid">
+                        ${completedCoursesCount > 0 ? '' : '<div class="empty-courses">暂无已完成课程</div>'}
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // 添加学习中的课程到网格
+        if (inProgressCoursesCount > 0) {
+            const inProgressGrid = document.getElementById('inProgressCoursesGrid');
+            
+            if (inProgressGrid) {
+                // 添加课程卡片到网格
+                inProgressCourses.forEach(course => {
+                    const courseCard = document.createElement('div');
+                    courseCard.className = 'course-item';
+                    courseCard.innerHTML = `
+                        <div class="course-img">
+                            <img src="${course.cover}" alt="${course.title}" onerror="this.src='images/default-course-cover.svg'">
+                        </div>
+                        <div class="course-info">
+                            <h3>${course.title}</h3>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${course.progress}%"></div>
+                            </div>
+                            <div class="course-meta">
+                                <span class="progress-text">完成度: ${course.progress}%</span>
+                                <span class="course-date">${course.date}</span>
+                            </div>
+                        </div>
+                        <div class="course-actions">
+                            <a href="course-learn.html?id=${course.id}" class="btn-continue">继续学习</a>
+                        </div>
+                    `;
+                    inProgressGrid.appendChild(courseCard);
+                });
+            }
+        }
+        
+        // 添加已完成的课程到网格
+        if (completedCoursesCount > 0) {
+            const completedGrid = document.getElementById('completedCoursesGrid');
+            
+            if (completedGrid) {
+                // 添加完成的课程卡片到网格
+                completedCourses.forEach(course => {
+                    const courseCard = document.createElement('div');
+                    courseCard.className = 'course-item completed';
+                    courseCard.innerHTML = `
+                        <div class="course-img">
+                            <img src="${course.cover}" alt="${course.title}" onerror="this.src='images/default-course-cover.svg'">
+                            <div class="completion-badge"><i class="bi bi-check-circle-fill"></i></div>
+                        </div>
+                        <div class="course-info">
+                            <h3>${course.title}</h3>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                            <div class="course-meta">
+                                <span class="progress-text">已完成</span>
+                                <span class="course-date">完成于: ${course.completionDate}</span>
+                            </div>
+                        </div>
+                        <div class="course-actions">
+                            <a href="course-learn.html?id=${course.id}" class="btn-review">复习课程</a>
+                        </div>
+                    `;
+                    completedGrid.appendChild(courseCard);
+                });
+            }
+        }
+        
+        // 显示页面内容
+        pageContainer.style.display = 'block';
+        
+        // 返回按钮事件
+        const backBtn = document.getElementById('backFromAllCoursesBtn');
+        if (backBtn) {
+            backBtn.addEventListener('click', function() {
+                pageContainer.style.display = 'none';
+            });
+        }
+    }
+}
+
+// 获取已完成的课程列表
+function getCompletedCourses() {
+    // 在实际项目中，这里应该从后端获取已完成课程数据
+    // 现在返回模拟数据，确保与用户资料中显示的已完成课程数量一致（5门）
+    return [
+        {
+            id: '5',
+            title: 'HTML与CSS基础',
+            cover: 'images/default-course-cover.svg',
+            completionDate: '2023-10-15',
+            instructor: '李老师'
+        },
+        {
+            id: '6',
+            title: 'JavaScript基础教程',
+            cover: 'images/default-course-cover.svg',
+            completionDate: '2023-11-20',
+            instructor: '王老师'
+        },
+        {
+            id: '7',
+            title: '响应式网页设计',
+            cover: 'images/default-course-cover.svg',
+            completionDate: '2023-12-05',
+            instructor: '张老师'
+        },
+        {
+            id: '8',
+            title: 'Git版本控制',
+            cover: 'images/default-course-cover.svg',
+            completionDate: '2024-01-10',
+            instructor: '赵老师'
+        },
+        {
+            id: '9',
+            title: '命令行基础',
+            cover: 'images/default-course-cover.svg',
+            completionDate: '2024-02-18',
+            instructor: '刘老师'
+        }
+    ];
 }
 
 function handleStartLearning(e) {
@@ -393,11 +566,117 @@ function handleUnfavorite(e) {
 function handleViewAllFavorites(e) {
     e.preventDefault();
     
+    // 获取收藏课程数据
     // 在实际项目中，这里应该从后端获取所有收藏课程
-    // 这里模拟显示收藏页面
+    const favoriteCourses = [
+        {
+            id: '3',
+            title: '数据结构与算法',
+            cover: 'images/default-course-cover.svg',
+            instructor: '张老师'
+        },
+        {
+            id: '4',
+            title: '机器学习基础',
+            cover: 'images/default-course-cover.svg',
+            instructor: '李老师'
+        },
+        {
+            id: '5',
+            title: 'React前端开发',
+            cover: 'images/default-course-cover.svg',
+            instructor: '王老师'
+        },
+        {
+            id: '6',
+            title: '云计算与容器技术',
+            cover: 'images/default-course-cover.svg',
+            instructor: '赵老师'
+        }
+    ];
     
-    // 临时方案：跳转到课程列表页面，并附加查询参数表示显示收藏
-    window.location.href = 'courses.html?favorites=true';
+    const favoritesCount = favoriteCourses.length;
+    
+    // 创建页面内容
+    const pageContainer = document.getElementById('pageContent');
+    if (pageContainer) {
+        pageContainer.innerHTML = `
+            <div class="courses-container">
+                <div class="courses-header">
+                    <h1>收藏的课程 (${favoritesCount})</h1>
+                    <button class="btn-back" id="backFromAllFavoritesBtn"><i class="bi bi-arrow-left"></i> 返回</button>
+                </div>
+                <div class="favorites-grid" id="allFavoritesGrid">
+                    ${favoritesCount > 0 ? '' : '<div class="empty-courses">暂无收藏课程</div>'}
+                </div>
+            </div>
+        `;
+        
+        // 添加所有收藏课程到网格
+        if (favoritesCount > 0) {
+            const favoritesGrid = document.getElementById('allFavoritesGrid');
+            
+            if (favoritesGrid) {
+                // 添加课程卡片到网格
+                favoriteCourses.forEach(course => {
+                    const favoriteCard = document.createElement('div');
+                    favoriteCard.className = 'favorite-card';
+                    favoriteCard.innerHTML = `
+                        <div class="favorite-img">
+                            <img src="${course.cover}" alt="${course.title}" onerror="this.src='images/default-course-cover.svg'">
+                        </div>
+                        <div class="favorite-info">
+                            <h3>${course.title}</h3>
+                            <p>讲师：${course.instructor}</p>
+                            <div class="favorite-actions">
+                                <a href="course-learn.html?id=${course.id}" class="btn-start">开始学习</a>
+                                <button class="btn-unfavorite" data-course-id="${course.id}"><i class="bi bi-star-fill"></i></button>
+                            </div>
+                        </div>
+                    `;
+                    favoritesGrid.appendChild(favoriteCard);
+                });
+                
+                // 重新绑定取消收藏按钮的事件
+                const unfavoriteBtns = document.querySelectorAll('#allFavoritesGrid .btn-unfavorite');
+                if (unfavoriteBtns.length > 0) {
+                    unfavoriteBtns.forEach(btn => {
+                        btn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            const favoriteCard = this.closest('.favorite-card');
+                            if (confirm('确定要取消收藏此课程吗？')) {
+                                favoriteCard.style.opacity = '0';
+                                favoriteCard.style.transform = 'scale(0.9)';
+                                favoriteCard.style.transition = 'all 0.3s';
+                                
+                                setTimeout(() => {
+                                    favoriteCard.remove();
+                                    
+                                    // 检查是否没有收藏课程了
+                                    if (document.querySelectorAll('#allFavoritesGrid .favorite-card').length === 0) {
+                                        document.getElementById('allFavoritesGrid').innerHTML = '<div class="empty-courses">暂无收藏课程</div>';
+                                    }
+                                    
+                                    showToast('课程已从收藏中移除');
+                                }, 300);
+                            }
+                        });
+                    });
+                }
+            }
+        }
+        
+        // 显示页面内容
+        pageContainer.style.display = 'block';
+        
+        // 返回按钮事件
+        const backBtn = document.getElementById('backFromAllFavoritesBtn');
+        if (backBtn) {
+            backBtn.addEventListener('click', function() {
+                pageContainer.style.display = 'none';
+            });
+        }
+    }
 }
 
 function bindEventListeners() {
@@ -425,6 +704,21 @@ function bindEventListeners() {
                 window.location.href = 'login.html';
             }, 1000);
         });
+    }
+    
+    // 绑定"查看全部课程"按钮
+    const viewAllCoursesBtn = document.querySelector('.recent-courses .btn-view-all');
+    if (viewAllCoursesBtn) {
+        viewAllCoursesBtn.removeAttribute('href'); // 移除href属性
+        viewAllCoursesBtn.addEventListener('click', handleViewAllCourses);
+    }
+    
+    // 绑定"查看全部收藏"按钮
+    const viewAllFavoritesBtn = document.querySelector('.favorite-courses .btn-view-all');
+    if (viewAllFavoritesBtn) {
+        viewAllFavoritesBtn.removeAttribute('href'); // 移除href属性
+        viewAllFavoritesBtn.id = 'viewAllFavorites'; // 确保ID正确
+        viewAllFavoritesBtn.addEventListener('click', handleViewAllFavorites);
     }
 }
 
@@ -560,54 +854,86 @@ function showSettingsPage() {
     }
 }
 
+// 显示Toast提示消息
 function showToast(message, type = 'success') {
-    const existingToast = document.querySelector('.toast-message');
-    if (existingToast) {
-        existingToast.remove();
+    // 检查是否已存在toast容器
+    let toastContainer = document.querySelector('.toast-container');
+    
+    if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.className = 'toast-container';
+        document.body.appendChild(toastContainer);
     }
+    
+    // 创建新toast元素
     const toast = document.createElement('div');
-    toast.className = 'toast-message';
-    if (type === 'error') {
-        toast.style.backgroundColor = 'rgba(245, 34, 45, 0.9)';
-    } else if (type === 'warning') {
-        toast.style.backgroundColor = 'rgba(250, 173, 20, 0.9)';
-    }
+    toast.className = `toast-message ${type}`;
     toast.textContent = message;
-    document.body.appendChild(toast);
+    
+    // 添加到容器中
+    toastContainer.appendChild(toast);
+    
+    // 显示toast
     setTimeout(() => {
         toast.classList.add('show');
     }, 10);
+    
+    // 3秒后自动隐藏
     setTimeout(() => {
         toast.classList.remove('show');
         setTimeout(() => {
             toast.remove();
+            if (toastContainer.children.length === 0) {
+                toastContainer.remove();
+            }
         }, 300);
     }, 3000);
 }
 
+// 为页面添加toast样式
 (function() {
+    if (document.querySelector('#profile-toast-styles')) return;
+    
     const style = document.createElement('style');
+    style.id = 'profile-toast-styles';
     style.textContent = `
-        .toast-message {
+        .toast-container {
             position: fixed;
-            bottom: 20px;
+            top: 20px;
             right: 20px;
-            background-color: rgba(46, 204, 113, 0.9);
-            color: white;
+            z-index: 9999;
+        }
+        
+        .toast-message {
             padding: 12px 20px;
+            margin-bottom: 10px;
+            background-color: #4CAF50;
+            color: white;
             border-radius: 4px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
             opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.3s, transform 0.3s;
-            z-index: 1100;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
         }
         
         .toast-message.show {
             opacity: 1;
             transform: translateY(0);
         }
+        
+        .toast-message.error {
+            background-color: #F44336;
+        }
+        
+        .toast-message.warning {
+            background-color: #FF9800;
+        }
+        
+        .toast-message.info {
+            background-color: #2196F3;
+        }
     `;
+    
     document.head.appendChild(style);
 })();
 

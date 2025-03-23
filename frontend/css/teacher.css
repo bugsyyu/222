@@ -137,6 +137,13 @@
     background-color: var(--bg-white);
 }
 
+/* 确保课程列表容器不限制高度 */
+.published-courses .course-list, 
+.draft-courses .course-list {
+    max-height: none;
+    overflow-y: visible;
+}
+
 .course-item {
     display: flex;
     padding: 16px;
@@ -607,4 +614,21 @@ input[type="date"]:focus {
     .modal-footer button {
         width: 100%;
     }
+}
+
+/* 更多课程提示样式 */
+.more-courses-hint {
+    padding: 10px 16px;
+    margin-top: 8px;
+    background-color: rgba(24, 144, 255, 0.1);
+    color: var(--info-color);
+    border-radius: 4px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.more-courses-hint i {
+    font-size: 1.1rem;
 } 

@@ -101,6 +101,29 @@
             gap: 20px;
         }
         
+        .courses-footer {
+            margin-top: 30px;
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .courses-footer .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .courses-footer .btn:hover {
+            background-color: #45a049;
+        }
+        
         .empty-courses {
             grid-column: 1 / -1;
             text-align: center;
@@ -188,7 +211,7 @@
                             <div class="teacher-stats">
                                 <div class="stat-item">
                                     <i class="bi bi-book"></i>
-                                    <span>已发布课程：<span id="stats-published">4</span>门</span>
+                                    <span>已发布课程：<span id="stats-published">8</span>门</span>
                                 </div>
                             </div>
                         </div>
@@ -242,7 +265,7 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="teacher-published-courses.html" class="btn-view-all" id="viewAllPublishedCourses">查看全部已发布课程</a>
+                    <a href="#" class="btn-view-all" id="viewAllPublishedCourses">查看全部已发布课程</a>
                 </div>
             </div>
 
@@ -272,7 +295,7 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="teacher-draft-courses.html" class="btn-view-all" id="viewAllDraftCourses">查看全部草稿</a>
+                    <a href="#" class="btn-view-all" id="viewAllDraftCourses">查看全部草稿</a>
                 </div>
             </div>
         </div>
@@ -752,8 +775,151 @@
             const viewAllPublishedCoursesBtn = document.getElementById('viewAllPublishedCourses');
             if (viewAllPublishedCoursesBtn) {
                 viewAllPublishedCoursesBtn.onclick = function(e) {
-                    // 允许正常的链接导航到新页面，无需阻止默认行为
-                    // 通过 href 属性跳转到新页面 teacher-published-courses.html
+                    e.preventDefault();
+                    
+                    // 显示已发布课程列表页面，简化版实现直接在当前页面显示
+                    const pageContent = document.getElementById('pageContent');
+                    if (pageContent) {
+                        pageContent.innerHTML = `
+                            <div class="courses-container">
+                                <div class="courses-header">
+                                    <h1>全部已发布课程</h1>
+                                    <button class="btn-back" id="backFromPublishedBtn">返回</button>
+                                </div>
+                                <div class="courses-grid">
+                                    <div class="course-item">
+                                        <div class="course-img">
+                                            <img src="images/default-course-cover.svg" alt="课程封面">
+                                        </div>
+                                        <div class="course-info">
+                                            <h3>Web前端开发入门</h3>
+                                            <div class="course-meta">
+                                                <span class="course-favorites"><i class="bi bi-star"></i> 235 收藏</span>
+                                                <span class="course-status published">已发布</span>
+                                            </div>
+                                        </div>
+                                        <div class="course-actions">
+                                            <button class="btn-edit-course">编辑</button>
+                                            <button class="btn-toggle-status">下架</button>
+                                        </div>
+                                    </div>
+                                    <div class="course-item">
+                                        <div class="course-img">
+                                            <img src="images/default-course-cover.svg" alt="课程封面">
+                                        </div>
+                                        <div class="course-info">
+                                            <h3>JavaScript高级编程</h3>
+                                            <div class="course-meta">
+                                                <span class="course-favorites"><i class="bi bi-star"></i> 178 收藏</span>
+                                                <span class="course-status published">已发布</span>
+                                            </div>
+                                        </div>
+                                        <div class="course-actions">
+                                            <button class="btn-edit-course">编辑</button>
+                                            <button class="btn-toggle-status">下架</button>
+                                        </div>
+                                    </div>
+                                    <div class="course-item">
+                                        <div class="course-img">
+                                            <img src="images/default-course-cover.svg" alt="课程封面">
+                                        </div>
+                                        <div class="course-info">
+                                            <h3>PHP后端开发基础</h3>
+                                            <div class="course-meta">
+                                                <span class="course-favorites"><i class="bi bi-star"></i> 156 收藏</span>
+                                                <span class="course-status published">已发布</span>
+                                            </div>
+                                        </div>
+                                        <div class="course-actions">
+                                            <button class="btn-edit-course">编辑</button>
+                                            <button class="btn-toggle-status">下架</button>
+                                        </div>
+                                    </div>
+                                    <div class="course-item">
+                                        <div class="course-img">
+                                            <img src="images/default-course-cover.svg" alt="课程封面">
+                                        </div>
+                                        <div class="course-info">
+                                            <h3>数据库设计与优化</h3>
+                                            <div class="course-meta">
+                                                <span class="course-favorites"><i class="bi bi-star"></i> 125 收藏</span>
+                                                <span class="course-status published">已发布</span>
+                                            </div>
+                                        </div>
+                                        <div class="course-actions">
+                                            <button class="btn-edit-course">编辑</button>
+                                            <button class="btn-toggle-status">下架</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        
+                        // 显示页面内容容器
+                        pageContent.style.display = 'block';
+                        
+                        // 绑定返回按钮事件
+                        const backBtn = document.getElementById('backFromPublishedBtn');
+                        if (backBtn) {
+                            backBtn.onclick = function() {
+                                pageContent.style.display = 'none';
+                            };
+                        }
+                        
+                        // 重新绑定新添加的编辑和状态切换按钮
+                        const newEditBtns = pageContent.querySelectorAll('.btn-edit-course');
+                        if (newEditBtns.length > 0) {
+                            newEditBtns.forEach(btn => {
+                                btn.onclick = function() {
+                                    const courseItem = this.closest('.course-item');
+                                    const courseTitle = courseItem.querySelector('h3').textContent;
+                                    
+                                    const modal = document.getElementById('editCourseModal');
+                                    if (modal) {
+                                        // 填充表单数据
+                                        document.getElementById('editCourseTitle').value = courseTitle;
+                                        document.getElementById('editCourseCategory').value = '计算机科学';
+                                        document.getElementById('editCourseDescription').value = '这是一门' + courseTitle + '课程的详细描述...';
+                                        document.getElementById('editCourseDuration').value = '30';
+                                        document.getElementById('editCourseChapters').value = '10';
+                                        document.getElementById('editCourseDifficulty').value = 'intermediate';
+                                        document.getElementById('editCourseLanguage').value = 'chinese';
+                                        
+                                        // 显示模态框
+                                        modal.style.display = 'flex';
+                                        modal.style.opacity = '1';
+                                        modal.style.visibility = 'visible';
+                                    }
+                                };
+                            });
+                        }
+                        
+                        const newToggleBtns = pageContent.querySelectorAll('.btn-toggle-status');
+                        if (newToggleBtns.length > 0) {
+                            newToggleBtns.forEach(btn => {
+                                btn.onclick = function() {
+                                    const courseItem = this.closest('.course-item');
+                                    const statusElement = courseItem.querySelector('.course-status');
+                                    
+                                    if (statusElement.classList.contains('published')) {
+                                        // 当前是已发布状态，切换为草稿
+                                        statusElement.classList.remove('published');
+                                        statusElement.classList.add('draft');
+                                        statusElement.textContent = '草稿';
+                                        this.textContent = '发布';
+                                        alert('课程已下架');
+                                    } else {
+                                        // 当前是草稿状态，切换为已发布
+                                        statusElement.classList.remove('draft');
+                                        statusElement.classList.add('published');
+                                        statusElement.textContent = '已发布';
+                                        this.textContent = '下架';
+                                        alert('课程已发布');
+                                    }
+                                };
+                            });
+                        }
+                    }
                 };
             }
             
@@ -761,8 +927,156 @@
             const viewAllDraftCoursesBtn = document.getElementById('viewAllDraftCourses');
             if (viewAllDraftCoursesBtn) {
                 viewAllDraftCoursesBtn.onclick = function(e) {
-                    // 允许正常的链接导航到新页面，无需阻止默认行为
-                    // 通过 href 属性跳转到新页面 teacher-draft-courses.html
+                    e.preventDefault();
+                    
+                    // 显示草稿课程列表页面，使用动态数据
+                    const pageContent = document.getElementById('pageContent');
+                    if (pageContent) {
+                        // 过滤获取所有草稿课程
+                        const draftCourses = window.coursesData ? window.coursesData.filter(course => course.status === 'draft') : [];
+                        const draftCount = draftCourses.length;
+                        
+                        pageContent.innerHTML = `
+                            <div class="courses-container">
+                                <div class="courses-header">
+                                    <h1>草稿课程 (${draftCount})</h1>
+                                    <button class="btn-back" id="backFromDraftsBtn">返回</button>
+                                </div>
+                                <div class="courses-grid" id="allDraftCoursesGrid">
+                                    ${draftCount > 0 ? '' : '<div class="empty-courses">暂无草稿课程</div>'}
+                                </div>
+                                <div class="courses-footer">
+                                    <a href="#" class="btn btn-primary" id="viewAllDraftsBtn">查看全部草稿 (${draftCount})</a>
+                                </div>
+                            </div>
+                        `;
+                        
+                        // 添加草稿课程到网格
+                        if (draftCount > 0) {
+                            const coursesGrid = document.getElementById('allDraftCoursesGrid');
+                            if (coursesGrid) {
+                                draftCourses.forEach(course => {
+                                    const courseCard = document.createElement('div');
+                                    courseCard.className = 'course-item';
+                                    courseCard.innerHTML = `
+                                        <div class="course-img">
+                                            <img src="${course.cover}" alt="${course.title}" onerror="this.src='images/default-course-cover.svg'">
+                                        </div>
+                                        <div class="course-info">
+                                            <h3>${course.title}</h3>
+                                            <div class="course-meta">
+                                                <span class="course-progress">${course.progress || 0}% 完成</span>
+                                                <span class="course-status draft">草稿</span>
+                                            </div>
+                                        </div>
+                                        <div class="course-actions">
+                                            <button class="btn-edit-course">继续编辑</button>
+                                            <button class="btn-publish-course">发布</button>
+                                        </div>
+                                    `;
+                                    coursesGrid.appendChild(courseCard);
+                                });
+                            }
+                        }
+                        
+                        // 显示页面内容容器
+                        pageContent.style.display = 'block';
+                        
+                        // 绑定返回按钮事件
+                        const backBtn = document.getElementById('backFromDraftsBtn');
+                        if (backBtn) {
+                            backBtn.onclick = function() {
+                                pageContent.style.display = 'none';
+                            };
+                        }
+                        
+                        // 绑定"查看全部"按钮事件
+                        const viewAllBtn = document.getElementById('viewAllDraftsBtn');
+                        if (viewAllBtn) {
+                            viewAllBtn.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                showToast('当前已显示全部草稿课程', 'info');
+                            });
+                        }
+                        
+                        // 重新绑定新添加的编辑和发布按钮
+                        const newEditBtns = pageContent.querySelectorAll('.btn-edit-course');
+                        if (newEditBtns.length > 0) {
+                            newEditBtns.forEach(btn => {
+                                btn.onclick = function() {
+                                    const courseItem = this.closest('.course-item');
+                                    const courseTitle = courseItem.querySelector('h3').textContent;
+                                    
+                                    // 获取课程数据
+                                    const course = window.coursesData.find(c => c.title === courseTitle) || getCourseDataByTitle(courseTitle);
+                                    
+                                    const modal = document.getElementById('editCourseModal');
+                                    if (modal) {
+                                        // 填充表单数据
+                                        document.getElementById('editCourseTitle').value = course.title;
+                                        document.getElementById('editCourseTitle').dataset.originalTitle = course.title;
+                                        document.getElementById('editCourseCategory').value = course.category || '计算机科学';
+                                        document.getElementById('editCourseDescription').value = course.description || '这是一门' + course.title + '课程的详细描述...';
+                                        document.getElementById('editCourseDuration').value = course.duration || '30';
+                                        document.getElementById('editCourseChapters').value = course.chapters || '10';
+                                        document.getElementById('editCourseDifficulty').value = course.difficulty || 'intermediate';
+                                        document.getElementById('editCourseLanguage').value = course.language || 'chinese';
+                                        
+                                        // 显示模态框
+                                        modal.style.display = 'flex';
+                                        modal.style.opacity = '1';
+                                        modal.style.visibility = 'visible';
+                                    }
+                                };
+                            });
+                        }
+                        
+                        const newPublishBtns = pageContent.querySelectorAll('.btn-publish-course');
+                        if (newPublishBtns.length > 0) {
+                            newPublishBtns.forEach(btn => {
+                                btn.onclick = function() {
+                                    const courseItem = this.closest('.course-item');
+                                    const courseTitle = courseItem.querySelector('h3').textContent;
+                                    
+                                    // 查找对应的课程数据
+                                    const courseIndex = window.coursesData.findIndex(c => c.title === courseTitle);
+                                    
+                                    if (courseIndex !== -1 && confirm(`确定要发布《${courseTitle}》课程吗？`)) {
+                                        // 更新课程状态
+                                        const course = window.coursesData[courseIndex];
+                                        course.status = 'published';
+                                        course.students = course.students || 0;
+                                        course.rating = course.rating || 0;
+                                        
+                                        // 计算新的发布和草稿课程
+                                        const publishedCourses = window.coursesData.filter(c => c.status === 'published');
+                                        const draftCourses = window.coursesData.filter(c => c.status === 'draft');
+                                        
+                                        // 更新统计信息
+                                        if (typeof updateCourseStats === 'function') {
+                                            updateCourseStats(publishedCourses, draftCourses);
+                                        }
+                                        
+                                        // 从当前列表中移除
+                                        courseItem.remove();
+                                        
+                                        // 显示消息
+                                        showToast ? showToast('课程已成功发布', 'success') : alert('课程已成功发布');
+                                        
+                                        // 如果没有剩余课程，可以显示空状态
+                                        const remainingCourses = pageContent.querySelectorAll('.course-item');
+                                        if (remainingCourses.length === 0) {
+                                            pageContent.querySelector('.courses-grid').innerHTML = `
+                                                <div class="empty-courses">
+                                                    <p>没有草稿课程</p>
+                                                </div>
+                                            `;
+                                        }
+                                    }
+                                };
+                            });
+                        }
+                    }
                 };
             }
             
